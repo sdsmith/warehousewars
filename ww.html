@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta HTTP-EQUIV="EXPIRES" CONTENT="-1">
+		<title>Computing Science 309 Warehouse Wars</title>
+		<script language="javascript" src="ww.js" > </script>
+
+		<script> 
+			stage=null;
+			// SOME GLUE CODE CONNECTING THIS PAGE TO THE STAGE
+			interval=null;
+			function setupGame(){
+				stage=new Stage(20,20,"stage");
+				stage.initialize();
+			}
+			function startGame(){
+				// YOUR CODE GOES HERE
+			}
+			function pauseGame(){
+				// YOUR CODE GOES HERE
+			}
+			// YOUR CODE GOES HERE
+		</script>
+		<style>
+			/* style parts of the legend, the controls and the elements in the stage appropriately */
+
+		</style>
+	</head>
+	<body bgcolor=ffffff onload="setupGame(); startGame();" >
+		<center>
+			<h1>Warehouse Wars</h1>
+			<table>
+				<tr>
+					<td> <div id="stage"> </div></td> 
+					<td>
+						<center>
+							<h2>Legend</h2>
+							<table class="legend">
+								<tr>
+									<td> <img src="icons/blank.gif" id="blankImage" /> </td>
+									<td> <img src="icons/emblem-package-2-24.png" id="boxImage" /> </td>
+									<td> <img src="icons/face-cool-24.png" id="playerImage" /> </td>
+									<td> <img src="icons/face-devil-grin-24.png" id="monsterImage" /> </td>
+									<td> <img src="icons/wall.jpeg" id="wallImage" /> </td>
+								</tr>
+								<tr>
+									<td> Empty <br/> Square </td>
+									<td> Box </td>
+									<td> Player </td>
+									<td> Monster </td>
+									<td> Wall </td>
+								</tr>
+							</table>
+							<h2>Controls</h2>
+							<table class="controls">
+								<tr>
+									<td><img src="icons/north_west.svg" onclick="alert('clicked north west');" /></td>
+									<td><img src="icons/north.svg" /></td>
+									<td><img src="icons/north_east.svg" /></td>
+								</tr>
+								<tr>
+									<td><img src="icons/west.svg" /></td>
+									<td>&nbsp;</td>
+									<td><img src="icons/east.svg" /></td>
+								</tr>
+								<tr>
+									<td><img src="icons/south_west.svg" /></td>
+									<td><img src="icons/south.svg" /></td>
+									<td><img src="icons/south_east.svg" /></td>
+								</tr>
+							</table>
+						</center>
+					</td>
+				</tr>
+			</table>
+		</center>
+	</body>
+</html>
+
