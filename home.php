@@ -5,20 +5,23 @@
 	?>
 	<form id="logout" method="post">
 		<input type="hidden" name="action" value="logout" />
-		
+		<input type="submit" value="Logout" />
 	</form>
 </div>
 <?php else : ?>
-<div id="authentication">
-	
-	<form id="login" method="post">
+<div id="authentication">	
+	<h3>Login</h3>
+
+	<form id="login_form" method="post">
 		<input type="hidden" name="action" value="login" />
-		Username: <input type="text" name="login_username" value="<?php echo $_POST['login_username']; ?>" /><br/>
+
+		Username: <input type="text" name="login_username" 
+					value="<?php echo $_POST['login_username']; ?>" /><br/>
 		Password: <input type="password" name="login_password" /><br/>
 		<input type="submit" value="Login" />
 	</form>
 	
-	<form id="register" method="post">
+	<form id="register_redirect" method="post">
 		<input type="hidden" name="action" value="register_user" />
 		<input type="submit" value="Register" />
 	</form>
@@ -30,6 +33,7 @@
 <h3>Highscores - Top 10</h3>
 <ul>
 	<?php
-	
+	dbconnect();
+	pg_prepare($dbconn, "highscore", 'SELECT * FROM 
 	?>
 </ul>

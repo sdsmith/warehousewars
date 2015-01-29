@@ -11,9 +11,23 @@ $errormessage = "";
 
 $dbconn = NULL;
 
-function dbconnect() {
-	return $connection = pg_connect("host=localhost dbname=smiths61 user=smiths61 password=59882") or die("Could not connect: " . pg_last_error());
+
+/* Open global connection to database */
+function dbConnect() {
+	global $dbconn;	
+	if (!isset(dbconn)) {
+		$dbconn = pg_connect("host=localhost dbname=smiths61 user=smiths61 password=59882") or die("Could not connect: " . pg_last_error());
+	}
 }
+
+/* Close global connection to database */
+function dbClose() {
+	global $dbconn;
+	if (isset($dbconn)) {
+		pg_close($dbconn);
+	}
+}
+
 
 
 
@@ -22,17 +36,14 @@ if (!isset($state)) {
 	$state = "home_guest";
 }
 
-// NOTE(sdsmith): make sure to set the dbconn variable when required
-//in the state setup. May want to change this behavior. (initial 
-// reasoning was maximize connection use.
-
 // Determine current state to serve content
 switch ($state) {
 	case "home_guest":
 		// Homepage for unauthenticated user
 		$view = "home.php";
 		$authenticated = false;
-
+		
+		if 
 		break;
 
 	case "home_authenticated":
@@ -64,6 +75,9 @@ switch ($state) {
 
 
 <?php
+// This is 'just in case' code, to make sure that the database connection is
+// always closed on page exit.
 if (isset($dbconn)) {
 	pg_close($dbconn);
 }
+?>
