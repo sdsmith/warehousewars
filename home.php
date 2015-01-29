@@ -33,7 +33,5 @@
 <h3>Highscores - Top 10</h3>
 <ul>
 	<?php
-	dbconnect();
-	pg_prepare($dbconn, "highscore", 'SELECT * FROM 
 	?>
 </ul>
