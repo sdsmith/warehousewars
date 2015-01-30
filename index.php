@@ -8,9 +8,13 @@ $user_name = &$_SESSION['user_name'];
 $user_id = &$_SESSION['userid'];
 $user_highscore = &$_SESSION['highscore'];
 
-$errormessage = "";
-
 $dbconn = NULL;
+
+$errormessage = array();
+
+
+// NOTE(sdsmith): make sure to clear actions when switching views, 		
+// otherwise unexpected redirects could occur.
 
 
 function dbConnect() {
@@ -65,7 +69,6 @@ switch ($state) {
 							die("Multiple user credential matches");
 						}
 
-						var_dump($autheduserdata);
 						// Properly authenticated; do post authentication setup below
 						$authenticated = true;
 						$state = "home_authenticated";
@@ -74,7 +77,7 @@ switch ($state) {
 						$user_highscore = $autheduserdata['highscore'];
 					} else {
 						// Did not authenticate
-						$errormessage = "Invalid Credentials";
+						$errormessage[] = "Invalid Credentials";
 					}
 				} else {
 					die("Query failed: " . pg_last_error());
@@ -109,9 +112,77 @@ switch ($state) {
 		$view = "register.php";
 		
 		if ($action == "registration_submit") {
+			// Perform check of registration data; if valid, insert into db
+			$reg_username = &$_POST['reg_username'];
+			$reg_email = &$_POST['reg_email'];
+			$reg_password = &$_POST['reg_password'];
+			$reg_confirm_password = &$_POST['reg_confirm_password'];
+
+			dbConnect();
+			pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
+			pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
+			pg_prepare($dbconn, "insert_new_user", 'INSERT INTO appuser (name, email, joindate, validated, lastlogin, highscore) VALUES ($1, $2, $3, false, $3, 0); INSERT INTO appuser_passwords (userid, password) VALUES ((SELECT id FROM appuser WHERE name = $1 AND email = $2), $4');
 			
+			// TODO(sdsmith): Run check_user_info_existance to make sure 	
+			// there are no results. If their are, determine what is 		
+			// incorrect and tell the user. If there are no matches, insert
+			// new user into database and redirect to login page with 
+			// username filled in.
+			$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
+			$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
+
+			$validated = true;
+			// Check if username exists in db
+			if (!empty($reg_username)) {
+				if (pg_fetch_array($resultobj_username)) {
+					$errormessage[] = "Username exists";
+					$validated = false;
+				}
+			} else {
+				$errormessage[] = "Must have a username";
+				$validated = false;
+			}
+
+			// Check if email exists in db
+			if (!empty($reg_email)) {
+				if (pg_fetch_array($resultobj_email)) {
+					$errormessage[] = "Email exists";
+					$validated = false;
+				}
+			} else {
+				$errormessage[] = "Must have an email";
+				$validated = false;
+			}
+
+			// Check if passwords match
+			if (!empty($reg_password) and !empty($reg_confirm_password)) {
+				if ($reg_password !== $reg_confirm_password) {
+					$errormessage[] = "Passwords do not match";
+					$validated = false;
+				}
+			} else {
+				$errormessage[] = "Must have confirmed password";
+				$validated = false;
+			}
+			
+			if ($validated) {
+				// Registration information is valid
+				$timestamp = date('Y-m-d H:i:s');
+
+				pg_execute($dbconn, "insert_new_user", array($reg_username, $reg_email, $timestamp, $reg_password));
+
+				// Bring user back to front page and pre-populate form
+				$view = "home.php";
+				$state = "home_guest";
+				$_POST['login_username'] = $reg_username;
+				$action = "";
+			}
+
+			dbClose();
+
 		} elseif ($action == "home") {
 			$view = "home.php";
+			$action = "";
 		}
 
 		break;
@@ -127,9 +198,13 @@ switch ($state) {
 		<h1>Warehouse Wars Online</h1>
 		<hr/>
 
-		<?php if ($errormessage != "") : ?>
+		<?php if (!empty($errormessage)) : ?>
 		<div id='errormessage'>
-			<?php echo $errormessage ?>
+			<?php 
+			foreach ($errormessage as $error) {
+				echo $error . "<br/>";
+			}
+			?>
 		</div>
 		<?php endif ?>
 

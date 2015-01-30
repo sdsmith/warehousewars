@@ -1,10 +1,10 @@
-DROP TABLE appuser;
-DROP TABLE appuser_passwords;
-DROP TABLE ww_appuser_stats;
+DROP TABLE appuser CASCADE;
+DROP TABLE appuser_passwords CASCADE;
+DROP TABLE ww_appuser_stats CASCADE;
 
 
 CREATE TABLE appuser_passwords (
-	userid 		BIGINT UNIQUE,
+	userid 		BIGINT,
 	password 	VARCHAR(50) 	NOT NULL,
 	PRIMARY KEY (userid)
 );
@@ -12,6 +12,7 @@ CREATE TABLE appuser_passwords (
 CREATE TABLE ww_appuser_stats (
 	userid 		BIGINT,
 	gameid	 	INT,
+	time 		TIMESTAMP,
 	score 		INT 	NOT NULL,
 	maxlevel 	INT,
 	kills 		INT,
