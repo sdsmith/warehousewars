@@ -10,24 +10,24 @@ CREATE TABLE appuser_passwords (
 );
 
 CREATE TABLE ww_appuser_stats (
+	gameid	 	BIGINT,
 	userid 		BIGINT,
-	gameid	 	INT,
 	time 		TIMESTAMP,
-	score 		INT 	NOT NULL,
+	score 		INT 		NOT NULL,
 	maxlevel 	INT,
 	kills 		INT,
 	deaths 		INT,
 	steps 		BIGINT,
-	PRIMARY KEY (userid, gameid)
+	PRIMARY KEY (gameid)
 );
 
 CREATE TABLE appuser (
-	id 		BIGSERIAL,
-	name 		VARCHAR(20) 	NOT NULL 	UNIQUE,
-	email 		VARCHAR(50) 	NOT NULL 	UNIQUE,
+	id 			BIGSERIAL,
+	name 		VARCHAR(20) NOT NULL 	UNIQUE,
+	email 		VARCHAR(50) NOT NULL 	UNIQUE,
 	joindate 	TIMESTAMP 	NOT NULL,
 	validated 	BOOLEAN 	NOT NULL,
 	lastlogin 	TIMESTAMP 	NOT NULL,
-	highscore	INT		NOT NULL,
+	highscore	INT			NOT NULL,
 	PRIMARY KEY (id)
 );

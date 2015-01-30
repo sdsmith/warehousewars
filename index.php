@@ -15,7 +15,9 @@ $errormessage = array();
 
 // NOTE(sdsmith): make sure to clear actions when switching views, 		
 // otherwise unexpected redirects could occur.
-
+// TODO(sdsmith): Write a function that you would call to change view. 
+// Default behavior for func would be to wipe actions, unless optional 
+// override was given.
 
 function dbConnect() {
 	global $dbconn;	
@@ -91,8 +93,10 @@ switch ($state) {
 
 		} elseif ($action == "register_user") {
 			// NOTE(sdsmith): this relies on it falling through.
-			// TODO(sdsmith): make determin state function and call it when new state needs to be decoded.	
+			// TODO(sdsmith): make determin state function and call it when new state needs to be decoded.
+			$view = "register.php";
 			$state = "registration";
+			$action = "";
 		}
 
 	case "home_authenticated":
