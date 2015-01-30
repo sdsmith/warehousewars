@@ -6,6 +6,7 @@ $state = &$_SESSION['state'];
 $authenticated = &$_SESSION['authenticated'];
 $user_name = &$_SESSION['user_name'];
 $user_id = &$_SESSION['userid'];
+$user_highscore = &$_SESSION['highscore'];
 
 $errormessage = "";
 
@@ -64,15 +65,16 @@ switch ($state) {
 							die("Multiple user credential matches");
 						}
 
+						var_dump($autheduserdata);
 						// Properly authenticated; do post authentication setup below
 						$authenticated = true;
 						$state = "home_authenticated";
-						$user_id = $result_as_array['id'];
+						$user_id = $autheduserdata['id'];
 						$user_name = $cred_username;
-
+						$user_highscore = $autheduserdata['highscore'];
 					} else {
 						// Did not authenticate
-						$errormessage = "Invalid Credentials: " . pg_last_error();
+						$errormessage = "Invalid Credentials";
 					}
 				} else {
 					die("Query failed: " . pg_last_error());
@@ -82,19 +84,35 @@ switch ($state) {
 			}
 
 			dbClose();
-		}
+			break;
 
-		break;
+		} elseif ($action == "register_user") {
+			// NOTE(sdsmith): this relies on it falling through.
+			// TODO(sdsmith): make determin state function and call it when new state needs to be decoded.	
+			$state = "registration";
+		}
 
 	case "home_authenticated":
 		// Homepage for authenticated user
 		$view = "home.php";
+
+		if ($action == "logout") {
+			$authenticated = false;
+			session_destroy();
+			$state = "home_guest";
+		}
 
 		break;
 
 	case "registration":
 		// Registration page
 		$view = "register.php";
+		
+		if ($action == "registration_submit") {
+			
+		} elseif ($action == "home") {
+			$view = "home.php";
+		}
 
 		break;
 }
@@ -116,14 +134,6 @@ switch ($state) {
 		<?php endif ?>
 
 		<?php include($view) ?>
+
 	</body>
 </html>
-
-
-<?php /*
-// This is 'just in case' code, to make sure that the database connection is
-// always closed on page exit.
-if (isset($dbconn)) {
-	pg_close($dbconn);
-}*/
-?>

@@ -27,5 +27,6 @@ CREATE TABLE appuser (
 	joindate 	TIMESTAMP 	NOT NULL,
 	validated 	BOOLEAN 	NOT NULL,
 	lastlogin 	TIMESTAMP 	NOT NULL,
+	highscore	INT		NOT NULL,
 	PRIMARY KEY (id)
 );

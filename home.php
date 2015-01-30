@@ -1,7 +1,7 @@
 <?php if (isset($authenticated) and $authenticated) : ?>
 <div id="userpanel">
 	<?php
-	echo "Welcome $user_name<br>Highscore: $user_highschool";
+	echo "Welcome, $user_name<br>Highscore: $user_highscore";
 	?>
 	<form id="logout" method="post">
 		<input type="hidden" name="action" value="logout" />
