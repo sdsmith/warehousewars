@@ -65,6 +65,8 @@ switch ($state) {
 					if ($result_as_array != false) {
 						// There was a result, so we are authenticated.
 
+						$autheduserdata = $result_as_array;
+
 						// Sanity check: confirm there was only one credential match.
 						if ($result_as_array = pg_fetch_array($result)) {
 							$authenticated = false;
