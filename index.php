@@ -95,11 +95,13 @@ function actionController() {
 	// Determine current state to serve content
 	switch ($state) {
 		case "home_guest":
+			echo "home_guest";
 			// Homepage for unauthenticated user
 			set_view("home.html");
 			$authenticated = false;
 		
 			if ($action == "login") {
+				echo "action: login";
 				// User is logging in; check credentials against the database.
 				$cred_username = $_POST['login_username'];
 				$cred_password = $_POST['login_password'];
@@ -117,6 +119,7 @@ function actionController() {
 			break;
 
 		case "home_authenticated":
+			echo "home_authenticated";
 			// Homepage for authenticated user
 			set_view("home.html");
 
@@ -127,6 +130,7 @@ function actionController() {
 			break;
 
 		case "registration":
+			echo "registration";
 			// Registration page
 			set_view("register.html");
 		
@@ -158,6 +162,7 @@ function actionController() {
 
 
 /* Action machine based on state and user input */
+$action = $_POST['action'];
 actionController();
 
 ?>
