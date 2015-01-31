@@ -1,5 +1,5 @@
 <?php
-require_once "postgres.php";
+require_once("/student/smiths61/www/ww/models/postgres.php");
 
 /* Library provided globals */
 $authenticated = &$_SESSION['authenticated'];

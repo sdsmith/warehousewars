@@ -5,8 +5,8 @@
 session_save_path("/student/smiths61/wwwsess/ww/");
 session_start();
 
-require_once "model/mvc.php";
-require_once "model/authentication.php";
+require_once("/student/smiths61/www/ww/models/authentication.php");
+
 
 // Get current request's action
 $action = &$_POST['action'];
@@ -25,14 +25,17 @@ $view = &$_SESSION['view'];
  * action with reset_action.
  */
 function set_view($new_view, $new_state=NULL, $reset_action=false) {
-	global $view = "views/" . $new_view;
+	global $view;
+	global $action;
+	global $state;
+	$view = "views/" . $new_view;
 
 	if (isset($state)) {
 		set_state($new_state);
 	}
 
 	if ($reset_action) {
-		global $action = NULL;
+		$action = NULL;
 	}
 }
 
@@ -40,20 +43,25 @@ function set_view($new_view, $new_state=NULL, $reset_action=false) {
  * Set the current system state.
  */
 function set_state($new_state) {
-	global $state = $new_state;	
+	global $state;
+	
+	$state = $new_state;	
 }
 
 /*
  * Set current system action.
  */
 function set_action($new_action) {
-	global $action = $new_action;
+	global $action;
+	
+	$action = $new_action;
 }
 
 /*
  * Return html that displays all error messages in the errormessages array.
  */
 function display_errormessages() {
+	global $errormessages;
 	$errormsgstring = "";
 
 	if (!empty($errormessages)) {
@@ -74,6 +82,11 @@ function display_errormessages() {
  * state, and system action.
  */
 function actionController() {
+	global $authenticated;
+	global $state;
+	global $action;
+	global $view;
+
 	// First visit
 	if (!isset($state)) {
 		set_state("home_guest");

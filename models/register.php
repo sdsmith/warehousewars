@@ -1,6 +1,6 @@
 <?php
 
-require_once "postgres.php";
+require_once("/student/smiths61/www/ww/models/postgres.php");
 
 
 /*
@@ -8,50 +8,49 @@ require_once "postgres.php";
  * messages. Return true on successful validation, false otherwise.
  */
 function validate_registration_info($username, $email, $password, $confirm_password) {
-			dbConnect();
-			pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
-			pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
+	dbConnect();
+	pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
+	pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
 			
-			$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
-			$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
+	$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
+	$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
 
-			$validated = true;
-			// Check if username exists in db
-			if (!empty($reg_username)) {
-				if (pg_fetch_array($resultobj_username)) {
-					$errormessage[] = "Username exists";
-					$validated = false;
-				}
-			} else {
-				$errormessage[] = "Must have a username";
-				$validated = false;
-			}
+	$validated = true;
+	// Check if username exists in db
+	if (!empty($reg_username)) {
+		if (pg_fetch_array($resultobj_username)) {
+			$errormessage[] = "Username exists";
+			$validated = false;
+		}
+	} else {
+		$errormessage[] = "Must have a username";
+		$validated = false;
+	}
 
-			// Check if email exists in db
-			if (!empty($reg_email)) {
-				if (pg_fetch_array($resultobj_email)) {
-					$errormessage[] = "Email exists";
-					$validated = false;
-				}
-			} else {
-				$errormessage[] = "Must have an email";
-				$validated = false;
-			}
+	// Check if email exists in db
+	if (!empty($reg_email)) {
+		if (pg_fetch_array($resultobj_email)) {
+			$errormessage[] = "Email exists";
+			$validated = false;
+		}
+	} else {
+		$errormessage[] = "Must have an email";
+		$validated = false;
+	}
 
-			// Check if passwords match
-			if (!empty($reg_password) and !empty($reg_confirm_password)) {
-				if ($reg_password !== $reg_confirm_password) {
-					$errormessage[] = "Passwords do not match";
-					$validated = false;
-				}
-			} else {
-				$errormessage[] = "Must have confirmed password";
-				$validated = false;
-			}
-			
-			dbClose();
-
-			return $validated;
+	// Check if passwords match
+	if (!empty($reg_password) and !empty($reg_confirm_password)) {
+		if ($reg_password !== $reg_confirm_password) {
+			$errormessage[] = "Passwords do not match";
+			$validated = false;
+		}
+	} else {
+		$errormessage[] = "Must have confirmed password";
+		$validated = false;
+	}
+	
+	dbClose();
+	return $validated;
 }
 
 

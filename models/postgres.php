@@ -3,6 +3,7 @@
  * Postgres database interaction api.
  */
 
+/* Globals provided by the library */
 $dbconn = NULL;
 
 
