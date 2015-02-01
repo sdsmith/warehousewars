@@ -3,21 +3,27 @@
  * Postgres database interaction api.
  */
 
-/* Globals provided by the library */
-$dbconn = NULL;
 
-
-function dbConnect() {
-	global $dbconn;	
-	if (!isset($dbconn)) {
-		$dbconn = pg_connect("host=localhost dbname=smiths61 user=smiths61 password=59882") or die("Could not connect: " . pg_last_error());
+/*
+ * Return a connection to the database.
+ */
+function dbConnect() {	
+	$dbconn = pg_connect("host=localhost dbname=smiths61 user=smiths61 password=59882");
+	if ($dbconn) {
+		return $dbconn;
 	}
+	die("Could not connect to database: " . pg_last_error());
 }
 
-function dbClose() {
-	global $dbconn;
+/*
+ * Close the given connection to the database. Return true ifsuccessful, false
+ * otherwise.
+ */
+function dbClose($dbconn) {
 	if (isset($dbconn)) {
-		pg_close($dbconn);
+		return pg_close($dbconn);
+	} else {
+		die("Error: attempted to close an unset connection - " . pg_last_error());
 	}
 }
 ?>

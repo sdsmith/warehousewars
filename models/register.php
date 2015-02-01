@@ -8,7 +8,8 @@ require_once("/student/smiths61/www/ww/models/postgres.php");
  * messages. Return true on successful validation, false otherwise.
  */
 function validate_registration_info($username, $email, $password, $confirm_password) {
-	dbConnect();
+	$dbconn = dbConnect();
+	
 	pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
 	pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
 			
@@ -49,7 +50,7 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 		$validated = false;
 	}
 	
-	dbClose();
+	dbClose($dbconn);
 	return $validated;
 }
 
@@ -59,8 +60,8 @@ function validate_registration_info($username, $email, $password, $confirm_passw
  */
 function register_newuser($username, $email, $password, $confirm_password) {
 	$insert_status = false;
-
-	dbConnect();
+	$dbconn = dbConnect();
+	
 	pg_prepare($dbconn, "insert_user_info", 'INSERT INTO appuser (name, email, joindate, validated, lastlogin, highscore) VALUES ($1, $2, $3, false, $3, 0)');
 	pg_prepare($dbconn, "insert_user_password", 'INSERT INTO appuser_passwords (userid, password) VALUES ((SELECT id FROM appuser WHERE name = $1 AND email = $2), $4');
 
@@ -84,8 +85,7 @@ function register_newuser($username, $email, $password, $confirm_password) {
 		}
 	}
 
-	dbClose();
-
+	dbClose($dbconn);
 	return $insert_status;
 }
 

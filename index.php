@@ -13,7 +13,6 @@ $action = &$_POST['action'];
 
 $errormessages = array();
 
-
 $state = &$_SESSION['state'];
 $action = &$_SESSION['action'];
 $view = &$_SESSION['view'];
@@ -65,14 +64,14 @@ function display_errormessages() {
 	$errormsgstring = "";
 
 	if (!empty($errormessages)) {
-		$errormsgstring .= "<div id='errormessages'>\n";
+		$errormsgstring = "<div id=\"errormessages\">\n";
 
 		foreach ($errormessages as $error) {
-			$errormsgstring .= $error . "<br/>";
+			$errormsgstring .= $error . "<br/>\n";
 		}
-		$errormsgstring .= "</div>";
+		$errormsgstring .= "</div>\n";
 	}
-	
+
 	return $errormsgstring;
 }
 
@@ -105,7 +104,6 @@ function actionController() {
 				// User is logging in; check credentials against the database.
 				$cred_username = $_POST['login_username'];
 				$cred_password = $_POST['login_password'];
-				$authed = authenticate_user($cred_username, $cred_password);
 
 				if (login($cred_username, $cred_password)) {
 					// Authenticate
@@ -125,6 +123,7 @@ function actionController() {
 
 			if ($action == "logout") {
 				logout();
+				set_state("home_guest");
 			}
 
 			break;
@@ -175,6 +174,8 @@ actionController();
 	<body>
 		<h1>Warehouse Wars Online</h1>
 		<hr/>
+
+		<?php echo display_errormessages(); ?>
 
 		<?php include($view) ?>
 
