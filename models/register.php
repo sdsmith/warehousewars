@@ -8,17 +8,17 @@ require_once("/student/smiths61/www/ww/models/postgres.php");
  * messages. Return true on successful validation, false otherwise.
  */
 function validate_registration_info($username, $email, $password, $confirm_password) {
+	global $errormessages;
 	$dbconn = dbConnect();
 	
 	pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
 	pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
-			
-	$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
-	$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
+	
 
 	$validated = true;
 	// Check if username exists in db
 	if (!empty($reg_username)) {
+		$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
 		if (pg_fetch_array($resultobj_username)) {
 			$errormessage[] = "Username exists";
 			$validated = false;
@@ -30,6 +30,7 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 
 	// Check if email exists in db
 	if (!empty($reg_email)) {
+		$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
 		if (pg_fetch_array($resultobj_email)) {
 			$errormessage[] = "Email exists";
 			$validated = false;
@@ -68,6 +69,7 @@ function register_newuser($username, $email, $password, $confirm_password) {
 	$valid = validate_registration_info($username, $email, $password, $confirm_password);
 
 	if ($valid) {
+		echo "The registration information has been validated";
 		// Registration information is valid
 		$timestamp = date('Y-m-d H:i:s');
 

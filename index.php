@@ -18,6 +18,11 @@ $action = &$_SESSION['action'];
 $view = &$_SESSION['view'];
 
 
+// TODO(sdsmith): Each state of the machine can be associated with a view.
+// Eventually refactor the system to just require state change where the view
+// associated with it will be defined in a config file.
+
+
 /*
  * Set the current view from the 'views' folder. Can include new state to set 
  * the system to with $new_state, and tell the system to reset the current 
@@ -96,11 +101,10 @@ function actionController() {
 		case "home_guest":
 			echo "home_guest";
 			// Homepage for unauthenticated user
-			set_view("home.html");
+			set_view("home_guest.html");
 			$authenticated = false;
 		
 			if ($action == "login") {
-				echo "action: login";
 				// User is logging in; check credentials against the database.
 				$cred_username = $_POST['login_username'];
 				$cred_password = $_POST['login_password'];
@@ -112,7 +116,6 @@ function actionController() {
 			} elseif ($action == "register_user") {
 				// Go to registration page
 				set_view("register.html", "registration");
-				actionController();
 			}
 			break;
 
@@ -123,7 +126,7 @@ function actionController() {
 
 			if ($action == "logout") {
 				logout();
-				set_state("home_guest");
+				set_view("home_guest", "home_guest");
 			}
 
 			break;
@@ -142,9 +145,8 @@ function actionController() {
 				if (register_newuser($reg_username, $reg_email, $password, $confirm_password)) {
 					// Successfully registered new user
 					// Bring user back to front page and pre-populate form
-					set_view("home.html", "home_guest", true);
+					set_view("home_guest.html", "home_guest", true);
 					$_POST['login_username'] = $reg_username;
-					actionController();
 				}
 
 			} elseif ($action == "home") {
@@ -160,9 +162,11 @@ function actionController() {
 }
 
 
+/* MAIN { */
 /* Action machine based on state and user input */
 $action = $_POST['action'];
 actionController();
+/* } */
 
 ?>
 

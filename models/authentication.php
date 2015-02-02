@@ -9,8 +9,6 @@ $user_name = &$_SESSION['username'];
 $user_id = &$_SESSION['userid'];
 $user_highscore = &$_SESSION['highscore'];
 
-$error_authentication = array();
-
 
 /*
  * Authenticates the given user/password with the database. Return array of
@@ -95,6 +93,6 @@ function login($username, $password) {
  * true if logout was a success, false otherwise.
  */
 function logout() {
-	return session_destory();
+	return session_destroy();
 }
 ?>
