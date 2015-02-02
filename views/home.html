@@ -1,7 +1,6 @@
 <div id="userpanel">
 	<?php
 	echo "Welcome, " . $_SESSION['username'] . "<br>Highscore:  " . $_SESSION['highscore'];
-	var_dump($_SESSION);
 	?>
 	<form id="logout" method="post">
 		<input type="hidden" name="action" value="logout" />

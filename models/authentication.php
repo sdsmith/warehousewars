@@ -1,5 +1,5 @@
 <?php
-require_once("/student/smiths61/www/ww/models/postgres.php");
+require_once(dirname(__FILE__) . "/postgres.php");
 
 /* Library provided globals */
 $authenticated = &$_SESSION['authenticated'];
@@ -84,7 +84,6 @@ function login($username, $password) {
 		}
 	}
 
-	var_dump($_SESSION);
 	return $authenticated;
 }
 

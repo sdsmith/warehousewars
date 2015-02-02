@@ -1,6 +1,6 @@
 <?php
 
-require_once("/student/smiths61/www/ww/models/postgres.php");
+require_once(dirname(__FILE__) . "/postgres.php");
 
 
 /*

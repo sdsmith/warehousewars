@@ -2,13 +2,14 @@
 /*
  * Main application front-end controller.
  */
-session_save_path("/student/smiths61/wwwsess/ww/");
+define("APP_ROOT_PATH", dirname(__FILE__));
+session_save_path(APP_ROOT_PATH . "/sess");
 session_start();
 
 
 // TODO(sdsmith): make relative
-require_once("/student/smiths61/www/ww/models/authentication.php");
-require_once("/student/smiths61/www/ww/models/register.php");
+require_once(APP_ROOT_PATH . "/models/authentication.php");
+require_once(APP_ROOT_PATH . "/models/register.php");
 
 
 // Get current request's action
