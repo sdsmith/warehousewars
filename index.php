@@ -158,7 +158,7 @@ function actionController() {
 					die("Authenticated user was on the registration page");
 				}
 
-				set_view("home.html", "home_guest", true);
+				set_view("home_guest.html", "home_guest", true);
 			}
 			break;
 	}
