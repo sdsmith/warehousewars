@@ -144,9 +144,7 @@ function actionController() {
 				$reg_password = &$_POST['reg_password'];
 				$reg_confirm_password = &$_POST['reg_confirm_password'];
 				
-				echo "ABOUT TO REG USER<br/>";
 				if (register_newuser($reg_username, $reg_email, $reg_password, $reg_confirm_password)) {
-					echo "USER REGISTERED<br/>";
 					// Successfully registered new user
 					// Bring user back to front page and pre-populate form
 					set_view("home_guest.html", "home_guest", true);

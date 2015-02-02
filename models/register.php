@@ -41,7 +41,6 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	}
 
 	// Check if passwords match
-	var_dump($password); var_dump($confirm_password);
 	if (!empty($password) and !empty($confirm_password)) {
 		if ($password !== $confirm_password) {
 			$errormessages[] = "Passwords do not match";
@@ -52,8 +51,6 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 		$validated = false;
 	}
 	
-	var_dump($validated);
-	echo "is what validate_registration_info will return<br/>";
 	dbClose($dbconn);
 	return $validated;
 }
@@ -65,20 +62,20 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 function register_newuser($username, $email, $password, $confirm_password) {
 	global $errormessages;
 	$insert_status = false;
-	$dbconn = dbConnect();
-	
-	pg_prepare($dbconn, "insert_user_info", 'INSERT INTO appuser (name, email, joindate, validated, lastlogin, highscore) VALUES ($1, $2, $3, false, $3, 0)');
-	pg_prepare($dbconn, "insert_user_password", 'INSERT INTO appuser_passwords (userid, password) VALUES ((SELECT id FROM appuser WHERE name = $1 AND email = $2), $4');
 
 	$valid = validate_registration_info($username, $email, $password, $confirm_password);
+
+	$dbconn = dbConnect();	
+	pg_prepare($dbconn, "insert_user_info", 'INSERT INTO appuser (name, email, joindate, validated, lastlogin, highscore) VALUES ($1, $2, $3, false, $4, 0)');
+	pg_prepare($dbconn, "insert_user_password", 'INSERT INTO appuser_passwords (userid, password) VALUES ((SELECT id FROM appuser WHERE name = $1 AND email = $2), $3)');
 
 	if ($valid) {
 		// Registration information is valid
 		$timestamp = date('Y-m-d H:i:s');
 
-		$result = pg_execute($dbconn, "insert_user_info", array($username, $email, $timestamp));
+		$result = pg_execute($dbconn, "insert_user_info", array($username, $email, $timestamp, $timestamp));
 		if ($result) {
-			$result = pg_execute($dbconn, "insert_user_password", array($password));
+			$result = pg_execute($dbconn, "insert_user_password", array($username, $email, $password));
 			if ($result) {
 				$insert_status = true;
 			} else {
@@ -90,8 +87,6 @@ function register_newuser($username, $email, $password, $confirm_password) {
 		}
 	}
 
-	var_dump($insert_status);
-	echo "is what register_user will return<br/>";
 	dbClose($dbconn);
 	return $insert_status;
 }
