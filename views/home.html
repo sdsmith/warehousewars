@@ -9,8 +9,8 @@
 </div>
 
 <hr/>
-<h3>Highscores - Top 10</h3>
-<ul>
-	<?php
-	?>
-</ul>
+<?php
+require_once(dirname(__FILE__) . "/../models/gamestats.php");
+
+echo display_highscores(get_highscores(10));
+?>
