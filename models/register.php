@@ -41,6 +41,7 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	}
 
 	// Check if passwords match
+	var_dump($password); var_dump($confirm_password);
 	if (!empty($password) and !empty($confirm_password)) {
 		if ($password !== $confirm_password) {
 			$errormessages[] = "Passwords do not match";
@@ -51,6 +52,8 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 		$validated = false;
 	}
 	
+	var_dump($validated);
+	echo "is what validate_registration_info will return<br/>";
 	dbClose($dbconn);
 	return $validated;
 }
