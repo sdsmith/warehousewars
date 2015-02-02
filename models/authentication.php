@@ -4,11 +4,11 @@ require_once("/student/smiths61/www/ww/models/postgres.php");
 /* Library provided globals */
 $authenticated = &$_SESSION['authenticated'];
 
-/* Session variables set on successful login */
-$user_name = &$_SESSION['username'];
-$user_id = &$_SESSION['userid'];
-$user_highscore = &$_SESSION['highscore'];
-
+/* Session variables set on successful login
+$_SESSION['username'];
+$_SESSION['userid'];
+$_SESSION['highscore'];
+*/
 
 /*
  * Authenticates the given user/password with the database. Return array of
@@ -68,7 +68,7 @@ function login($username, $password) {
 		$emptyinfo = true;
 	}
 
-	// Check password has ben entered
+	// Check password has been entered
 	if (empty($password)) {
 		$errormessages[] = "Must enter a password";
 		$emptyinfo = true;
@@ -77,13 +77,14 @@ function login($username, $password) {
 	if (!$emptyinfo) {
 		$authed = authenticate_user($username, $password);
 		if ($authed) {
-			$user_name = $cred_username;
-			$user_id = $authed['id'];
-			$user_highscore = $authed['highscore'];
+			$_SESSION['username'] = $username;
+			$_SESSION['userid'] = $authed['id'];
+			$_SESSION['highscore'] = $authed['highscore'];
 			$authenticated = true;
 		}
 	}
 
+	var_dump($_SESSION);
 	return $authenticated;
 }
 
