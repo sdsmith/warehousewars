@@ -123,21 +123,9 @@ function actionController() {
 			}
 			break;
 
-		case "home_authenticated":
-			// Homepage for authenticated user
-			set_view("home.html");
-
-			if ($action == "logout") {
-				logout();
-				set_view("home_guest.html", "home_guest");
-			}
-
-			break;
-
 		case "registration":
 			// Registration page
 			set_view("register.html");
-
 
 			if ($action == "registration_submit") {
 				$reg_username = &$_POST['reg_username'];
@@ -161,6 +149,34 @@ function actionController() {
 				set_view("home_guest.html", "home_guest", true);
 			}
 			break;
+
+		case "home_authenticated":
+			// Homepage for authenticated user
+			set_view("home.html");
+
+			if (!$authenticated) {
+				die("Unauthenticated user on authenticated only page");
+			}
+
+			if ($action == "logout") {
+				logout();
+				set_view("home_guest.html", "home_guest");
+			} elseif ($action == "play_warehouse_wars") {
+				set_view("ww.html", "warehouse_wars");
+			}
+
+			break;
+
+		case "warehouse_wars":
+			// Page for playing warehouse wars
+			set_view("ww.html");
+			
+			if ($action == "home") {
+				set_view("home.html", "home_authenticated");
+			} elseif ($action == "logout") {
+				logout();
+				set_view("home_guest.html", "home_guest");
+			}
 	}
 }
 
