@@ -5,6 +5,8 @@
 session_save_path("/student/smiths61/wwwsess/ww/");
 session_start();
 
+
+// TODO(sdsmith): make relative
 require_once("/student/smiths61/www/ww/models/authentication.php");
 require_once("/student/smiths61/www/ww/models/register.php");
 
@@ -35,7 +37,7 @@ function set_view($new_view, $new_state=NULL, $reset_action=false) {
 	global $state;
 	$view = "views/" . $new_view;
 
-	if (isset($state)) {
+	if (isset($new_state)) {
 		set_state($new_state);
 	}
 
@@ -97,6 +99,7 @@ function actionController() {
 		set_state("home_guest");
 	}
 
+
 	// Determine current state to serve content
 	switch ($state) {
 		case "home_guest":
@@ -133,12 +136,14 @@ function actionController() {
 		case "registration":
 			// Registration page
 			set_view("register.html");
-		
+
+
 			if ($action == "registration_submit") {
 				$reg_username = &$_POST['reg_username'];
 				$reg_email = &$_POST['reg_email'];
 				$reg_password = &$_POST['reg_password'];
 				$reg_confirm_password = &$_POST['reg_confirm_password'];
+				
 
 				if (register_newuser($reg_username, $reg_email, $password, $confirm_password)) {
 					// Successfully registered new user

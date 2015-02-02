@@ -60,6 +60,7 @@ function validate_registration_info($username, $email, $password, $confirm_passw
  * Insert user into the database. Return true on successful insert, false otherwise.
  */
 function register_newuser($username, $email, $password, $confirm_password) {
+	global $errormessages;
 	$insert_status = false;
 	$dbconn = dbConnect();
 	
@@ -69,7 +70,6 @@ function register_newuser($username, $email, $password, $confirm_password) {
 	$valid = validate_registration_info($username, $email, $password, $confirm_password);
 
 	if ($valid) {
-		echo "The registration information has been validated";
 		// Registration information is valid
 		$timestamp = date('Y-m-d H:i:s');
 
