@@ -17,8 +17,8 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 
 	$validated = true;
 	// Check if username exists in db
-	if (!empty($reg_username)) {
-		$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
+	if (!empty($username)) {
+		$resultobj_username = pg_execute($dbconn, "check_username_existance", array($username));
 		if (pg_fetch_array($resultobj_username)) {
 			$errormessages[] = "Username exists";
 			$validated = false;
@@ -29,8 +29,8 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	}
 
 	// Check if email exists in db
-	if (!empty($reg_email)) {
-		$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
+	if (!empty($email)) {
+		$resultobj_email = pg_execute($dbconn, "check_email_existance", array($email));
 		if (pg_fetch_array($resultobj_email)) {
 			$errormessages[] = "Email exists";
 			$validated = false;
@@ -41,8 +41,8 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	}
 
 	// Check if passwords match
-	if (!empty($reg_password) and !empty($reg_confirm_password)) {
-		if ($reg_password !== $reg_confirm_password) {
+	if (!empty($password) and !empty($confirm_password)) {
+		if ($password !== $confirm_password) {
 			$errormessages[] = "Passwords do not match";
 			$validated = false;
 		}
