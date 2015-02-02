@@ -6,6 +6,7 @@ session_save_path("/student/smiths61/wwwsess/ww/");
 session_start();
 
 require_once("/student/smiths61/www/ww/models/authentication.php");
+require_once("/student/smiths61/www/ww/models/register.php");
 
 
 // Get current request's action

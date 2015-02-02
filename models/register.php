@@ -73,7 +73,7 @@ function register_newuser($username, $email, $password, $confirm_password) {
 		// Registration information is valid
 		$timestamp = date('Y-m-d H:i:s');
 
-		$result = pg_execute($dbconn, "insert_user_info", array($username, $email, $timestamp);
+		$result = pg_execute($dbconn, "insert_user_info", array($username, $email, $timestamp));
 		if ($result) {
 			$result = pg_execute($dbconn, "insert_user_password", array($password));
 			if ($result) {
