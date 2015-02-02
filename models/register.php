@@ -20,11 +20,11 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	if (!empty($reg_username)) {
 		$resultobj_username = pg_execute($dbconn, "check_username_existance", array($reg_username));
 		if (pg_fetch_array($resultobj_username)) {
-			$errormessage[] = "Username exists";
+			$errormessages[] = "Username exists";
 			$validated = false;
 		}
 	} else {
-		$errormessage[] = "Must have a username";
+		$errormessages[] = "Must have a username";
 		$validated = false;
 	}
 
@@ -32,22 +32,22 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	if (!empty($reg_email)) {
 		$resultobj_email = pg_execute($dbconn, "check_email_existance", array($reg_email));
 		if (pg_fetch_array($resultobj_email)) {
-			$errormessage[] = "Email exists";
+			$errormessages[] = "Email exists";
 			$validated = false;
 		}
 	} else {
-		$errormessage[] = "Must have an email";
+		$errormessages[] = "Must have an email";
 		$validated = false;
 	}
 
 	// Check if passwords match
 	if (!empty($reg_password) and !empty($reg_confirm_password)) {
 		if ($reg_password !== $reg_confirm_password) {
-			$errormessage[] = "Passwords do not match";
+			$errormessages[] = "Passwords do not match";
 			$validated = false;
 		}
 	} else {
-		$errormessage[] = "Must have confirmed password";
+		$errormessages[] = "Must have confirmed password";
 		$validated = false;
 	}
 	
@@ -87,6 +87,8 @@ function register_newuser($username, $email, $password, $confirm_password) {
 		}
 	}
 
+	var_dump($insert_status);
+	echo "is what register_user will return<br/>";
 	dbClose($dbconn);
 	return $insert_status;
 }
