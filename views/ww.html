@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta HTTP-EQUIV="EXPIRES" CONTENT="-1">
 		<title>Computing Science 309 Warehouse Wars</title>
-		<script language="javascript" src="../static/ww.js" > </script>
+		<script language="javascript" src="static/javascript/ww.js" > </script>
 
 		<script> 
 			stage=null;
@@ -38,11 +38,11 @@
 							<h2>Legend</h2>
 							<table class="legend">
 								<tr>
-									<td> <img src="icons/blank.gif" id="blankImage" /> </td>
-									<td> <img src="icons/emblem-package-2-24.png" id="boxImage" /> </td>
-									<td> <img src="icons/face-cool-24.png" id="playerImage" /> </td>
-									<td> <img src="icons/face-devil-grin-24.png" id="monsterImage" /> </td>
-									<td> <img src="icons/wall.jpeg" id="wallImage" /> </td>
+									<td> <img src="static/icons/blank.gif" id="blankImage" /> </td>
+									<td> <img src="static/icons/emblem-package-2-24.png" id="boxImage" /> </td>
+									<td> <img src="static/icons/face-cool-24.png" id="playerImage" /> </td>
+									<td> <img src="static/icons/face-devil-grin-24.png" id="monsterImage" /> </td>
+									<td> <img src="static/icons/wall.jpeg" id="wallImage" /> </td>
 								</tr>
 								<tr>
 									<td> Empty <br/> Square </td>
@@ -55,19 +55,19 @@
 							<h2>Controls</h2>
 							<table class="controls">
 								<tr>
-									<td><img src="icons/north_west.svg" onclick="alert('clicked north west');" /></td>
-									<td><img src="icons/north.svg" /></td>
-									<td><img src="icons/north_east.svg" /></td>
+									<td><img src="static/icons/north_west.svg" onclick="alert('clicked north west');" /></td>
+									<td><img src="static/icons/north.svg" /></td>
+									<td><img src="static/icons/north_east.svg" /></td>
 								</tr>
 								<tr>
-									<td><img src="icons/west.svg" /></td>
+									<td><img src="static/icons/west.svg" /></td>
 									<td>&nbsp;</td>
-									<td><img src="icons/east.svg" /></td>
+									<td><img src="static/icons/east.svg" /></td>
 								</tr>
 								<tr>
-									<td><img src="icons/south_west.svg" /></td>
-									<td><img src="icons/south.svg" /></td>
-									<td><img src="icons/south_east.svg" /></td>
+									<td><img src="static/icons/south_west.svg" /></td>
+									<td><img src="static/icons/south.svg" /></td>
+									<td><img src="static/icons/south_east.svg" /></td>
 								</tr>
 							</table>
 						</center>
@@ -75,6 +75,14 @@
 				</tr>
 			</table>
 		</center>
+
+	<div id="home_button">
+		<form id="home_button_form" method="post">
+			<input type="hidden" name="action" value="home" />
+			<input type="submit" value="Home" />
+		</form>
+	</div>
+	
 	</body>
 </html>
 
