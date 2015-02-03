@@ -24,12 +24,22 @@ function Stage(width, height, stageElementID){
 // initialize an instance of the game
 Stage.prototype.initialize=function(){
 	// Create a table of blank images, give each image an ID so we can reference it later
-	var s='<table>';
-	// YOUR CODE GOES HERE
-	s+="</table>";
+	var s='<table>\n';
+
+	for (x = 0; x < this.width; x++) {
+		s += "<tr>\n";
+		for (y = 0; y < this.height; y++) {
+			s += "<td><img id='stage_"+x+"_"+y+"' src='"+ this.blankImageSrc + "' /></td>\n";
+		}
+		s += "</tr>\n";
+	}
+	s+="</table>\n";
+	
 	// Put it in the stageElementID (innerHTML)
+	document.getElementById(this.stageElementID).innerHTML = s;
 
 	// Add the player to the center of the stage
+	
 
 	// Add walls around the outside of the stage, so actors can't leave the stage
 
@@ -39,7 +49,7 @@ Stage.prototype.initialize=function(){
 
 }
 // Return the ID of a particular image, useful so we don't have to continually reconstruct IDs
-Stage.prototype.getStageId=function(x,y){ return ""; }
+Stage.prototype.getStageId=function(x,y){ return "stage_"+x+"_"+y; }
 
 Stage.prototype.addActor=function(actor){
 	this.actors.push(actor);
