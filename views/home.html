@@ -1,24 +1,34 @@
-<div id="userpanel">
-	<?php
-	echo "Welcome, " . $_SESSION['username'] . "<br>Highscore:  " . $_SESSION['highscore'];
-	?>
-	<form id="logout" method="post">
-		<input type="hidden" name="action" value="logout" />
-		<input type="submit" value="Logout" />
-	</form>
-</div>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Warehouse Wars Online</title>
+	</head>
+	<body>
+		<h1>Warehouse Wars Online</h1>
+		<hr/>
 
-<hr/>
-<div id="warehouse_wars_link">
-	<form id="warehouse_wars_link_form" method="post">
-		<input type="hidden" name="action" value="play_warehouse_wars" />
-		<input type="submit" value="Play now!" />
-	</form>
-</div>
+		<div id="userpanel">
+			<?php
+			echo "Welcome, " . $_SESSION['username'] . "<br>Highscore:  " . $_SESSION['highscore'];
+			?>
+			<form id="logout" method="post">
+				<input type="hidden" name="action" value="logout" />
+				<input type="submit" value="Logout" />
+			</form>
+		</div>
 
-<hr/>
-<?php
-require_once(dirname(__FILE__) . "/../models/gamestats.php");
+		<hr/>
+		<div id="warehouse_wars_link">
+			<form id="warehouse_wars_link_form" method="post">
+				<input type="hidden" name="action" value="play_warehouse_wars" />
+				<input type="submit" value="Play now!" />
+			</form>
+		</div>
 
-echo display_highscores(get_highscores(10));
-?>
+		<hr/>
+		<?php
+		require_once(dirname(__FILE__) . "/../models/gamestats.php");
+		echo display_highscores(get_highscores(10));
+		?>
+	</body>
+</html>

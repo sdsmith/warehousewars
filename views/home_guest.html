@@ -1,24 +1,38 @@
-<div id="authentication">	
-	<h3>Login</h3>
-
-	<form id="login_form" method="post">
-		<input type="hidden" name="action" value="login" />
-
-		Username: <input type="text" name="login_username" 
-					value="<?php echo $_POST['login_username']; ?>" /><br/>
-		Password: <input type="password" name="login_password" /><br/>
-		<input type="submit" value="Login" />
-	</form>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Warehouse Wars Online</title>
+	</head>
+	<body>
+		<h1>Warehouse Wars Online</h1>
+		<hr/>
 	
-	<form id="register_redirect" method="post">
-		<input type="hidden" name="action" value="register_user" />
-		<input type="submit" value="Register" />
-	</form>
-</div>
+		<div id="authentication">
+			<h3>Login</h3>
+			<?php 
+			require_once(dirname(__FILE__) . "/../index.php");
+			echo display_errormessages() . "<br/>"; 
+			?>
 
-<hr/>
-<?php
-require_once(dirname(__FILE__) . "/../models/gamestats.php");
+			<form id="login_form" method="post">
+				<input type="hidden" name="action" value="login" />
 
-echo display_highscores(get_highscores(10));
-?>
+				Username: <input type="text" name="login_username" 
+							value="<?php echo $_POST['login_username']; ?>" /><br/>
+				Password: <input type="password" name="login_password" /><br/>
+				<input type="submit" value="Login" />
+			</form>
+	
+			<form id="register_redirect" method="post">
+				<input type="hidden" name="action" value="register_user" />
+				<input type="submit" value="Register" />
+			</form>
+		</div>
+
+		<hr/>
+		<?php
+		require_once(dirname(__FILE__) . "/../models/gamestats.php");
+		echo display_highscores(get_highscores(10));
+		?>
+	</body>
+</html>

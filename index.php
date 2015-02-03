@@ -189,18 +189,7 @@ actionController();
 
 ?>
 
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Warehouse Wars Online</title>
-	</head>
-	<body>
-		<h1>Warehouse Wars Online</h1>
-		<hr/>
+<?php include($view) ?>
 
-		<?php echo display_errormessages(); ?>
 
-		<?php include($view) ?>
 
-	</body>
-</html>
