@@ -26,9 +26,9 @@ Stage.prototype.initialize=function(){
 	// Create a table of blank images, give each image an ID so we can reference it later
 	var s='<table>\n';
 
-	for (x = 0; x < this.width; x++) {
+	for (var x = 0; x < this.width; x++) {
 		s += "<tr>\n";
-		for (y = 0; y < this.height; y++) {
+		for (var y = 0; y < this.height; y++) {
 			s += "<td><img id='stage_"+x+"_"+y+"' src='"+ this.blankImageSrc + "' /></td>\n";
 		}
 		s += "</tr>\n";
@@ -55,13 +55,18 @@ Stage.prototype.addActor=function(actor){
 	this.actors.push(actor);
 }
 
+/*
+ * Removes the given actor from the stage and return the removed actor.
+ */
 Stage.prototype.removeActor=function(actor){
 	// Lookup javascript array manipulation (indexOf and splice).
+	var actor_index = this.actors.indexOf(actor);
+	return this.actors.splice(actor_index, 1);
 }
 
 // Set the src of the image at stage location (x,y) to src
 Stage.prototype.setImage=function(x, y, src){
-
+	document.getElementById(this.getStageId(x,y)).innerHTML = "<img src=\""+src+" />";
 }
 
 // Take one step in the animation of the game.  
@@ -77,3 +82,29 @@ Stage.prototype.getActor=function(x, y){
 	return null;
 }
 // End Class Stage
+
+
+
+/* BEGIN Class Actor */
+/*
+ * Actor constructor. Take stage position (x,y) and the source of the image to
+ * be displayed in its position.
+ */
+function Actor(x, y, imgsrc) {
+	this.pos_x = x;
+	this.pos_y = y;
+	this.imgsrc = imgsrc;
+
+	
+}
+/* END Class Actor */
+
+
+
+
+
+
+
+
+
+
