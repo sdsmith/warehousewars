@@ -93,6 +93,7 @@ function actionController() {
 	global $state;
 	global $action;
 	global $view;
+	global $errormessages;
 
 	// First visit
 	if (!isset($state)) {
@@ -119,7 +120,8 @@ function actionController() {
 						set_view("home.html", "home_authenticated");
 					}
 				} else {
-					$errormessages[] = "Please enter alpha-numeric characters only";
+					$_POST['login_username'] = "";
+					$errormessages[] = "Please enter alpha-numeric characters only.";
 				}
 			} elseif ($action == "register_user") {
 				// Go to registration page

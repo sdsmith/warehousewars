@@ -44,7 +44,7 @@ function display_highscores($highscorearray) {
 		$highscores_html .= "<table>\n";
 
 		foreach ($highscorearray as $entry) {
-			$highscores_html .= "\t<tr>\n\t\t<td>" . $entry[0] . "</td><td>" . $entry[1] . "</td>\n\t</tr>";
+			$highscores_html .= "\t<tr>\n\t\t<td>" . $entry[0] . "</td><td>" . $entry[1] . "</td>\n\t</tr>\n";
 		}
 
 		$highscores_html .= "</table>\n";
