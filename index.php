@@ -7,10 +7,9 @@ session_save_path(APP_ROOT_PATH . "/sess");
 session_start();
 
 
-// TODO(sdsmith): make relative
 require_once(APP_ROOT_PATH . "/models/authentication.php");
 require_once(APP_ROOT_PATH . "/models/register.php");
-
+require_once(APP_ROOT_PATH . "/models/inputvalidation.php");
 
 // Get current request's action
 $action = &$_POST['action'];
@@ -112,10 +111,15 @@ function actionController() {
 				// User is logging in; check credentials against the database.
 				$cred_username = $_POST['login_username'];
 				$cred_password = $_POST['login_password'];
-
-				if (login($cred_username, $cred_password)) {
-					// Authenticate
-					set_view("home.html", "home_authenticated");
+				
+				// Validate input
+				if (whitelist_input($cred_username) and whitelist_input($cred_password)) {
+					if (login($cred_username, $cred_password)) {
+						// Authenticate
+						set_view("home.html", "home_authenticated");
+					}
+				} else {
+					$errormessages[] = "Please enter alpha-numeric characters only";
 				}
 			} elseif ($action == "register_user") {
 				// Go to registration page
@@ -163,6 +167,23 @@ function actionController() {
 				set_view("home_guest.html", "home_guest");
 			} elseif ($action == "play_warehouse_wars") {
 				set_view("ww.html", "warehouse_wars");
+			} elseif ($action == "settings") {
+				set_view("settings.html", "settings");
+			}
+
+			break;
+
+		case "settings":
+			set_view("settings.html");
+
+			if (!$authenticated) {
+				die("Unauthenticated user on authenticated only page");
+			}
+
+			if ($action == "settings_submit") {
+				// TODO(sdsmith): confirm inputs and update database if valid.
+			} elseif ($action == "home") {
+				set_view("home.html", "home_authenticated");
 			}
 
 			break;
@@ -171,12 +192,18 @@ function actionController() {
 			// Page for playing warehouse wars
 			set_view("ww.html");
 			
+			if (!$authenticated) {
+				die("Unauthenticated user on authenticated only page");
+			}
+
 			if ($action == "home") {
 				set_view("home.html", "home_authenticated");
 			} elseif ($action == "logout") {
 				logout();
 				set_view("home_guest.html", "home_guest");
 			}
+
+			break;
 	}
 }
 
