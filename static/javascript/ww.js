@@ -1,10 +1,10 @@
 // NOTE(sdsmith): To be more efficient, we could use a render (draw) queue that
 // only renders items that have been changed. However this is unecessary for 
 // the amount of objects we use.
+// NOTE(sdsmith): Could add actors to a tick/update queue so that only items
+// that need to be updated on a tick get called.
 
-// Stage
-// Note: Yet another way to declare a class, using .prototype.
-
+// BEGIN Class Stage
 /*
  * Stage class.
  *
@@ -130,7 +130,7 @@ Stage.prototype.processKeydown = function(event) {
 		this.player.handleKeydown(event);
 	}
 }
-// End Class Stage
+// END Class Stage
 
 
 

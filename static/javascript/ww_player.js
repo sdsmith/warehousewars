@@ -12,26 +12,44 @@ var key_C = 67;
 
 /* START Class Player */
 /*
- * Player constructor.
+ * Player constructor. Has a default image set. If image_source if set, it will
+ * be used as the base image for the actor.
  */
-function Player(x, y, stage_ref) {
-	var image_source = ;
-	this._actor = new Actor(x, y, image_source);
+function Player(x, y, stage_ref, image_source=null) {
 	this._stage = stage_ref;
+
+	// Set actor's image
+	var default_image_source = this._stage.playerImageSrc;
+	if (image_source) {
+		default_image_source = image_source;
+	}
+	this._actor = new Actor(x, y, image_source, 0);
 }
 
+/*
+ * Return actor's position on the stage as an array [x,y].
+ */
 Player.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
+/*
+ * Set actor's position to the give stage co-ordinates,
+ */
 Player.prototype.setPosition = function(x, y) {
 	return this._actor.setPosition();
 }
 
+/*
+ * Return actor's image.
+ */
 Player.prototype.getImage = function() {
 	return this._actor.getImage();
 }
 
+/*
+ * Set actor's image.
+ */
 Player.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
@@ -54,6 +72,10 @@ Player.prototype.immediateMove = function(dx, dy) {
 	this._stage.setImage(pos[0], pos[1], this.getImage());
 }
 
+/*
+ * Called every stage tick. Player's action is not limited to stage ticks
+ * (it reacts instantly), and so performs no operation on stage tick.
+ */
 Player.prototype.tick = function() {
 }
 

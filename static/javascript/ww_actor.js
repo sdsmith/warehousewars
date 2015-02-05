@@ -3,8 +3,7 @@
  * Actor constructor. Take stage position (x,y) and the source of the image to
  * be displayed in its position.
  */
-function Actor(x, y, stage_ref, image_source="", tick_delay=0) {
-	this._stage = stage_ref
+function Actor(x, y, image_source, tick_delay) {
 	this.pos_x = x;
 	this.pos_y = y;
 	this.image_source = image_source;
@@ -13,21 +12,30 @@ function Actor(x, y, stage_ref, image_source="", tick_delay=0) {
 }
 
 /*
- * Return array of x, y position.
+ * Return array of x, y position relative to the stage.
  */
 Actor.prototype.getPosition = function() {
 	return [this.pos_x, this.pos_y];
 }
 
+/*
+ * Set actor's position on the stage to the given co-ordinates.
+ */
 Actor.prototype.setPosition = function(x, y) {
 	this.pos_x = x;
 	this.pos_y = y;
 }
 
+/*
+ * Return actor's image.
+ */
 Actor.prototype.getImage = function() {
 	return this.imgsrc;
 }
 
+/*
+ * Set actor's image to given image.
+ */
 Actor.prototype.setImage = function(image_source) {
 	this.imgsrc = image_source;
 }

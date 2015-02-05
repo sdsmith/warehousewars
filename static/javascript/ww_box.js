@@ -1,28 +1,50 @@
 /* START Class Box */
 /*
- * Wall constructor. Take stage position (x,y).
+ * Box constructor. Take stage position (x,y).
  */
-function Wall(x, y) {
-	var image_source = ;
-	this._actor = Actor(x, y, image_source);
+function Box(x, y, image_source=null) {
+	// Check default image source
+	var default_image_source = "";
+	if (image_source) {
+		default_image_source = image_source;
+	}
+
+	this._actor = Actor(x, y, default_image_source, 0);
 }
 
-Wall.prototype.getPosition = function() {
+/*
+ * Return position of actor relative to the stage as an array [x,y].
+ */
+Box.prototype.getPosition = function() {
 	return self._actor.getPosition();
 }
 
-Wall.prototype.getImage = function() {
+/*
+ * Return the actor's image.
+ */
+Box.prototype.getImage = function() {
 	return this._actor.getImage();
 }
 
-Wall.prototype.tick = function() {
+/*
+ * Set actor's image.
+ */
+Box.prototype.setImage = function(image_source) {
+	self._actor.setImage(image_source);
+}
+
+/*
+ * Called by the stage every tick. Since it is a box, it does not perform any
+ * action on a tick.
+ */ 
+Box.prototype.tick = function() {
 }
 
 /*
  * Called when object would like to move. Return false, as a wall will never
  * move.
  */
-Wall.prototype.move = function(dx, dy) {
-	return false;
+Box.prototype.move = function(dx, dy) {
+	return this._actor.move(dx, dy);
 }
 /* END Class Box */
