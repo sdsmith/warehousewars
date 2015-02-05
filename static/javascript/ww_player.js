@@ -19,7 +19,7 @@ function Player(stage_ref, x, y, image_source=null) {
 	this._stage = stage_ref;
 
 	// Set actor's image
-	var default_image_source = this._stage.playerImageSrc;
+	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}

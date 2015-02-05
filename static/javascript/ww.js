@@ -21,7 +21,7 @@ function Stage(width, height, stageElementID) {
 	this.square_dimension = 24;
 
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
-	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2)); // a special actor, the player
+	this.player = null; // a special actor, the player
 
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;
@@ -62,6 +62,7 @@ Stage.prototype.initialize = function() {
 	}
 
 	// Add Player to the stage
+	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.playerImageSrc);
 	this.addActor(this.player);
 
 	// Add some Boxes to the stage
