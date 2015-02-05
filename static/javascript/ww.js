@@ -20,7 +20,7 @@ function Stage(width, height, stageElementID) {
 	this.height = height;
 
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
-	this.player = new Player(Math.floor(this.width / 2), Math.floor(this.height / 2), this); // a special actor, the player
+	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2)); // a special actor, the player
 
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;

@@ -15,7 +15,7 @@ var key_C = 67;
  * Player constructor. Has a default image set. If image_source if set, it will
  * be used as the base image for the actor.
  */
-function Player(x, y, stage_ref, image_source=null) {
+function Player(stage_ref, x, y, image_source=null) {
 	this._stage = stage_ref;
 
 	// Set actor's image

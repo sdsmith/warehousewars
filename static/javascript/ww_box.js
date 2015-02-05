@@ -2,14 +2,14 @@
 /*
  * Box constructor. Take stage position (x,y).
  */
-function Box(x, y, image_source=null) {
+function Box(stage_ref, x, y, image_source=null) {
 	// Check default image source
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}
 
-	this._actor = new Actor(x, y, default_image_source, 0);
+	this._actor = new Actor(stage_ref, x, y, default_image_source, 0);
 }
 
 /*
