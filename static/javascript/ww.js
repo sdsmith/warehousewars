@@ -43,7 +43,7 @@ Stage.prototype.initialize = function() {
 	for (var x = 0; x < this.width; x++) {
 		board_html += "<tr>\n";
 		for (var y = 0; y < this.height; y++) {
-			board_html += "<td width='"+this.square_dimension.toString()+"' height='"+this.square_dimension.toString()+"' ><img id='stage_"+x+"_"+y+"' src='"+this.blankImageSrc+"' /></td>\n";
+			board_html += "<td><img id='stage_"+x+"_"+y+"' width='"+this.square_dimension.toString()+"' height='"+this.square_dimension.toString()+"' src='"+ this.blankImageSrc + "' /></td>\n";
 		}
 		board_html += "</tr>\n";
 	}
