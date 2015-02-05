@@ -3,7 +3,8 @@
  * Actor constructor. Take stage position (x,y) and the source of the image to
  * be displayed in its position.
  */
-function Actor(x, y, image_source, tick_delay) {
+function Actor(stage_ref, x, y, image_source, tick_delay) {
+	this._stage = stage_ref;
 	this.pos_x = x;
 	this.pos_y = y;
 	this.image_source = image_source;
@@ -58,7 +59,7 @@ Actor.prototype.move = function(dx, dy) {
 	var canMove = true;
 	var other_actor = this._stage.getActor(new_x, new_y);
 	if (other_actor) {
-		canMove = this.move(dx, dy);
+		canMove = other_actor.move(dx, dy);
 	}
 
 	if (canMove) {
