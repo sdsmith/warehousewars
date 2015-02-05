@@ -55,7 +55,7 @@ Stage.prototype.initialize = function() {
 	for(var x = 0; x < this.width; x++){
 		for(var y = 0; y < this.height; y++){
 			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
-				this.addActor(new Wall(x, y));
+				this.addActor(new Wall(x, y, this.wallImageSrc));
 			}
 		}
 	}
@@ -94,8 +94,9 @@ Stage.prototype.setImage = function(x, y, src) {
 Stage.prototype.tick = function() {
 	for(var i = 0; i < this.actors.length; i++){
 		this.actors[i].tick();
+
 		var actor_pos = this.actors[i].getPosition();
-		this.setImage(actor_pos[0], actor_pos[1]);
+		this.setImage(actor_pos[0], actor_pos[1], this.actors[i].getImage());
 	}
 }
 
@@ -115,7 +116,6 @@ Stage.prototype.getActor = function(x, y) {
 
 	return actor;		
 }
-
 
 /*
  * Calls appropriate game action based on given keypdown event.
