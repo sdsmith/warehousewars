@@ -1,3 +1,7 @@
+// NOTE(sdsmith): To be more efficient, we could use a render (draw) queue that
+// only renders items that have been changed. However this is unecessary for 
+// the amount of objects we use.
+
 // Stage
 // Note: Yet another way to declare a class, using .prototype.
 
@@ -50,7 +54,9 @@ Stage.prototype.initialize = function() {
 	// Add walls around the outside of the stage, so actors can't leave the stage
 	for(var x = 0; x < this.width; x++){
 		for(var y = 0; y < this.height; y++){
-			this.addActor(new Wall(x, y));
+			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
+				this.addActor(new Wall(x, y));
+			}
 		}
 	}
 
@@ -88,13 +94,26 @@ Stage.prototype.setImage = function(x, y, src) {
 Stage.prototype.tick = function() {
 	for(var i = 0; i < this.actors.length; i++){
 		this.actors[i].tick();
+		var actor_pos = this.actors[i].getPosition();
+		this.setImage(actor_pos[0], actor_pos[1]);
 	}
 }
 
 // return the first actor at coordinates (x,y) return null if there is no such actor
 // there should be only one actor at (x,y)!
 Stage.prototype.getActor = function(x, y) {
-	return null;
+	var i = 0; 
+	var actor = null;
+
+	while (i < this.actors.length && !actor) {
+		var actor_pos = this.actors[i].getPosition();
+		
+		if (actor_pos[0] == x && actor_pos[1] == y) {
+			actor = this.actors[i];
+		}
+	}
+
+	return actor;		
 }
 
 
@@ -103,7 +122,6 @@ Stage.prototype.getActor = function(x, y) {
  * Reference: https://developer.mozilla.org/en-US/docs/Web/Events/keydown
  */
 Stage.prototype.processKeydown(event) {
-	
 	var keyCode = event.keyCode // Supported by all broswers, but depricated
 	// http://www.javascripter.net/faq/keycodes.htm
 

@@ -24,7 +24,7 @@ Player.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Player.prototype.setPosition = function() {
+Player.prototype.setPosition = function(x, y) {
 	return this._actor.setPosition();
 }
 
@@ -52,6 +52,9 @@ Player.prototype.immediateMove = function(dx, dy) {
 	this._actor.move(dx, dy);
 	var pos = this.getPosition();
 	this._stage.setImage(pos[0], pos[1], this.getImage());
+}
+
+Player.prototype.tick = function() {
 }
 
 /*
