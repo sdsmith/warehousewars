@@ -121,7 +121,7 @@ Stage.prototype.getActor = function(x, y) {
  * Calls appropriate game action based on given keypdown event.
  * Reference: https://developer.mozilla.org/en-US/docs/Web/Events/keydown
  */
-Stage.prototype.processKeydown(event) {
+Stage.prototype.processKeydown = function(event) {
 	var keyCode = event.keyCode // Supported by all broswers, but depricated
 	// http://www.javascripter.net/faq/keycodes.htm
 

@@ -50,7 +50,7 @@ Actor.prototype.move = function(dx, dy) {
 	var canMove = true;
 	var other_actor = this._stage.getActor(new_x, new_y);
 	if (other_actor) {
-		canMove = .move(dx, dy);
+		canMove = this.move(dx, dy);
 	}
 
 	if (canMove) {
