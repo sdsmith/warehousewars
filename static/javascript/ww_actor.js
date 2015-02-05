@@ -3,13 +3,13 @@
  * Actor constructor. Take stage position (x,y) and the source of the image to
  * be displayed in its position.
  */
-function Actor(x, y, image_source, tick_delay=0) {
+function Actor(x, y, stage_ref, image_source="", tick_delay=0) {
+	this._stage = stage_ref
 	this.pos_x = x;
 	this.pos_y = y;
 	this.image_source = image_source;
 	this.tick_delay_count = 0;
 	this.tick_delay = tick_delay;
-	
 }
 
 /*
@@ -34,7 +34,6 @@ Actor.prototype.setImage = function(image_source) {
 
 //Generic step function to be overridden by specific actors that will use it
 Actor.prototype.tick = function() {
-	return true;
 }
 
 //Generic is_dead function to be overridden by specific actors
@@ -44,8 +43,21 @@ Actor.prototype.isDead = function() {
 
 //Generic move function that moves the actor by dx, dy relative to their position
 Actor.prototype.move = function(dx, dy) {
-	this.setPosition(this.pos_x + dx, this.pos_y + dy);
-	return true;
+	var new_x = this.pos_x + dx;
+	var new_y = this.pos_y + dy;
+
+	// Check if the new spot is available to move into
+	var canMove = true;
+	var other_actor = this._stage.getActor(new_x, new_y);
+	if (other_actor) {
+		canMove = .move(dx, dy);
+	}
+
+	if (canMove) {
+		this.setPosition(this.pos_x + dx, this.pos_y + dy);
+		return true;
+	}
+	return false;
 }
 
 //Delay function that will allow for speed settings of different actors relative to the base delay amount.
