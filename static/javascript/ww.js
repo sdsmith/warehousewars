@@ -126,7 +126,7 @@ Stage.prototype.processKeydown = function(event) {
 	// http://www.javascripter.net/faq/keycodes.htm
 
 	// Check if it is a player control key
-	if (65 <= keyCode and keyCode <= 90) {
+	if (65 <= keyCode && keyCode <= 90) {
 		this.player.handleKeydown(event);
 	}
 }
