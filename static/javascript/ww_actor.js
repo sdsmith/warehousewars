@@ -12,8 +12,11 @@ function Actor(x, y, image_source, tick_delay=0) {
 	
 }
 
+/*
+ * Return array of x, y position.
+ */
 Actor.prototype.getPosition = function() {
-	return (this.pos_x, this.pos_y);
+	return [this.pos_x, this.pos_y];
 }
 
 Actor.prototype.setPosition = function(x, y) {

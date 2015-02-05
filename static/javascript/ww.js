@@ -1,13 +1,22 @@
 // Stage
 // Note: Yet another way to declare a class, using .prototype.
 
+/*
+ * Stage class.
+ *
+ * Stage has the following grid co-ordinates.
+ * 		x,y ---- +ve x
+ *		 |
+ *		 |
+ *		+ve y
+ */
 function Stage(width, height, stageElementID) {
 	// the logical width and height of the stage
 	this.width = width;
 	this.height = height;
 
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
-	this.player = new Player(Math.floor(this.width / 2), Math.floor(this.height / 2)); // a special actor, the player
+	this.player = new Player(Math.floor(this.width / 2), Math.floor(this.height / 2), this); // a special actor, the player
 
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;
@@ -25,7 +34,7 @@ function Stage(width, height, stageElementID) {
 Stage.prototype.initialize = function() {
 	// Create a table of blank images, give each image an ID so we can reference it later
 	var board_html = '<table>\n';
-
+	
 	for (var x = 0; x < this.width; x++) {
 		board_html += "<tr>\n";
 		for (var y = 0; y < this.height; y++) {
@@ -86,6 +95,22 @@ Stage.prototype.tick = function() {
 // there should be only one actor at (x,y)!
 Stage.prototype.getActor = function(x, y) {
 	return null;
+}
+
+
+/*
+ * Calls appropriate game action based on given keypdown event.
+ * Reference: https://developer.mozilla.org/en-US/docs/Web/Events/keydown
+ */
+Stage.prototype.processKeydown(event) {
+	
+	var keyCode = event.keyCode // Supported by all broswers, but depricated
+	// http://www.javascripter.net/faq/keycodes.htm
+
+	// Check if it is a player control key
+	if (65 <= keyCode and keyCode <= 90) {
+		this.player.handleKeydown(event);
+	}
 }
 // End Class Stage
 
