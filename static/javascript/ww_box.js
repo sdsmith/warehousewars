@@ -9,7 +9,7 @@ function Box(x, y, image_source=null) {
 		default_image_source = image_source;
 	}
 
-	this._actor = Actor(x, y, default_image_source, 0);
+	this._actor = new Actor(x, y, default_image_source, 0);
 }
 
 /*

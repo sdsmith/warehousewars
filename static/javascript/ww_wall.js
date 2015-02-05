@@ -9,14 +9,14 @@ function Wall(x, y, image_source=null) {
 		default_image_source = image_source;
 	}
 
-	this._actor = Actor(x, y, default_image_source, 0);
+	this._actor = new Actor(x, y, default_image_source, 0);
 }
 
 /*
  * Return the position of the actor relative to the stage as an array [x, y].
  */
 Wall.prototype.getPosition = function() {
-	return self._actor.getPosition();
+	return this._actor.getPosition();
 }
 
 /*
@@ -30,7 +30,7 @@ Wall.prototype.getImage = function() {
  * Set actor's image.
  */
 Wall.prototype.setImage = function(image_source) {
-	self._actor.setImage(image_source);
+	this._actor.setImage(image_source);
 }
 
 /*
