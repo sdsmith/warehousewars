@@ -55,7 +55,7 @@ Stage.prototype.initialize = function() {
 	for(var x = 0; x < this.width; x++){
 		for(var y = 0; y < this.height; y++){
 			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
-				this.addActor(new Wall(x, y, this.wallImageSrc));
+				this.addActor(new Wall(this, x, y, this.wallImageSrc));
 			}
 		}
 	}
