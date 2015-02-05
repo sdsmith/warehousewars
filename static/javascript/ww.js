@@ -87,7 +87,7 @@ Stage.prototype.removeActor = function(actor) {
 
 // Set the src of the image at stage location (x,y) to src
 Stage.prototype.setImage = function(x, y, src) {
-	document.getElementById(this.getStageId(x,y)).innerHTML = "<img src=\""+src+" />";
+	document.getElementById(this.getStageId(x,y)).src = src;
 }
 
 // Take one step in the animation of the game.  
