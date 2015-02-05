@@ -31,14 +31,14 @@ Actor.prototype.setPosition = function(x, y) {
  * Return actor's image.
  */
 Actor.prototype.getImage = function() {
-	return this.imgsrc;
+	return this.image_source;
 }
 
 /*
  * Set actor's image to given image.
  */
 Actor.prototype.setImage = function(image_source) {
-	this.imgsrc = image_source;
+	this.image_source = image_source;
 }
 
 //Generic step function to be overridden by specific actors that will use it
