@@ -18,6 +18,7 @@ function Stage(width, height, stageElementID) {
 	// the logical width and height of the stage
 	this.width = width;
 	this.height = height;
+	this.square_dimension = 24;
 
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
 	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2)); // a special actor, the player
@@ -42,7 +43,7 @@ Stage.prototype.initialize = function() {
 	for (var x = 0; x < this.width; x++) {
 		board_html += "<tr>\n";
 		for (var y = 0; y < this.height; y++) {
-			board_html += "<td><img id='stage_"+x+"_"+y+"' src='"+ this.blankImageSrc + "' /></td>\n";
+			board_html += "<td><img id='stage_"+x+"_"+y+"' width='"+this.square_dimension.toString()+"' height='"+this.square_dimension.toString()+"' src='"+ this.blankImageSrc + "' /></td>\n";
 		}
 		board_html += "</tr>\n";
 	}
