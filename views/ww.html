@@ -20,8 +20,8 @@
 				stage.initialize();
 
 				/* Event Handlers */	
-				document.addEventListener('keydown', stage.processKeydown(event));
-				document.setInterval(stage.tick(), interval);
+				document.addEventListener('keydown', stage.processKeydown);
+				setInterval(stage.tick(), interval);
 			}
 
 			function startGame(){
