@@ -1,13 +1,20 @@
 /* Start Class Monster */
-
-function Monster(x, y, stage_ref) {
-	var image_source = ;
-	this._actor = new Actor(x, y, image_source, tick_delay=0);
-	this._stage = stage_ref;
-	this.tick_delay_count = 0;
-	this.tick_delay = tick_delay;
+/* 
+ * Monster Constructor. Take stage position (x, y). 
+ */
+function Monster(stage_ref, x, y, image_source=null) {
+	// Check default image source	
+	var default_image_source = "";
+	if (image_source) {
+		default_image_source = image_source;
+	}
+	
+	//Test movement deltas	
 	this.dx = 1;
 	this.dy = 1;
+
+	this._stage = stage_ref;
+	this._actor = new Actor(stage_ref, x, y, default_image_source, 0);
 }
 
 Monster.prototype.getPosition = function() {
@@ -26,8 +33,17 @@ Monster.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
 
-Monster.prototype.delay = function() {
-	return this.actor.delay();
+Monster.prototype.tick = function() {
+	if(this.isDead){
+		this._stage.removeActor(this);
+	}
+
+	if(!this.tick_delay){
+		return;
+	}
+	
+	this.move(this.dx, this.dy);
+	return true;
 }
 
 /*
@@ -37,16 +53,15 @@ Monster.prototype.delay = function() {
  */
 Monster.prototype.isDead = function() {
 	var counter = 0;	
-	var locXCoords = [this.pos_x - 1, this.pos_x, this.pos_x + 1];
-	var locYCoords = [this.pos_y - 1, this.pos_y, this.pos_y + 1];
+	var delta = [-1, 0, 1];
 
+	for(var i = 0; i < delta.length; i++) {
+		for(var j = 0; j < delta.length; j++) {
 
-	for(var i = 0; i < locXCoords.length; i++) {
-		for(var j = 0; j < locYCoords.length; j++) {
-
-			var surroundCheck = this._stage.getActor(locXCoords[i], locYCoords[j]);
+			var surroundCheck = this._stage.getActor(this.pos_x + delta[i], 
+																this.pos_y + delta[j]);
 			//Individual square check
-			if(surroundCheck !== null || locXCoords[i] > this._stage.width || locYCoords[j] > this._stage.height || locXCoords[i] < 0 || locYCoords[j] < 0) {
+			if(surroundCheck !== null) {
 				counter += 1;
 
 				if(counter === 8)	{
@@ -66,48 +81,37 @@ Monster.prototype.isDead = function() {
 /*
  *	Monster cannot be moved therefore will return false
  */
-Monster.prototype.move = function() {
-	return false;
-}
+Monster.prototype.move = function(dx, dy) {
+	var new_x = this.pos_x + dx;
+	var new_y = this.pos_y + dy;
+	var nNew_x = this.pos_x - dx;
+	var nNew_y = this.pos_y - dy;
 
-/*
- *	Monster will move if there is nothing in it's path, it will move in the 
- *	opposite direction if it hits a box or another monster, kill the player
- * or get stuck on the StickyBox actor.
- */
-Monster.prototype.moveBehavior = function(dx, dy){
-	new_x = this.pos_x + dx;
-	new_y = this.pos_y + dy;
-	check = this._stage.getActor(new_x, new_y);
+	var other_actor = this._stage.getActor(new_x, new_y);
+	var bounce_x = this._stage.getActor(nNew_x, new_y);
+	var bounce_y = this._stage.getActor(new_x, nNew_y);
 
-	if(check instanceof Player){
-		this._stage.removeActor(Player);
-		//end game
+	if (other_actor === this._stage.player) {
+		//kill the player
 	}
-	if(check instanceof StickyBox){
+
+	if (other_actor instanceof StickyBox){
 		return false;
 	}
-	if(new_x < 0 || new_x > this._stage.width || check !== this._actor){
-		this.dx = -this.dx;
-	}
-	if(new_y < 0 || new_y > this._stage.width || check !== this._actor){
-		this.dy = -this.dy;
-	}	
-	return this._actor.move(dx, dy);		
-}
 
-Monster.prototype.tick = function() {
-	if(this.isDead){
-		this._stage.removeActor(this);
+	//Checks if (dx, -dy) is free to move to
+	if (other_actor !== null && bounce_x !== null){
+		dy = -dy;
 	}
 
-	if(!this.tick_delay){
-		return;
+	//Checks if (-dx, dy) is free to move to
+	if (other_actor !== null && bounce_y !== null){
+		dx = -dx;
 	}
-	
-	this.move(dx, dy);
-	return true;
+
+	return this._actor.move(dx, dy);
 }
+
 
 
 
