@@ -28,6 +28,7 @@
 			
 			/* Event Handlers */
 			document.addEventListener('keydown', stage.processKeydown(event));
+			document.setInterval(stage.tick(), interval);
 		</script>
 		<style>
 			/* style parts of the legend, the controls and the elements in the stage appropriately */
