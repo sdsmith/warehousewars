@@ -11,24 +11,27 @@
 		<script language="javascript" src="static/javascript/ww_box.js" ></script>
 
 		<script> 
-			stage=null;
+			var stage = null;
 			// SOME GLUE CODE CONNECTING THIS PAGE TO THE STAGE
-			interval=null;
+			var interval = null;
+			
 			function setupGame(){
 				stage=new Stage(20,20,"stage");
 				stage.initialize();
+
+				/* Event Handlers */	
+				document.addEventListener('keydown', stage.processKeydown(event));
+				document.setInterval(stage.tick(), interval);
 			}
+
 			function startGame(){
 				// YOUR CODE GOES HERE
 			}
+
 			function pauseGame(){
 				// YOUR CODE GOES HERE
 			}
-			// YOUR CODE GOES HERE
 			
-			/* Event Handlers */
-			document.addEventListener('keydown', stage.processKeydown(event));
-			document.setInterval(stage.tick(), interval);
 		</script>
 		<style>
 			/* style parts of the legend, the controls and the elements in the stage appropriately */
