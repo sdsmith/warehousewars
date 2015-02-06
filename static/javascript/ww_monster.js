@@ -47,6 +47,9 @@ Monster.prototype.tick = function(force_update) {
 	 * check the tick will fall into the isDead code to try and extract a false result, unfortunately this doesn't occur
 	 * instead the monster while being initialized will think it is surrounded by default(check if this is actually true and 
 	 * not further broken logic) and mess up the spawn sequence
+	 *ADDITIONAL NOTE(SLatychev): isDead is logically broken making tick broken in the process
+	 *
+	 *
 	 */
 		if (this.isDead()) {
 			this._stage.removeActor(this);
