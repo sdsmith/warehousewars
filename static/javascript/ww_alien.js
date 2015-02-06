@@ -10,8 +10,8 @@ function Alien(stage_ref, x, y, image_source=null) {
 	}
 	
 	//Test movement deltas	
-	this.dx = 1;
-	this.dy = 1;
+	this.dx = 0;
+	this.dy = 0;
 
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, x, y, default_image_source, 2);
@@ -49,7 +49,7 @@ Alien.prototype.isDead = function() {
 /*
  *	Alien cannot be moved therefore will return false
  */
-Alien.prototype.move = function(dx, dy) {
+Alien.prototype.move = function() {
 	var deltas = [-1, 0, 1];
 	this.dx = Math.floor((Math.random() * 1) -1);
 	this.dy = Math.floor((Math.random() * 1) -1);
