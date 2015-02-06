@@ -23,7 +23,7 @@ function Player(stage_ref, x, y, image_source=null) {
 	if (image_source) {
 		default_image_source = image_source;
 	}
-	this._actor = new Actor(x, y, image_source, 0);
+	this._actor = new Actor(stage_ref, x, y, image_source, 0);
 }
 
 /*
