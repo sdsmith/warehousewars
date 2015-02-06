@@ -36,7 +36,7 @@ function Stage(width, height, stageElementID) {
 
 	// Stage Constants
 	this.box_frequency = 0.40;
-	this.monster_frequency = 0.02;
+	this.monster_frequency = 0.50;
 }
 
 // initialize an instance of the game
