@@ -12,7 +12,6 @@
 
 		<script> 
 			var stage = null;
-			// SOME GLUE CODE CONNECTING THIS PAGE TO THE STAGE
 			var interval = null;
 			
 			function setupGame(){
@@ -20,8 +19,16 @@
 				stage.initialize();
 
 				/* Event Handlers */	
-				document.addEventListener('keydown', stage.processKeydown);
-				setInterval(stage.tick(), interval);
+				document.addEventListener(
+					'keydown', 
+					function processKeydown(event) {
+						stage.processKeydown(event);
+					});
+				setInterval(
+					function tick() {
+						stage.tick();
+					}
+					, interval);
 			}
 
 			function startGame(){
