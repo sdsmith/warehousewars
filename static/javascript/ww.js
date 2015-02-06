@@ -33,6 +33,9 @@ function Stage(width, height, stageElementID) {
 	this.playerImageSrc = document.getElementById('playerImage').src;
 	this.boxImageSrc = document.getElementById('boxImage').src;
 	this.wallImageSrc = document.getElementById('wallImage').src;
+
+	// Stage Constants
+	this.box_frequency = 0.40;
 }
 
 // initialize an instance of the game
@@ -74,7 +77,7 @@ Stage.prototype.initialize = function() {
 				continue;
 			}
 
-			if (Math.random() < 0.60) {
+			if (Math.random() < this.box_frequency) {
 				this.addActor(new Box(this, x, y, this.boxImageSrc));
 			} 
 		}
