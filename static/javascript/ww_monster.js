@@ -49,7 +49,7 @@ Monster.prototype.tick = function() {
 		return;
 	}
 	
-	this.move(this.dx, this.dy);
+	this._actor.move(this.dx, this.dy);
 	return true;
 }
 
