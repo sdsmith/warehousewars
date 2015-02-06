@@ -41,10 +41,11 @@ Monster.prototype.setImage = function(image_source) {
  * and make itself move
  */
 Monster.prototype.tick = function() {
+	/*
 	if(this.isDead){
 		this._stage.removeActor(this);
 	}
-
+	*/
 	if(!this._actor.delay()){
 		return;
 	}
