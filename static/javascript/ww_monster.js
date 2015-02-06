@@ -91,6 +91,8 @@ Monster.prototype.isDead = function() {
  * the opposite direction (deltas get sign flipped)
  */
 Monster.prototype.move = function(dx, dy) {
+
+	/*	
 	var new_x = this.pos_x + dx;
 	var new_y = this.pos_y + dy;
 	var nNew_x = this.pos_x - dx;
@@ -118,6 +120,7 @@ Monster.prototype.move = function(dx, dy) {
 	if (other_actor !== null && bounce_y !== null){
 		dx = -dx;
 	}
+	*/
 
 	return this._actor.move(dx, dy);
 }
