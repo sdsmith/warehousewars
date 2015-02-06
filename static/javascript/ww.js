@@ -57,7 +57,6 @@ Stage.prototype.initialize = function() {
 		for(var y = 0; y < this.height; y++){
 			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
 				this.addActor(new Wall(this, x, y, this.wallImageSrc));
-			}
 		}
 	}
 
@@ -65,8 +64,20 @@ Stage.prototype.initialize = function() {
 	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.playerImageSrc);
 	this.addActor(this.player);
 
+	var player_pos = this.player.getPosition();
+
 	// Add some Boxes to the stage
-	
+	for (var x = 1; x < this.width-1; x++) {
+		for (var y = 1; x < this.width-1; y++) {
+			if (x == player_pos[0] && y == player_pos[1]) {
+				continue;
+			}
+
+			if (Math.random() < 0.60) {
+				this.addActor(new Box(this, x, y, this.boxImageSrc));
+			} 
+		}
+	}
 
 	// Add in some Monsters
 	
