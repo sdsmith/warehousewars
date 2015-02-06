@@ -83,7 +83,7 @@ Player.prototype.immediateMove = function(dx, dy) {
  * (it reacts instantly), and so performs no operation on stage tick.
  */
 Player.prototype.tick = function() {
-	return true;
+	return false;
 }
 
 /*
