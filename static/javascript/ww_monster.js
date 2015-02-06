@@ -14,9 +14,12 @@ function Monster(stage_ref, x, y, image_source=null) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, default_image_source, 0);
+	this._actor = new Actor(stage_ref, x, y, default_image_source, 5);
 }
 
+/*
+ * 
+ */
 Monster.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
@@ -33,12 +36,16 @@ Monster.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
 
+/*
+ * Will check if monster is dead, will appropriately delay itself if need be,
+ * and make itself move
+ */
 Monster.prototype.tick = function() {
 	if(this.isDead){
 		this._stage.removeActor(this);
 	}
 
-	if(!this.tick_delay){
+	if(!this._actor.delay()){
 		return;
 	}
 	
@@ -47,9 +54,9 @@ Monster.prototype.tick = function() {
 }
 
 /*
- *	Checks surrounding squares and adds up the total number of blocks the monster
- *	is surrounded by, if it is surrounded keep alive for 3 more ticks to ensure
- *	it is really dead
+ *	Checks surrounding squares and adds up the total number of blocks the
+ * monster is surrounded by, if it is surrounded keep alive for 3 more ticks
+ * to ensure it is really dead
  */
 Monster.prototype.isDead = function() {
 	var counter = 0;	
@@ -79,7 +86,9 @@ Monster.prototype.isDead = function() {
 }
 
 /*
- *	Monster cannot be moved therefore will return false
+ *	(According to test deltas) will move diagonally, if it hits a wall will
+ * determine if it is being blocked in the x or y directions and "bounce" in
+ * the opposite direction (deltas get sign flipped)
  */
 Monster.prototype.move = function(dx, dy) {
 	var new_x = this.pos_x + dx;
@@ -92,7 +101,8 @@ Monster.prototype.move = function(dx, dy) {
 	var bounce_y = this._stage.getActor(new_x, nNew_y);
 
 	if (other_actor === this._stage.player) {
-		//kill the player
+		//Assuming this property exists
+		this._stage.player.killed = true;
 	}
 
 	if (other_actor instanceof StickyBox){

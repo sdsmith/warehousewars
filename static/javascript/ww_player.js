@@ -67,9 +67,12 @@ Player.prototype.move = function(dx, dy) {
  * Because this is the player, they skip the normal update loop when moving.
  */
 Player.prototype.immediateMove = function(dx, dy) {
+	var old_pos = this.getPosition();
+
 	if (this._actor.move(dx, dy)) {
-		var pos = this.getPosition();
-		this._stage.setImage(pos[0], pos[1], this.getImage());
+		var new_pos = this.getPosition();
+		this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
+		this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
 	}
 }
 
@@ -99,27 +102,27 @@ Player.prototype.handleKeydown = function(event) {
 			break;
 
 		case key_W:
-			this.immediateMove(0, -1);
-			break;
-
-		case key_E:
-			this.immediateMove(1, -1);
-			break;
-
-		case key_A:
 			this.immediateMove(-1, 0);
 			break;
 
-		case key_D:
-			this.immediateMove(1, 0);
-			break;
-
-		case key_Z:
+		case key_E:
 			this.immediateMove(-1, 1);
 			break;
 
-		case key_X:
+		case key_A:
+			this.immediateMove(0, -1);
+			break;
+
+		case key_D:
 			this.immediateMove(0, 1);
+			break;
+
+		case key_Z:
+			this.immediateMove(1, -1);
+			break;
+
+		case key_X:
+			this.immediateMove(1, 0);
 			break;
 
 		case key_C:
