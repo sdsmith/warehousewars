@@ -16,7 +16,7 @@ function Box(stage_ref, x, y, image_source=null) {
  * Return position of actor relative to the stage as an array [x,y].
  */
 Box.prototype.getPosition = function() {
-	return self._actor.getPosition();
+	return this._actor.getPosition();
 }
 
 /*
@@ -30,7 +30,7 @@ Box.prototype.getImage = function() {
  * Set actor's image.
  */
 Box.prototype.setImage = function(image_source) {
-	self._actor.setImage(image_source);
+	this._actor.setImage(image_source);
 }
 
 /*

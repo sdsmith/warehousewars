@@ -57,6 +57,7 @@ Stage.prototype.initialize = function() {
 		for(var y = 0; y < this.height; y++){
 			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
 				this.addActor(new Wall(this, x, y, this.wallImageSrc));
+			}
 		}
 	}
 
@@ -68,7 +69,7 @@ Stage.prototype.initialize = function() {
 
 	// Add some Boxes to the stage
 	for (var x = 1; x < this.width-1; x++) {
-		for (var y = 1; x < this.width-1; y++) {
+		for (var y = 1; y < this.width-1; y++) {
 			if (x == player_pos[0] && y == player_pos[1]) {
 				continue;
 			}
