@@ -36,6 +36,7 @@ function Stage(width, height, stageElementID) {
 
 	// Stage Constants
 	this.box_frequency = 0.40;
+	this.monster_frequency = 0.02;
 }
 
 // initialize an instance of the game
@@ -80,6 +81,9 @@ Stage.prototype.initialize = function() {
 			if (Math.random() < this.box_frequency) {
 				this.addActor(new Box(this, x, y, this.boxImageSrc));
 			} 
+			else if (Math.random() < this.monster_frequency) {
+				this.addActor(new Monster(this, x, y, this.monsterImageSrc));
+			}
 		}
 	}
 
