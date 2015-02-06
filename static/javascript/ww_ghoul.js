@@ -34,6 +34,17 @@ Ghoul.prototype.setImage = function(image_source) {
 }
 
 Ghoul.prototype.tick = function() {
+	var deltas = [-1, 0, 1];
+	var ghoul_pos = this.getPosition();
+	if(this.isDead) {
+		for (var x = 0; x < deltas.length; x++) {
+			for (var y = 0; y < deltas.length; y++) {
+				this._stage.removeActor(this._stage.getActor(
+								ghoul_pos[0] + delta[i], ghoul_pos[1] + delta[j]));
+			}
+		}
+	}
+
 	return this._monster.tick();
 }
 
@@ -49,7 +60,7 @@ Ghoul.prototype.isDead = function() {
 /*
  *	Alien cannot be moved therefore will return false
  */
-Ghoul.prototype.move = function(dx, dy) {
+Ghoul.prototype.move = function() {
 	var deltas = [-1, 0, 1];
 	this.dx = Math.floor((Math.random() * 1) -1);
 	this.dy = Math.floor((Math.random() * 1) -1);
