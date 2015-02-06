@@ -41,15 +41,16 @@ Monster.prototype.setImage = function(image_source) {
  * and make itself move
  */
 Monster.prototype.tick = function() {
+	/*
 	if(this.isDead){
 		this._stage.removeActor(this);
 	}
-
+	*/
 	if(!this._actor.delay()){
 		return;
 	}
 	
-	this.move(this.dx, this.dy);
+	this._actor.move(this.dx, this.dy);
 	return true;
 }
 
@@ -91,6 +92,8 @@ Monster.prototype.isDead = function() {
  * the opposite direction (deltas get sign flipped)
  */
 Monster.prototype.move = function(dx, dy) {
+
+	/*	
 	var new_x = this.pos_x + dx;
 	var new_y = this.pos_y + dy;
 	var nNew_x = this.pos_x - dx;
@@ -118,8 +121,10 @@ Monster.prototype.move = function(dx, dy) {
 	if (other_actor !== null && bounce_y !== null){
 		dx = -dx;
 	}
+	*/
 
-	return this._actor.move(dx, dy);
+	this._actor.move(dx, dy);
+	return false;
 }
 
 

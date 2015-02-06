@@ -38,6 +38,7 @@ function Stage(width, height, stageElementID) {
 	// Stage Constants
 	this.game_paused = false;
 	this.box_frequency = 0.40;
+	this.monster_frequency = 0.50;
 
 	// Map containing actor positions.
 	this.actor_map = new Map(this.width, this.height, this.num_floors);
@@ -85,6 +86,9 @@ Stage.prototype.initialize = function() {
 			if (Math.random() < this.box_frequency) {
 				this.addActor(new Box(this, x, y, this.boxImageSrc));
 			} 
+			else if (Math.random() < this.monster_frequency) {
+				this.addActor(new Monster(this, x, y, this.monsterImageSrc));
+			}
 		}
 	}
 
