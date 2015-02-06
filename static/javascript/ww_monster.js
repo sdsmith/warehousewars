@@ -123,7 +123,8 @@ Monster.prototype.move = function(dx, dy) {
 	}
 	*/
 
-	return this._actor.move(dx, dy);
+	this._actor.move(dx, dy);
+	return false;
 }
 
 
