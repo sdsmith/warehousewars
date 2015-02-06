@@ -117,6 +117,7 @@ Stage.prototype.getActor = function(x, y) {
 		if (actor_pos[0] == x && actor_pos[1] == y) {
 			actor = this.actors[i];
 		}
+		i++;
 	}
 
 	return actor;		
