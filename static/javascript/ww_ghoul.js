@@ -1,6 +1,6 @@
 /* Start Class Ghoul */
 /* 
- * Alien Constructor. Take stage position (x, y). 
+ * Ghoul Constructor. Take stage position (x, y). 
  */
 function Ghoul(stage_ref, x, y, image_source=null) {
 	// Check default image source	
