@@ -35,7 +35,7 @@ Wall.prototype.setImage = function(image_source) {
 
 /*
  * Called by Stage on every tick. Wall does not do anything, and so performs
- * no operations.
+ * no operations. Return whether its state changed.
  */
 Wall.prototype.tick = function() {
 	return false;

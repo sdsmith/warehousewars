@@ -38,13 +38,15 @@ function Stage(width, height, stageElementID) {
 	// Stage Constants
 	this.game_paused = false;
 	this.box_frequency = 0.40;
-	this.monster_frequency = 0.50;
+	this.monster_frequency = 0.05;
 
 	// Map containing actor positions.
 	this.actor_map = new Map(this.width, this.height, this.num_floors);
 }
 
-// initialize an instance of the game
+/*
+ * Initialize an instance of the game.
+ */
 Stage.prototype.initialize = function() {
 	// Create a table of blank images, give each image an ID so we can reference it later
 	var board_html = '<table>\n';
@@ -99,11 +101,18 @@ Stage.prototype.initialize = function() {
 	this.tick(force_update=true);
 }
 
-// Return the ID of a particular image, useful so we don't have to continually reconstruct IDs
+/*
+ * Return the html ID of the provided co-ordinate.
+ * Useful for linking stage co-ordinates to the co-responding html objects.
+ */
 Stage.prototype.getStageId = function(x,y) {
 	return "stage_"+x+"_"+y;
 }
 
+/*
+ * Add given actor to the stage. This updates both the stage actor list and the
+ * actor map.
+ */
 Stage.prototype.addActor = function(actor) {
 	// Add actor to list of stage actors
 	this.actors.push(actor);
@@ -114,7 +123,8 @@ Stage.prototype.addActor = function(actor) {
 }
 
 /*
- * Removes the given actor from the stage and return the removed actor.
+ * Removes the given actor from the stage and return the removed actor. This 
+ * updates both the stage actor list and the actor map.
  */
 Stage.prototype.removeActor = function(actor) {
 	// Remove from direct access map
@@ -126,17 +136,25 @@ Stage.prototype.removeActor = function(actor) {
 	return this.actors.splice(actor_index, 1);
 }
 
-// Set the src of the image at stage location (x,y) to src
+/*
+ * Set the html src of the image at stage location (x,y) to the given src.
+ */
 Stage.prototype.setImage = function(x, y, src) {
 	document.getElementById(this.getStageId(x,y)).src = src;
 }
 
-// Take one step in the animation of the game.  
+/* 
+ * Take one step in the animation of the game. Only updates actor on screen when
+ * they say they need an update by returning true on their tick function.
+ * Can forcfully update the screen with actors on stage by supplying 
+ * force_update=true as a parameter. Actors will be notified in their tick if 
+ * they are forcefully being updated.
+ */
 Stage.prototype.tick = function(force_update=false) {
 	if (!this.game_paused || force_update) {
 		for(var i = 0; i < this.actors.length; i++){
 			var actor_old_pos = this.actors[i].getPosition();
-			var changed_visible_state = this.actors[i].tick();
+			var changed_visible_state = this.actors[i].tick(force_update); // inform actors they are being forcefully updated.
 	
 			if (changed_visible_state || force_update) {
 				// Set old position to blank
@@ -150,26 +168,12 @@ Stage.prototype.tick = function(force_update=false) {
 	}
 }
 
-// return the first actor at coordinates (x,y) return null if there is no such actor
-// there should be only one actor at (x,y)!
+/*
+ * Return actor at given co-ordinates, null otherwise. Uses the actor map for
+ * direct access, ie. O(1) call.
+ */
 Stage.prototype.getActor = function(x, y) {
-	
 	return this.actor_map.get(x, y, 0);
-	/*	
-	var i = 0; 
-	var actor = null;
-
-	while (i < this.actors.length && !actor) {
-		var actor_pos = this.actors[i].getPosition();
-		
-		if (actor_pos[0] == x && actor_pos[1] == y) {
-			actor = this.actors[i];
-		}
-		i++;
-	}
-
-	return actor;
-	*/
 }
 
 /*

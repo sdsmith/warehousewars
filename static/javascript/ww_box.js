@@ -35,7 +35,7 @@ Box.prototype.setImage = function(image_source) {
 
 /*
  * Called by the stage every tick. Since it is a box, it does not perform any
- * action on a tick.
+ * action on a tick. Return whether its state changed.
  */ 
 Box.prototype.tick = function() {
 	return false;

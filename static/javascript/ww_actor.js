@@ -47,8 +47,12 @@ Actor.prototype.setImage = function(image_source) {
 	this.image_source = image_source;
 }
 
-//Generic step function to be overridden by specific actors that will use it
+/*
+ * Generic tick function to be overridden by specific actors that will use it.
+ * Return whether its state changed.
+ */
 Actor.prototype.tick = function() {
+	return false;	// NOTE(sdsmith): This means be default it will not render.
 }
 
 //Generic is_dead function to be overridden by specific actors
