@@ -38,6 +38,7 @@ Box.prototype.setImage = function(image_source) {
  * action on a tick.
  */ 
 Box.prototype.tick = function() {
+	return false;
 }
 
 /*

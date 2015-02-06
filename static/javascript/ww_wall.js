@@ -38,6 +38,7 @@ Wall.prototype.setImage = function(image_source) {
  * no operations.
  */
 Wall.prototype.tick = function() {
+	return false;
 }
 
 /*

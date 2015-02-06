@@ -21,10 +21,16 @@ Actor.prototype.getPosition = function() {
 
 /*
  * Set actor's position on the stage to the given co-ordinates.
+ * Auto informs the stage of to updates its map position.
  */
 Actor.prototype.setPosition = function(x, y) {
+	var old_x = this.pos_x;
+	var old_y = this.pos_y;	
 	this.pos_x = x;
 	this.pos_y = y;
+
+	// inform the stage of position update
+	this._stage.updateActorPosition(this, old_x, old_y);
 }
 
 /*
@@ -63,7 +69,12 @@ Actor.prototype.move = function(dx, dy) {
 	}
 
 	if (canMove) {
-		this.setPosition(this.pos_x + dx, this.pos_y + dy);
+		var old_x = this.pos_x;
+		var old_y = this.pos_y;
+
+		// Update the actor's position and force them to re-render on stage 
+		this.setPosition(new_x, new_y);
+		this._stage.immediateMoveUpdate(this, old_x, old_y);
 		return true;
 	}
 	return false;

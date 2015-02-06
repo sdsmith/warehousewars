@@ -67,12 +67,14 @@ Player.prototype.move = function(dx, dy) {
  * Because this is the player, they skip the normal update loop when moving.
  */
 Player.prototype.immediateMove = function(dx, dy) {
-	var old_pos = this.getPosition();
+	if (!this._stage.game_paused) {
+		var old_pos = this.getPosition();
 
-	if (this._actor.move(dx, dy)) {
-		var new_pos = this.getPosition();
-		this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
-		this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
+		if (this._actor.move(dx, dy)) {
+			var new_pos = this.getPosition();
+			this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
+			this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
+		}
 	}
 }
 
@@ -81,6 +83,7 @@ Player.prototype.immediateMove = function(dx, dy) {
  * (it reacts instantly), and so performs no operation on stage tick.
  */
 Player.prototype.tick = function() {
+	return true;
 }
 
 /*

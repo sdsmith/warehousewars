@@ -18,6 +18,7 @@ function Stage(width, height, stageElementID) {
 	// the logical width and height of the stage
 	this.width = width;
 	this.height = height;
+	this.num_floors = 1;
 	this.square_dimension = 24;
 
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
@@ -35,7 +36,11 @@ function Stage(width, height, stageElementID) {
 	this.wallImageSrc = document.getElementById('wallImage').src;
 
 	// Stage Constants
+	this.game_paused = false;
 	this.box_frequency = 0.40;
+
+	// Map containing actor positions.
+	this.actor_map = new Map(this.width, this.height, this.num_floors);
 }
 
 // initialize an instance of the game
@@ -86,21 +91,33 @@ Stage.prototype.initialize = function() {
 	// Add in some Monsters
 	
 
+	// Force all objects to render in their start state
+	this.tick(force_update=true);
 }
+
 // Return the ID of a particular image, useful so we don't have to continually reconstruct IDs
 Stage.prototype.getStageId = function(x,y) {
 	return "stage_"+x+"_"+y;
 }
 
 Stage.prototype.addActor = function(actor) {
+	// Add actor to list of stage actors
 	this.actors.push(actor);
+
+	// Add actor to direct access map
+	var pos = actor.getPosition();
+	this.actor_map.set(pos[0], pos[1], 0, actor);
 }
 
 /*
  * Removes the given actor from the stage and return the removed actor.
  */
 Stage.prototype.removeActor = function(actor) {
-	// Lookup javascript array manipulation (indexOf and splice).
+	// Remove from direct access map
+	var pos = actor.getPosition();
+	this.actor_map.reset(pos[0], pos[1], 0);
+
+	// Remove from list of actors
 	var actor_index = this.actors.indexOf(actor);
 	return this.actors.splice(actor_index, 1);
 }
@@ -111,18 +128,30 @@ Stage.prototype.setImage = function(x, y, src) {
 }
 
 // Take one step in the animation of the game.  
-Stage.prototype.tick = function() {
-	for(var i = 0; i < this.actors.length; i++){
-		this.actors[i].tick();
+Stage.prototype.tick = function(force_update=false) {
+	if (!this.game_paused || force_update) {
+		for(var i = 0; i < this.actors.length; i++){
+			var actor_old_pos = this.actors[i].getPosition();
+			var changed_visible_state = this.actors[i].tick();
+	
+			if (changed_visible_state || force_update) {
+				// Set old position to blank
+				this.setImage(actor_old_pos[0], actor_old_pos[1], this.blankImageSrc);
 
-		var actor_pos = this.actors[i].getPosition();
-		this.setImage(actor_pos[0], actor_pos[1], this.actors[i].getImage());
+				// Update new position with associated image			
+				var actor_new_pos = this.actors[i].getPosition();
+				this.setImage(actor_new_pos[0], actor_new_pos[1], this.actors[i].getImage());
+			}
+		}
 	}
 }
 
 // return the first actor at coordinates (x,y) return null if there is no such actor
 // there should be only one actor at (x,y)!
 Stage.prototype.getActor = function(x, y) {
+	
+	return this.actor_map.get(x, y, 0);
+	/*	
 	var i = 0; 
 	var actor = null;
 
@@ -135,7 +164,29 @@ Stage.prototype.getActor = function(x, y) {
 		i++;
 	}
 
-	return actor;		
+	return actor;
+	*/
+}
+
+/*
+ * Updates the given actor on call, regardless of interval callback.
+ */
+Stage.prototype.immediateMoveUpdate = function(actor, old_x, old_y) {
+	// Set old position to blank
+	this.setImage(old_x, old_y, this.blankImageSrc);
+
+	// Update new position with associated image			
+	var actor_new_pos = actor.getPosition();
+	this.setImage(actor_new_pos[0], actor_new_pos[1], actor.getImage());
+}
+
+/*
+ * Updates the actor map with the new actor position.
+ */
+Stage.prototype.updateActorPosition = function(actor, old_x, old_y) {
+	this.actor_map.reset(old_x, old_y, 0);
+	var pos = actor.getPosition();
+	this.actor_map.set(pos[0], pos[1], 0, actor);
 }
 
 /*
@@ -145,6 +196,12 @@ Stage.prototype.getActor = function(x, y) {
 Stage.prototype.processKeydown = function(event) {
 	var keyCode = event.keyCode; // Supported by all broswers, but depricated
 	// http://www.javascripter.net/faq/keycodes.htm
+
+	// Check if game control key
+	if (27 == keyCode) {
+		// Escape key
+		this.game_paused = !this.game_paused;
+	}
 
 	// Check if it is a player control key
 	if (65 <= keyCode && keyCode <= 90) {
