@@ -24,8 +24,8 @@ Monster.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Monster.prototype.setPosition = function(x, y) {
-	return this._actor.setPosition(x, y);
+Monster.prototype.setPosition = function(x, y, sub_class=this) {
+	return this._actor.setPosition(x, y, sub_class);
 }
 
 Monster.prototype.getImage = function() {
@@ -36,25 +36,28 @@ Monster.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
 
+Monster.prototype.isGrabbable = function() {
+	return false;
+}
+
 /*
  * Will check if monster is dead, will appropriately delay itself if need be,
  * and make itself move
  */
-Monster.prototype.tick = function(force_update) {
+Monster.prototype.tick = function(force_update, sub_class=this) {
 	if(force_update) {
 	//TODO(SLatychev): force_update being used temporarily as it may not be called just on initialization later
 	/*NOTE(SLatychev): The current state of tick is jerry rigged (if it works at all) because without the force_update
 	 * check the tick will fall into the isDead code to try and extract a false result, unfortunately this doesn't occur
 	 * instead the monster while being initialized will think it is surrounded by default(check if this is actually true and 
 	 * not further broken logic) and mess up the spawn sequence
-	 *ADDITIONAL NOTE(SLatychev): isDead is logically broken making tick broken in the process
-	 *
+	 *ADDITONAL NOTE(SLatychev): This tick should always be overridden
 	 *
 	 */
 		if (this.isDead()) {
 			this._stage.removeActor(this);
 		} else if (!this._actor.delay()) {
-			return this.move(this.dx, this.dy);
+			return this.move(this.dx, this.dy, sub_class);
 		}
 	}
 	return false;
@@ -97,12 +100,12 @@ Monster.prototype.isDead = function() {
  * determine if it is being blocked in the x or y directions and "bounce" in
  * the opposite direction (deltas get sign flipped)
  */
-Monster.prototype.move = function() {
+Monster.prototype.move = function(dx, dy, sub_class=this) {
 	var monster_pos = this._actor.getPosition();
-	var new_x = monster_pos[0] + this.dx;
-	var new_y = monster_pos[1] + this.dy;
-	var nNew_x = monster_pos[0] - this.dx;
-	var nNew_y = monster_pos[1] - this.dy;
+	var new_x = monster_pos[0] + dx;
+	var new_y = monster_pos[1] + dy;
+	var nNew_x = monster_pos[0] - dx;
+	var nNew_y = monster_pos[1] - dy;
 
 	var other_actor = this._stage.getActor(new_x, new_y);
 	var relativePos_x = this._stage.getActor(nNew_x, new_y);
@@ -125,16 +128,16 @@ Monster.prototype.move = function() {
 	if (other_actor !== null) {
 		//TODO(SLatychev): Case hit corner, and gets blocked from behind
 		if (relativePos_x !== null) {
-			this.dy = -this.dy;
+			dy = -dy;
 		}
 		if (relativePos_y !== null) {
-			this.dx = -this.dx;
+			dx = -dx;
 		}
 		return true; 
 	}
 	
-	this._actor.setPosition(monster_pos[0]+this.dx, monster_pos[1]+this.dy);
-
+	this._actor.setPosition(monster_pos[0]+dx, monster_pos[1]+dy, sub_class);
+	this._stage.immediateMoveUpdate(sub_class, monster_pos[0], monster_pos[1]);
 	return true;
 }
 
