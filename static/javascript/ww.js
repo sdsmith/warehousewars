@@ -88,9 +88,9 @@ Stage.prototype.initialize = function() {
 			if (Math.random() < this.box_frequency) {
 				this.addActor(new Box(this, x, y, this.boxImageSrc));
 			} 
-			else if (Math.random() < this.monster_frequency) {
+/*			else if (Math.random() < this.monster_frequency) {
 				this.addActor(new Monster(this, x, y, this.monsterImageSrc));
-			}
+			}*/
 		}
 	}
 

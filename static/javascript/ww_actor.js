@@ -22,15 +22,18 @@ Actor.prototype.getPosition = function() {
 /*
  * Set actor's position on the stage to the given co-ordinates.
  * Auto informs the stage of to updates its map position.
+ * NOTE: Must supply subclass_actor parameter in order to tell the stage that
+ * it is the subclass that has moved that is using Actor via composition, NOT
+ * the actual Actor instance itself.
  */
-Actor.prototype.setPosition = function(x, y) {
+Actor.prototype.setPosition = function(x, y, subclass_actor=this) {
 	var old_x = this.pos_x;
 	var old_y = this.pos_y;	
 	this.pos_x = x;
 	this.pos_y = y;
 
 	// inform the stage of position update
-	this._stage.updateActorPosition(this, old_x, old_y);
+	this._stage.updateActorPosition(subclass_actor, old_x, old_y);
 }
 
 /*
@@ -60,8 +63,14 @@ Actor.prototype.isDead = function() {
 	return false;
 }
 
-//Generic move function that moves the actor by dx, dy relative to their position
-Actor.prototype.move = function(dx, dy) {
+/*
+ * Generic move function that moves the actor by dx, dy relative to their 
+ * position.
+ * NOTE: Must supply subclass_actor parameter in order to tell the stage that
+ * it is the subclass that has moved that is using Actor via composition, NOT
+ * the actual Actor instance itself.
+ */
+Actor.prototype.move = function(dx, dy, subclass_actor=this) {
 	var new_x = this.pos_x + dx;
 	var new_y = this.pos_y + dy;
 
@@ -77,8 +86,8 @@ Actor.prototype.move = function(dx, dy) {
 		var old_y = this.pos_y;
 
 		// Update the actor's position and force them to re-render on stage 
-		this.setPosition(new_x, new_y);
-		this._stage.immediateMoveUpdate(this, old_x, old_y);
+		this.setPosition(new_x, new_y, subclass_actor);
+		this._stage.immediateMoveUpdate(subclass_actor, old_x, old_y);
 		return true;
 	}
 	return false;

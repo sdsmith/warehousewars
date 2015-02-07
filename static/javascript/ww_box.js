@@ -19,6 +19,10 @@ Box.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
+Box.prototype.setPosition = function(x, y) {
+	this._actor.setPosition(x, y, this);
+}
+
 /*
  * Return the actor's image.
  */
@@ -46,6 +50,10 @@ Box.prototype.tick = function() {
  * move.
  */
 Box.prototype.move = function(dx, dy) {
-	return this._actor.move(dx, dy);
+	return this._actor.move(dx, dy, this);
+}
+
+Box.prototype.isGrabbable = function() {
+	return true;
 }
 /* END Class Box */

@@ -24,6 +24,8 @@ function Player(stage_ref, x, y, image_source=null) {
 		default_image_source = image_source;
 	}
 	this._actor = new Actor(stage_ref, x, y, image_source, 0);
+
+	this.key_shift_pressed = false; // Whether the shift key has been pressed
 }
 
 /*
@@ -74,6 +76,18 @@ Player.prototype.immediateMove = function(dx, dy) {
 			var new_pos = this.getPosition();
 			this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
 			this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
+
+			// TODO(sdsmith): If shift key pressed, drag an object opposite the current move direction
+			if (this.key_shift_pressed) {
+				var actor_pos_x = old_pos[0] - dx;
+				var actor_pos_y = old_pos[1] - dy;
+				actor = this._stage.getActor(actor_pos_x, actor_pos_y);
+
+				if (actor && actor.isGrabbable()) {
+					actor.setPosition(old_pos[0], old_pos[1]);
+					this._stage.immediateMoveUpdate(actor, actor_pos_x, actor_pos_y);
+				}
+			}
 		}
 	}
 }
@@ -98,6 +112,7 @@ Player.prototype.handleKeydown = function(event) {
 		z-SW 	x-S 	c-SE
 	 */
 	var keyCode = event.keyCode;
+	this.key_shift_pressed = event.shiftKey;
 
 	switch (keyCode) {
 		case key_Q:
@@ -132,5 +147,7 @@ Player.prototype.handleKeydown = function(event) {
 			this.immediateMove(1, 1);
 			break;
 	}
+
+	
 }
 /* END Class Player */
