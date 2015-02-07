@@ -14,7 +14,7 @@ function Monster(stage_ref, x, y, image_source=null) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, default_image_source, 5);
+	this._actor = new Actor(stage_ref, x, y, default_image_source, 50);
 }
 
 /*
@@ -45,7 +45,7 @@ Monster.prototype.isGrabbable = function() {
  * and make itself move
  */
 Monster.prototype.tick = function(force_update, sub_class=this) {
-	if(force_update) {
+//	if(force_update) {
 	//TODO(SLatychev): force_update being used temporarily as it may not be called just on initialization later
 	/*NOTE(SLatychev): The current state of tick is jerry rigged (if it works at all) because without the force_update
 	 * check the tick will fall into the isDead code to try and extract a false result, unfortunately this doesn't occur
@@ -56,12 +56,12 @@ Monster.prototype.tick = function(force_update, sub_class=this) {
 	 */
 		if (this.isDead()) {
 			this._stage.removeActor(this);
-		} else if (!this._actor.delay()) {
+		} else if (this._actor.delay()) {
 			return this.move(this.dx, this.dy, sub_class);
 		}
-	}
+/*	}
 	return false;
-}
+*/}
 
 /*
  *	Checks surrounding squares and adds up the total number of blocks the
@@ -69,7 +69,7 @@ Monster.prototype.tick = function(force_update, sub_class=this) {
  * to ensure it is really dead
  */
 Monster.prototype.isDead = function() {
-	var counter = 0;	
+/*	var counter = 0;	
 	var delta = [-1, 0, 1];
 	var monster_pos = this.getPosition();
 
@@ -92,7 +92,23 @@ Monster.prototype.isDead = function() {
 		}
 	}
 	counter = 0;
-	return false;
+	return false; */
+
+	var pos = this.getPosition();
+	var num_surrounding_actors = 0;
+
+	for (var dx = -1; dx <= 1; dx++) {
+		for (var dy = -1; dy <= 1; dy++) {
+			if (dx == 0 && dy == 0) continue; // Don't need to check player
+			
+			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy);
+			if (actor) {
+				num_surrounding_actors += 1;
+			}
+		}
+	}
+
+	return num_surrounding_actors == 8;
 }
 
 /*
@@ -101,7 +117,7 @@ Monster.prototype.isDead = function() {
  * the opposite direction (deltas get sign flipped)
  */
 Monster.prototype.move = function(dx, dy, sub_class=this) {
-	var monster_pos = this._actor.getPosition();
+/*	var monster_pos = this._actor.getPosition();
 	var new_x = monster_pos[0] + dx;
 	var new_y = monster_pos[1] + dy;
 	var nNew_x = monster_pos[0] - dx;
@@ -111,18 +127,6 @@ Monster.prototype.move = function(dx, dy, sub_class=this) {
 	var relativePos_x = this._stage.getActor(nNew_x, new_y);
 	var relativePos_y = this._stage.getActor(new_x, nNew_y);
 
-	/*
-	//Tell player that they are dead
-	if (other_actor === this._stage.player) {
-		this._stage.player.killed = true;
-	}
-
-
-	//Don't allow player to move if they collide with a sticky box
-	if (other_actor instanceof StickyBox){
-		return false;
-	}
-	*/
 
 	//Ricochet collision
 	if (other_actor !== null) {
@@ -139,6 +143,18 @@ Monster.prototype.move = function(dx, dy, sub_class=this) {
 	this._actor.setPosition(monster_pos[0]+dx, monster_pos[1]+dy, sub_class);
 	this._stage.immediateMoveUpdate(sub_class, monster_pos[0], monster_pos[1]);
 	return true;
+*/
+	var old_pos = this.getPosition();
+	var actor = this._stage.getActor(old_pos[0]+dx, old_pos[1]+dy);
+	
+	if (actor) {
+		this.dx = -this.dx;
+		this.dy = -this.dy;
+	} else {
+		this.setPosition(old_pos[0]+dx, old_pos[1]+dy, sub_class);
+		this._stage.immediateMoveUpdate(sub_class, old_pos[0], old_pos[1])
+	}
+	return false;
 }
 
 
