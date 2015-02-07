@@ -48,4 +48,11 @@ Wall.prototype.tick = function() {
 Wall.prototype.move = function(dx, dy) {
 	return false;
 }
+
+/*
+ * Return whether the actor can be grabbed by another actor.
+ */
+Wall.prototype.isGrabbable = function() {
+	return false;
+}
 /* END Class Wall */

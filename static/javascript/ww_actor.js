@@ -98,5 +98,12 @@ Actor.prototype.delay = function() {
 	this.tick_delay_count = (this.tick_delay_count + 1) % this.tick_delay;
 	return this.tick_delay_count == 0;
 }
+
+/* 
+ * Return whether the actor can be grabbed by another actor.
+ */
+Actor.prototype.isGrabbable = function() {
+	return false;
+}
 /* END Class Actor */
 
