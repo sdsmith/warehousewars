@@ -127,9 +127,13 @@ Stage.prototype.addActor = function(actor) {
  * updates both the stage actor list and the actor map.
  */
 Stage.prototype.removeActor = function(actor) {
+	var pos = actor.getPosition();	
+	
 	// Remove from direct access map
-	var pos = actor.getPosition();
 	this.actor_map.reset(pos[0], pos[1], 0);
+
+	// Blank out its screen tile
+	this.setImage(pos[0], pos[1], this.blankImageSrc);
 
 	// Remove from list of actors
 	var actor_index = this.actors.indexOf(actor);
