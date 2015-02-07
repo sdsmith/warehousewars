@@ -88,9 +88,9 @@ Stage.prototype.initialize = function() {
 			if (Math.random() < this.box_frequency) {
 				this.addActor(new Box(this, x, y, this.boxImageSrc));
 			} 
-/*			else if (Math.random() < this.monster_frequency) {
+			else if (Math.random() < this.monster_frequency) {
 				this.addActor(new Monster(this, x, y, this.monsterImageSrc));
-			}*/
+			}
 		}
 	}
 
@@ -176,7 +176,7 @@ Stage.prototype.getActor = function(x, y) {
 	return this.actor_map.get(x, y, 0);
 }
 
-/*
+/* TODO(sdsmith): BE MORE DESCRIPTIVE ie. immediateScreenUpdate
  * Updates the given actor on call, regardless of interval callback.
  */
 Stage.prototype.immediateMoveUpdate = function(actor, old_x, old_y) {
@@ -188,7 +188,7 @@ Stage.prototype.immediateMoveUpdate = function(actor, old_x, old_y) {
 	this.setImage(actor_new_pos[0], actor_new_pos[1], actor.getImage());
 }
 
-/*
+/* TODO(sdsmith): BE MORE DESCRIPTIVE ie. updateActorMapPosition
  * Updates the actor map with the new actor position.
  */
 Stage.prototype.updateActorPosition = function(actor, old_x, old_y) {

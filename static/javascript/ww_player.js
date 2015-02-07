@@ -38,8 +38,8 @@ Player.prototype.getPosition = function() {
 /*
  * Set actor's position to the give stage co-ordinates,
  */
-Player.prototype.setPosition = function(x, y) {
-	return this._actor.setPosition();
+Player.prototype.setPosition = function(x, y, subclass_actor=this) {
+	return this._actor.setPosition(x, y, subclass_actor);
 }
 
 /*
@@ -60,7 +60,7 @@ Player.prototype.setImage = function(image_source) {
  * Called by objects that want to move Player. The player cannot be moved, and
  * so always returns false.
  */
-Player.prototype.move = function(dx, dy) {
+Player.prototype.move = function(dx, dy, subclass_actor=this) {
 	return false;
 }
 
@@ -72,12 +72,12 @@ Player.prototype.immediateMove = function(dx, dy) {
 	if (!this._stage.game_paused) {
 		var old_pos = this.getPosition();
 
-		if (this._actor.move(dx, dy)) {
+		if (this._actor.move(dx, dy, this)) {
 			var new_pos = this.getPosition();
 			this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
 			this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
 
-			// TODO(sdsmith): If shift key pressed, drag an object opposite the current move direction
+			// If shift key pressed, drag an object opposite the current move direction
 			if (this.key_shift_pressed) {
 				var actor_pos_x = old_pos[0] - dx;
 				var actor_pos_y = old_pos[1] - dy;
