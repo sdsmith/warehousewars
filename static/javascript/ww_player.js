@@ -7,6 +7,7 @@ var key_D = 68;
 var key_Z = 90;
 var key_X = 88;
 var key_C = 67;
+var key_space = 32;
 
 
 
@@ -69,14 +70,18 @@ Player.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
  * Because this is the player, they skip the normal update loop when moving.
  */
 Player.prototype.immediateMove = function(dx, dy, floor_num) {
+	var hasMoved = false;
+
 	if (!this._stage.game_paused) {
 		var old_pos = this.getPosition();
 
 		if (this._actor.move(dx, dy, floor_num, this)) {
+			hasMoved = true;
 			var new_pos = this.getPosition();
 
-			// If shift key pressed, drag an object opposite the current move direction
-			if (this.key_shift_pressed) {
+
+			// If shift key pressed and moved on the same floor, drag an object opposite the current move direction
+			if (this.key_shift_pressed && old_pos[2] == new_pos[2]) {
 				var actor_pos_x = old_pos[0] - dx;
 				var actor_pos_y = old_pos[1] - dy;
 				var actor_floor_num = (this.getPosition())[2];
@@ -89,6 +94,8 @@ Player.prototype.immediateMove = function(dx, dy, floor_num) {
 			}
 		}
 	}
+
+	return hasMoved;
 }
 
 /*
@@ -146,6 +153,13 @@ Player.prototype.handleKeydown = function(event) {
 		case key_C:
 			this.immediateMove(1, 1, pos[2]);
 			break;
+
+		case key_space:
+			// Switch floors (NOTE(sdsmith): assuming there is only two!!!!!)
+			var other_floor = (pos[2] + 1) % 2;
+			if (this.immediateMove(0, 0, other_floor)) {
+				this._stage.drawFloor(other_floor);
+			}
 	}
 
 	

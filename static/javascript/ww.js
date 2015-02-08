@@ -26,6 +26,8 @@ function Stage(width, height, stageElementID) {
 
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;
+	// element containing user messages
+	this.info_bannerID = document.getElementById('game_info_banner');
 
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
@@ -35,13 +37,17 @@ function Stage(width, height, stageElementID) {
 	this.boxImageSrc = document.getElementById('boxImage').src;
 	this.wallImageSrc = document.getElementById('wallImage').src;
 
-	// Stage Constants
+	
+	// Game state variables
 	this.game_paused = false;
+	this.info_banner_messages = []; // TODO(sdsmith):
+
+	// NPC spawn rates	
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
 
 	// Multi-floor support
-	this.num_floors = 1;
+	this.num_floors = 2;
 	this.player_floor = 0;
 	this.floor_on_screen = this.player_floor;
 
@@ -128,7 +134,7 @@ Stage.prototype.addActor = function(actor) {
 
 	// Add actor to direct access map
 	var pos = actor.getPosition();
-	this.actor_map.set(pos[0], pos[1], 0, actor);
+	this.actor_map.set(pos[0], pos[1], pos[2], actor);
 }
 
 /*
@@ -139,7 +145,7 @@ Stage.prototype.removeActor = function(actor) {
 	var pos = actor.getPosition();	
 	
 	// Remove from direct access map
-	this.actor_map.reset(pos[0], pos[1], 0);
+	this.actor_map.reset(pos[0], pos[1], pos[2]);
 
 	// Blank out its screen tile
 	this.setImage(pos[0], pos[1], this.blankImageSrc);
@@ -231,9 +237,8 @@ Stage.prototype.processKeydown = function(event) {
 		// Escape key
 		this.game_paused = !this.game_paused;
 	}
-
 	// Check if it is a player control key
-	if (65 <= keyCode && keyCode <= 90) {
+	else if (65 <= keyCode && keyCode <= 90 || keyCode == 32) {
 		this.player.handleKeydown(event);
 	}
 }
@@ -266,5 +271,13 @@ Stage.prototype.drawFloor = function(floor_num) {
 			this.setImage(x, y, image);
 		}
 	}
+
+	// Update the player's floor on draw
+	// TODO(sdsmith): is this the best way to do this?
+	this.player_floor = this.player.getPosition()[2];
+}
+
+// TODO(sdsmith):
+Stage.prototype.displayInfoMessage = function(message) {	 
 }
 // END Class Stage

@@ -19,7 +19,9 @@
 			function setupGame(){
 				stage=new Stage(20,20,"stage");
 				stage.initialize();
+			}
 
+			function startGame(){
 				/* Event Handlers */	
 				document.addEventListener(
 					'keydown', 
@@ -31,10 +33,6 @@
 						stage.tick();
 					}
 					, interval);
-			}
-
-			function startGame(){
-				// YOUR CODE GOES HERE
 			}
 
 			function pauseGame(){
@@ -57,6 +55,8 @@
 					<td> <div id="stage"> </div></td> 
 					<td>
 						<center>
+							<div id="game_info_banner"></div>
+
 							<h2>Legend</h2>
 							<table class="legend">
 								<tr>
