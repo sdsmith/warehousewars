@@ -94,6 +94,7 @@ Stage.prototype.initialize = function() {
 				if (floor_num == player_pos[2] && x == player_pos[0] && y == player_pos[1]) {
 					continue;
 				}
+
 				// Box
 				if (Math.random() < this.box_frequency) {
 					this.addActor(new Box(this, x, y, floor_num, this.boxImageSrc));
@@ -169,8 +170,8 @@ Stage.prototype.tick = function(force_update=false) {
 	if (!this.game_paused || force_update) {
 		for(var i = 0; i < this.actors.length; i++){
 			var actor_old_pos = this.actors[i].getPosition();
-			var changed_visible_state = this.actors[i].tick(force_update); // inform actors they are being forcefully updated.
-				var actor_new_pos = this.actors[i].getPosition();
+			var changed_visible_state = this.actors[i].tick(force_update); // inform actors if being forcefully updated
+			var actor_new_pos = this.actors[i].getPosition();
 
 			if (changed_visible_state || force_update) {
 				// Set old position to blank
@@ -270,9 +271,3 @@ Stage.prototype.drawFloor = function(floor_num) {
 	}
 }
 // END Class Stage
-
-
-
-
-
-
