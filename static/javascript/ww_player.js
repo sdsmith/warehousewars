@@ -15,7 +15,7 @@ var key_C = 67;
  * Player constructor. Has a default image set. If image_source if set, it will
  * be used as the base image for the actor.
  */
-function Player(stage_ref, x, y, image_source=null) {
+function Player(stage_ref, x, y, floor_num, image_source=null) {
 	this._stage = stage_ref;
 
 	// Set actor's image
@@ -23,13 +23,13 @@ function Player(stage_ref, x, y, image_source=null) {
 	if (image_source) {
 		default_image_source = image_source;
 	}
-	this._actor = new Actor(stage_ref, x, y, image_source, 0);
+	this._actor = new Actor(stage_ref, x, y, floor_num, image_source, 0);
 
 	this.key_shift_pressed = false; // Whether the shift key has been pressed
 }
 
 /*
- * Return actor's position on the stage as an array [x,y].
+ * Return actor's position on the stage as an array [x,y,floor_num].
  */
 Player.prototype.getPosition = function() {
 	return this._actor.getPosition();
@@ -38,8 +38,8 @@ Player.prototype.getPosition = function() {
 /*
  * Set actor's position to the give stage co-ordinates,
  */
-Player.prototype.setPosition = function(x, y, subclass_actor=this) {
-	return this._actor.setPosition(x, y, subclass_actor);
+Player.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	return this._actor.setPosition(x, y, floor_num, subclass_actor);
 }
 
 /*
@@ -60,7 +60,7 @@ Player.prototype.setImage = function(image_source) {
  * Called by objects that want to move Player. The player cannot be moved, and
  * so always returns false.
  */
-Player.prototype.move = function(dx, dy, subclass_actor=this) {
+Player.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return false;
 }
 
@@ -68,24 +68,23 @@ Player.prototype.move = function(dx, dy, subclass_actor=this) {
  * Move the player dx by dy units relative to the current position immediately.
  * Because this is the player, they skip the normal update loop when moving.
  */
-Player.prototype.immediateMove = function(dx, dy) {
+Player.prototype.immediateMove = function(dx, dy, floor_num) {
 	if (!this._stage.game_paused) {
 		var old_pos = this.getPosition();
 
-		if (this._actor.move(dx, dy, this)) {
+		if (this._actor.move(dx, dy, floor_num, this)) {
 			var new_pos = this.getPosition();
-			this._stage.setImage(new_pos[0], new_pos[1], this.getImage());
-			this._stage.setImage(old_pos[0], old_pos[1], this._stage.blankImageSrc);
 
 			// If shift key pressed, drag an object opposite the current move direction
 			if (this.key_shift_pressed) {
 				var actor_pos_x = old_pos[0] - dx;
 				var actor_pos_y = old_pos[1] - dy;
-				actor = this._stage.getActor(actor_pos_x, actor_pos_y);
+				var actor_floor_num = (this.getPosition())[2];
+				var actor = this._stage.getActor(actor_pos_x, actor_pos_y, actor_floor_num);
 
 				if (actor && actor.isGrabbable()) {
-					actor.setPosition(old_pos[0], old_pos[1]);
-					this._stage.immediateMoveUpdate(actor, actor_pos_x, actor_pos_y);
+					actor.setPosition(old_pos[0], old_pos[1], actor_floor_num);
+					this._stage.immediateActorScreenUpdate(actor, actor_pos_x, actor_pos_y, actor_floor_num);
 				}
 			}
 		}
@@ -113,38 +112,39 @@ Player.prototype.handleKeydown = function(event) {
 	 */
 	var keyCode = event.keyCode;
 	this.key_shift_pressed = event.shiftKey;
+	var pos = this.getPosition();
 
 	switch (keyCode) {
 		case key_Q:
-			this.immediateMove(-1, -1);
+			this.immediateMove(-1, -1, pos[2]);
 			break;
 
 		case key_W:
-			this.immediateMove(-1, 0);
+			this.immediateMove(-1, 0, pos[2]);
 			break;
 
 		case key_E:
-			this.immediateMove(-1, 1);
+			this.immediateMove(-1, 1, pos[2]);
 			break;
 
 		case key_A:
-			this.immediateMove(0, -1);
+			this.immediateMove(0, -1, pos[2]);
 			break;
 
 		case key_D:
-			this.immediateMove(0, 1);
+			this.immediateMove(0, 1, pos[2]);
 			break;
 
 		case key_Z:
-			this.immediateMove(1, -1);
+			this.immediateMove(1, -1, pos[2]);
 			break;
 
 		case key_X:
-			this.immediateMove(1, 0);
+			this.immediateMove(1, 0, pos[2]);
 			break;
 
 		case key_C:
-			this.immediateMove(1, 1);
+			this.immediateMove(1, 1, pos[2]);
 			break;
 	}
 

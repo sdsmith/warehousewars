@@ -2,7 +2,7 @@
 /* 
  * Monster Constructor. Take stage position (x, y). 
  */
-function Monster(stage_ref, x, y, image_source=null) {
+function Monster(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
@@ -14,7 +14,7 @@ function Monster(stage_ref, x, y, image_source=null) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, default_image_source, 50);
+	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 50);
 }
 
 /*
@@ -24,8 +24,8 @@ Monster.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Monster.prototype.setPosition = function(x, y, sub_class=this) {
-	return this._actor.setPosition(x, y, sub_class);
+Monster.prototype.setPosition = function(x, y, floor_num, sub_class=this) {
+	return this._actor.setPosition(x, y, floor_num, sub_class);
 }
 
 Monster.prototype.getImage = function() {
@@ -44,7 +44,7 @@ Monster.prototype.isGrabbable = function() {
  * Will check if monster is dead, will appropriately delay itself if need be,
  * and make itself move
  */
-Monster.prototype.tick = function(force_update, sub_class=this) {
+Monster.prototype.tick = function(force_update, subclass_actor=this) {
 //	if(force_update) {
 	//TODO(SLatychev): force_update being used temporarily as it may not be called just on initialization later
 	/*NOTE(SLatychev): The current state of tick is jerry rigged (if it works at all) because without the force_update
@@ -56,9 +56,11 @@ Monster.prototype.tick = function(force_update, sub_class=this) {
 	 */
 		if (this.isDead()) {
 			this._stage.removeActor(this);
+			return true;
 		} else if (this._actor.delay()) {
-			return this.move(this.dx, this.dy, sub_class);
+			return this.move(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 		}
+		return false;
 /*	}
 	return false;
 */}
@@ -101,7 +103,7 @@ Monster.prototype.isDead = function() {
 		for (var dy = -1; dy <= 1; dy++) {
 			if (dx == 0 && dy == 0) continue; // Don't need to check player
 			
-			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy);
+			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy, pos[2]);
 			if (actor) {
 				num_surrounding_actors += 1;
 			}
@@ -116,7 +118,7 @@ Monster.prototype.isDead = function() {
  * determine if it is being blocked in the x or y directions and "bounce" in
  * the opposite direction (deltas get sign flipped)
  */
-Monster.prototype.move = function(dx, dy, sub_class=this) {
+Monster.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 /*	var monster_pos = this._actor.getPosition();
 	var new_x = monster_pos[0] + dx;
 	var new_y = monster_pos[1] + dy;
@@ -141,18 +143,19 @@ Monster.prototype.move = function(dx, dy, sub_class=this) {
 	}
 	
 	this._actor.setPosition(monster_pos[0]+dx, monster_pos[1]+dy, sub_class);
-	this._stage.immediateMoveUpdate(sub_class, monster_pos[0], monster_pos[1]);
+	this._stage.immediateActorScreenUpdate(sub_class, monster_pos[0], monster_pos[1]);
 	return true;
 */
+	// TODO(sdsmith): need to be careful if the floor_num arameter is not on the same floor as the current monstor. Account for this later.
 	var old_pos = this.getPosition();
-	var actor = this._stage.getActor(old_pos[0]+dx, old_pos[1]+dy);
+	var actor = this._stage.getActor(old_pos[0]+dx, old_pos[1]+dy, floor_num);
 	
 	if (actor) {
 		this.dx = -this.dx;
 		this.dy = -this.dy;
 	} else {
-		this.setPosition(old_pos[0]+dx, old_pos[1]+dy, sub_class);
-		this._stage.immediateMoveUpdate(sub_class, old_pos[0], old_pos[1])
+		this.setPosition(old_pos[0]+dx, old_pos[1]+dy, floor_num, subclass_actor);
+		this._stage.immediateActorScreenUpdate(subclass_actor, old_pos[0], old_pos[1], old_pos[2])
 	}
 	return false;
 }

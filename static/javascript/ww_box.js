@@ -2,25 +2,25 @@
 /*
  * Box constructor. Take stage position (x,y).
  */
-function Box(stage_ref, x, y, image_source=null) {
+function Box(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}
 
-	this._actor = new Actor(stage_ref, x, y, default_image_source, 0);
+	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 0);
 }
 
 /*
- * Return position of actor relative to the stage as an array [x,y].
+ * Return position of actor relative to the stage as an array [x,y,floor_num].
  */
 Box.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Box.prototype.setPosition = function(x, y) {
-	this._actor.setPosition(x, y, this);
+Box.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	this._actor.setPosition(x, y, floor_num, subclass_actor);
 }
 
 /*
@@ -40,17 +40,19 @@ Box.prototype.setImage = function(image_source) {
 /*
  * Called by the stage every tick. Since it is a box, it does not perform any
  * action on a tick. Return whether its state changed.
+ * NOTE: Can be force updated, and will be notified through the force_update
+ * parameter.
  */ 
-Box.prototype.tick = function() {
+Box.prototype.tick = function(force_update) {
 	return false;
 }
 
 /*
- * Called when object would like to move. Return false, as a wall will never
- * move.
+ * Called when object would like to move. Return true if there is available  
+ * space move.
  */
-Box.prototype.move = function(dx, dy) {
-	return this._actor.move(dx, dy, this);
+Box.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
+	return this._actor.move(dx, dy, floor_num, subclass_actor);
 }
 
 Box.prototype.isGrabbable = function() {
