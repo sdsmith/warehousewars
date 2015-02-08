@@ -30,7 +30,7 @@ function Stage(width, height, stageElementID) {
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
 	this.blankImageSrc = document.getElementById('blankImage').src;
-	this.monsterImageSrc = document.getElementById('monsterImage').src;
+	this.patrollerImageSrc = document.getElementById('patrollerImage').src;
 	this.playerImageSrc = document.getElementById('playerImage').src;
 	this.boxImageSrc = document.getElementById('boxImage').src;
 	this.wallImageSrc = document.getElementById('wallImage').src;
@@ -96,11 +96,11 @@ Stage.prototype.initialize = function() {
 				if (Math.random() < this.box_frequency) {
 					this.addActor(new Box(this, x, y, floor_num, this.boxImageSrc));
 				} 
-/*				// Monster
+				// Monster
 				else if (Math.random() < this.monster_frequency) {
-					this.addActor(new Monster(this, x, y, floor_num,  this.monsterImageSrc));
+					this.addActor(new Monster(this, x, y, floor_num,  this.patrollerImageSrc));
 				}
-*/			}
+		}
 		}
 
 		// Add in some Monsters
