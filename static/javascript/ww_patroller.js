@@ -49,7 +49,13 @@ Patroller.prototype.isGrabbable = function() {
  *	Calls Monster's tick
  */
 Patroller.prototype.tick = function(force_update, subclass_actor=this) {
-	return this._monster.tick(force_update, subclass_actor);
+	if (this.isDead()) {
+		this._stage.removeActor(this);
+		return true;
+	} else if (this._monster.delay()) {
+		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
+	}
+	return false;
 }
 
 /*
