@@ -2,31 +2,27 @@
 /* 
  * Monster Constructor. Take stage position (x, y). 
  */
-function Monster(stage_ref, x, y, floor_num, image_source=null) {
+function Monster(stage_ref, x, y, floor_num, image_source=null, tick_delay=50) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}	
 	
-	//default movement deltas	
+	//Default movement deltas	
 	this.dx = 1;
 	this.dy = 1;
-	//TODO(SLatychev): Allow monsters to set their delays to allow them to change the delay
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 50);
+	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, tick_delay);
 }
 
-/*
- * 
- */
 Monster.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Monster.prototype.setPosition = function(x, y, floor_num, sub_class=this) {
-	return this._actor.setPosition(x, y, floor_num, sub_class);
+Monster.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	return this._actor.setPosition(x, y, floor_num, subclass_actor);
 }
 
 Monster.prototype.getImage = function() {

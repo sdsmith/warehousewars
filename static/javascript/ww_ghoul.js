@@ -9,20 +9,20 @@ function Ghoul(stage_ref, x, y, image_source=null) {
 		default_image_source = image_source;
 	}
 	
-	//Test movement deltas	
+	//Default movement deltas	
 	this.dx = 1;
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, default_image_source, 10);
+	this._monster = new Monster(stage_ref, x, y, default_image_source, 100);
 }
 
 Ghoul.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
-Ghoul.prototype.setPosition = function(x, y) {
-	return this._monster.setPosition(x, y);
+Ghoul.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
 Ghoul.prototype.getImage = function() {
@@ -33,41 +33,61 @@ Ghoul.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
-Ghoul.prototype.tick = function() {
-	var deltas = [-1, 0, 1];
+Ghoul.prototype.getDelay = function() {
+	return this._monster.getDelay();
+}
+
+Ghoul.prototype.setDelay = function(tick_delay) {
+	return this._monster.setDelay(tick_delay);
+}
+
+Ghoul.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
+}
+
+/*
+ *	If the ghoul dies remove all its surrounding boxes, then calls Monster's tick
+ */
+Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 	var ghoul_pos = this.getPosition();
 	if(this.isDead) {
-		for (var x = 0; x < deltas.length; x++) {
-			for (var y = 0; y < deltas.length; y++) {
-				this._stage.removeActor(this._stage.getActor(
-								ghoul_pos[0] + delta[i], ghoul_pos[1] + delta[j]));
+		for (var dx = -1; dx <= 1; dx++) {
+			for (var dy = -1; dy <= 1; dy++) {
+				if (dx == 0 && dy == 0) continue;
+				this._stage.removeActor(
+					this._stage.getActor(
+						ghoul_pos[0] + delta[i], 
+						ghoul_pos[1] + delta[j]));
 			}
 		}
 	}
 
-	return this._monster.tick();
+	return this._monster.tick(force_update, subclass_actor=this);
 }
 
 /*
- *	Checks surrounding squares and adds up the total number of blocks the monster
- *	is surrounded by, if it is surrounded keep alive for 3 more ticks to ensure
- *	it is really dead
+ *	Calls Monster's isDead
  */
 Ghoul.prototype.isDead = function() {
 	return this._monster.isDead();
 }
 
 /*
- *	Alien cannot be moved therefore will return false
+ *	Ghoul roams around randomly
  */
-Ghoul.prototype.move = function() {
-	var deltas = [-1, 0, 1];
+Ghoul.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 	this.dx = Math.floor((Math.random() * 1) -1);
 	this.dy = Math.floor((Math.random() * 1) -1);
-	return this._monster.move(this.dx, this.dy);
+	//Add LoS system
+	return this._monster.monsterMove(this.dx, this.dy, floor_num, subclass_actor);
 }
 
-
+/*
+ *	Calls Monster's move
+ */
+Ghoul.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
+	return this._monster.move(dx, dy, floor_num, subclass_actor);
+}
 
 
 

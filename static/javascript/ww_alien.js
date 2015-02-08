@@ -9,20 +9,20 @@ function Alien(stage_ref, x, y, image_source=null) {
 		default_image_source = image_source;
 	}
 	
-	//Test movement deltas	
+	//Default movement deltas	
 	this.dx = 0;
 	this.dy = 0;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, default_image_source, 2);
+	this._monster = new Monster(stage_ref, x, y, default_image_source, 20);
 }
 
 Alien.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
-Alien.prototype.setPosition = function(x, y) {
-	return this._monster.setPosition(x, y);
+Alien.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
 Alien.prototype.getImage = function() {
@@ -33,30 +33,47 @@ Alien.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
-Alien.prototype.tick = function() {
-	return this._monster.tick();
+Alien.prototype.getDelay = function() {
+	return this._monster.getDelay();
+}
+
+Alien.prototype.setDelay = function(tick_delay) {
+	return this._monster.setDelay(tick_delay);
+}
+
+Alien.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
 }
 
 /*
- *	Checks surrounding squares and adds up the total number of blocks the monster
- *	is surrounded by, if it is surrounded keep alive for 3 more ticks to ensure
- *	it is really dead
+ *	Calls Monster's tick
+ */
+Alien.prototype.tick = function(force_update, subclass_actor=this) {
+	return this._monster.tick(force_update, subclass_actor);
+}
+
+/*
+ *	Calls Monster's isDead
  */
 Alien.prototype.isDead = function() {
 	return this._monster.isDead();
 }
 
 /*
- *	Alien cannot be moved therefore will return false
+ *	Alien moves randomly
  */
-Alien.prototype.move = function() {
-	var deltas = [-1, 0, 1];
+Alien.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 	this.dx = Math.floor((Math.random() * 1) -1);
 	this.dy = Math.floor((Math.random() * 1) -1);
-	return this._monster.move(this.dx, this.dy);
+	return this._monster.monsterMove(this.dx, this.dy, floor_num, subclass_actor);
 }
 
-
+/*
+ *	Calls Monster's move
+ */
+Alien.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
+	return this._monster.move(dx, dy, floor_num, subclass_actor);
+}
 
 
 
