@@ -31,8 +31,8 @@ function Stage(width, height, stageElementID) {
 	// an alternative would be to use 'new Image()'
 	this.blankImageSrc = document.getElementById('blankImage').src;
 	this.patrollerImageSrc = document.getElementById('patrollerImage').src;
-	this.alienImageSrc = document.getElementById('alienImage').src;
-	this.ghoulImageSrc = document.getElementById('ghoulImage').src;
+	//this.alienImageSrc = document.getElementById('alienImage').src;
+	//this.ghoulImageSrc = document.getElementById('ghoulImage').src;
 	this.playerImageSrc = document.getElementById('playerImage').src;
 	this.boxImageSrc = document.getElementById('boxImage').src;
 	this.wallImageSrc = document.getElementById('wallImage').src;
