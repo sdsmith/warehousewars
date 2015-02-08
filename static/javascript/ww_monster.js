@@ -119,8 +119,8 @@ Monster.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this)
 		return false;
 	} else {
 		this.setPosition(old_pos[0]+this.dx, old_pos[1]+this.dy, floor_num, subclass_actor);
-		//TODO(SLatychev): See if it is necessary to call this function
-		this._stage.immediateActorScreenUpdate(subclass_actor, old_pos[0], old_pos[1], old_pos[2]);
+		//NOTE(sdsmith, SLatychev): This is unecessary as it make the screen update call twice
+		//this._stage.immediateActorScreenUpdate(subclass_actor, old_pos[0], old_pos[1], old_pos[2]);
 		return true;
 	}
 }
