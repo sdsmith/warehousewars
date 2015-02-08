@@ -15,12 +15,12 @@
  *		+ve y
  */
 function Stage(width, height, stageElementID) {
-	// the logical width and height of the stage
+	// the logical width and height of the stage, and tile dimensions
 	this.width = width;
 	this.height = height;
-	this.num_floors = 1;
 	this.square_dimension = 24;
 
+	// TODO(sdsmith): may need to add an array per floor if game starts to get slow
 	this.actors = []; // all actors on this stage (monsters, player, boxes, ...)
 	this.player = null; // a special actor, the player
 
@@ -39,6 +39,11 @@ function Stage(width, height, stageElementID) {
 	this.game_paused = false;
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
+
+	// Multi-floor support
+	this.num_floors = 1;
+	this.player_floor = 0;
+	this.floor_on_screen = this.player_floor;
 
 	// Map containing actor positions.
 	this.actor_map = new Map(this.width, this.height, this.num_floors);
@@ -63,42 +68,46 @@ Stage.prototype.initialize = function() {
 	// Put it in the stageElementID (innerHTML)
 	document.getElementById(this.stageElementID).innerHTML = board_html;
 
-	// Add walls around the outside of the stage, so actors can't leave the stage
-	for(var x = 0; x < this.width; x++){
-		for(var y = 0; y < this.height; y++){
-			if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
-				this.addActor(new Wall(this, x, y, this.wallImageSrc));
-			}
-		}
-	}
 
 	// Add Player to the stage
-	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.playerImageSrc);
+	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.player_floor, this.playerImageSrc);
 	this.addActor(this.player);
 
-	var player_pos = this.player.getPosition();
+	var player_pos = this.player.getPosition(); //needed so we don't place actor on player square(s)
 
-	// Add some Boxes to the stage
-	for (var x = 1; x < this.width-1; x++) {
-		for (var y = 1; y < this.width-1; y++) {
-			if (x == player_pos[0] && y == player_pos[1]) {
-				continue;
-			}
-
-			if (Math.random() < this.box_frequency) {
-				this.addActor(new Box(this, x, y, this.boxImageSrc));
-			} 
-			else if (Math.random() < this.monster_frequency) {
-				this.addActor(new Monster(this, x, y, this.monsterImageSrc));
+	// For each floor ...
+	for (var floor_num = 0; floor_num < this.num_floors; floor_num++) {
+		// Add walls around the outside of the stage, so actors can't leave the stage
+		for(var x = 0; x < this.width; x++){
+			for(var y = 0; y < this.height; y++){
+				if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
+					this.addActor(new Wall(this, x, y, floor_num, this.wallImageSrc));
+				}
 			}
 		}
+
+		// Add actors to the stage
+		for (var x = 1; x < this.width-1; x++) {
+			for (var y = 1; y < this.width-1; y++) {
+				if (floor_num == player_pos[2] && x == player_pos[0] && y == player_pos[1]) {
+					continue;
+				}
+				// Box
+				if (Math.random() < this.box_frequency) {
+					this.addActor(new Box(this, x, y, floor_num, this.boxImageSrc));
+				} 
+/*				// Monster
+				else if (Math.random() < this.monster_frequency) {
+					this.addActor(new Monster(this, x, y, floor_num,  this.monsterImageSrc));
+				}
+*/			}
+		}
+
+		// Add in some Monsters
 	}
 
-	// Add in some Monsters
-	
-
 	// Force all objects to render in their start state
-	this.tick(force_update=true);
+	this.drawFloor(0);
 }
 
 /*
@@ -159,14 +168,18 @@ Stage.prototype.tick = function(force_update=false) {
 		for(var i = 0; i < this.actors.length; i++){
 			var actor_old_pos = this.actors[i].getPosition();
 			var changed_visible_state = this.actors[i].tick(force_update); // inform actors they are being forcefully updated.
-	
+				var actor_new_pos = this.actors[i].getPosition();
+
 			if (changed_visible_state || force_update) {
 				// Set old position to blank
-				this.setImage(actor_old_pos[0], actor_old_pos[1], this.blankImageSrc);
+				if (actor_old_pos[2] == this.floor_on_screen) {
+					this.setImage(actor_old_pos[0], actor_old_pos[1], this.blankImageSrc);
+				}
 
 				// Update new position with associated image			
-				var actor_new_pos = this.actors[i].getPosition();
-				this.setImage(actor_new_pos[0], actor_new_pos[1], this.actors[i].getImage());
+				if (actor_new_pos[2] == this.floor_on_screen) {
+					this.setImage(actor_new_pos[0], actor_new_pos[1], this.actors[i].getImage());
+				}
 			}
 		}
 	}
@@ -176,29 +189,33 @@ Stage.prototype.tick = function(force_update=false) {
  * Return actor at given co-ordinates, null otherwise. Uses the actor map for
  * direct access, ie. O(1) call.
  */
-Stage.prototype.getActor = function(x, y) {
-	return this.actor_map.get(x, y, 0);
+Stage.prototype.getActor = function(x, y, floor_num) {
+	return this.actor_map.get(x, y, floor_num);
 }
 
 /* TODO(sdsmith): BE MORE DESCRIPTIVE ie. immediateScreenUpdate
  * Updates the given actor on call, regardless of interval callback.
  */
-Stage.prototype.immediateMoveUpdate = function(actor, old_x, old_y) {
+Stage.prototype.immediateActorScreenUpdate = function(actor, old_x, old_y, old_floor_num) {
 	// Set old position to blank
-	this.setImage(old_x, old_y, this.blankImageSrc);
+	if (old_floor_num == this.floor_on_screen) {
+		this.setImage(old_x, old_y, this.blankImageSrc);
+	}
 
 	// Update new position with associated image			
 	var actor_new_pos = actor.getPosition();
-	this.setImage(actor_new_pos[0], actor_new_pos[1], actor.getImage());
+	if (actor_new_pos[2] == this.floor_on_screen) {
+		this.setImage(actor_new_pos[0], actor_new_pos[1], actor.getImage());
+	}
 }
 
-/* TODO(sdsmith): BE MORE DESCRIPTIVE ie. updateActorMapPosition
+/*
  * Updates the actor map with the new actor position.
  */
-Stage.prototype.updateActorPosition = function(actor, old_x, old_y) {
-	this.actor_map.reset(old_x, old_y, 0);
+Stage.prototype.updateActorMapPosition = function(actor, old_x, old_y, old_floor_num) {
+	this.actor_map.reset(old_x, old_y, old_floor_num);
 	var pos = actor.getPosition();
-	this.actor_map.set(pos[0], pos[1], 0, actor);
+	this.actor_map.set(pos[0], pos[1], pos[2], actor);
 }
 
 /*
@@ -218,6 +235,36 @@ Stage.prototype.processKeydown = function(event) {
 	// Check if it is a player control key
 	if (65 <= keyCode && keyCode <= 90) {
 		this.player.handleKeydown(event);
+	}
+}
+
+/*
+ * Draws the full state of the given stage floor to the screen.
+ * NOTE: floor_number should be 0-indexed.
+ * Used for switching floors, or doing a full screen update.
+ */
+Stage.prototype.drawFloor = function(floor_num) {
+	var stageid = null;
+	
+	this.floor_on_screen = floor_num;
+
+	for (var x = 0; x < this.width; x++) {
+		for (var y = 0; y < this.height; y++) {
+			// Get screen tile id
+			stageid = this.getStageId(x, y);
+			
+			// Get actor at tile (x,y)
+			actor = this.getActor(x, y, floor_num);
+
+			// Get image coresponding to tile
+			var image = this.blankImageSrc; // default to blank
+			if (actor) {
+				image = actor.getImage();
+			}
+	
+			// Set image on screen
+			this.setImage(x, y, image);
+		}
 	}
 }
 // END Class Stage

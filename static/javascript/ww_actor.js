@@ -3,20 +3,21 @@
  * Actor constructor. Take stage position (x,y) and the source of the image to
  * be displayed in its position.
  */
-function Actor(stage_ref, x, y, image_source, tick_delay) {
+function Actor(stage_ref, x, y, floor_num, image_source, tick_delay) {
 	this._stage = stage_ref;
 	this.pos_x = x;
 	this.pos_y = y;
+	this.floor_num = floor_num;
 	this.image_source = image_source;
 	this.tick_delay_count = 0;
 	this.tick_delay = tick_delay;
 }
 
 /*
- * Return array of x, y position relative to the stage.
+ * Return array of (x,y,floor_num) position relative to the stage.
  */
 Actor.prototype.getPosition = function() {
-	return [this.pos_x, this.pos_y];
+	return [this.pos_x, this.pos_y, this.floor_num];
 }
 
 /*
@@ -26,14 +27,16 @@ Actor.prototype.getPosition = function() {
  * it is the subclass that has moved that is using Actor via composition, NOT
  * the actual Actor instance itself.
  */
-Actor.prototype.setPosition = function(x, y, subclass_actor=this) {
+Actor.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	var old_x = this.pos_x;
 	var old_y = this.pos_y;	
+	var old_floor_num = this.floor_num;
 	this.pos_x = x;
 	this.pos_y = y;
+	this.floor_num = floor_num;
 
 	// inform the stage of position update
-	this._stage.updateActorPosition(subclass_actor, old_x, old_y);
+	this._stage.updateActorMapPosition(subclass_actor, old_x, old_y, old_floor_num);
 }
 
 /*
@@ -54,7 +57,7 @@ Actor.prototype.setImage = function(image_source) {
  * Generic tick function to be overridden by specific actors that will use it.
  * Return whether its state changed.
  */
-Actor.prototype.tick = function() {
+Actor.prototype.tick = function(force_update) {
 	return false;	// NOTE(sdsmith): This means be default it will not render.
 }
 
@@ -70,26 +73,34 @@ Actor.prototype.isDead = function() {
  * it is the subclass that has moved that is using Actor via composition, NOT
  * the actual Actor instance itself.
  */
-Actor.prototype.move = function(dx, dy, subclass_actor=this) {
+Actor.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	var new_x = this.pos_x + dx;
 	var new_y = this.pos_y + dy;
 
 	// Check if the new spot is available to move into
 	var canMove = true;
-	var other_actor = this._stage.getActor(new_x, new_y);
+	var other_actor = this._stage.getActor(new_x, new_y, floor_num);
 	if (other_actor) {
-		canMove = other_actor.move(dx, dy);
+		if (floor_num == this.floor_num) {
+			// being asked to move on the same floor
+			canMove = other_actor.move(dx, dy, floor_num);
+		} else {
+			// being asked to move to a different floor
+			canMove = false;
+		}
 	}
 
 	if (canMove) {
 		var old_x = this.pos_x;
 		var old_y = this.pos_y;
+		var old_floor_num = this.floor_num;
 
 		// Update the actor's position and force them to re-render on stage 
-		this.setPosition(new_x, new_y, subclass_actor);
-		this._stage.immediateMoveUpdate(subclass_actor, old_x, old_y);
+		this.setPosition(new_x, new_y, floor_num, subclass_actor);
+		this._stage.immediateActorScreenUpdate(subclass_actor, old_x, old_y, old_floor_num);
 		return true;
 	}
+
 	return false;
 }
 

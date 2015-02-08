@@ -2,7 +2,7 @@
 /* 
  * Monster Constructor. Take stage position (x, y). 
  */
-function Monster(stage_ref, x, y, image_source=null) {
+function Monster(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
@@ -15,7 +15,7 @@ function Monster(stage_ref, x, y, image_source=null) {
 	//TODO(SLatychev): Allow monsters to set their delays to allow them to change the delay
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, default_image_source, 50);
+	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 50);
 }
 
 /*
@@ -25,8 +25,8 @@ Monster.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
-Monster.prototype.setPosition = function(x, y, sub_class=this) {
-	return this._actor.setPosition(x, y, sub_class);
+Monster.prototype.setPosition = function(x, y, floor_num, sub_class=this) {
+	return this._actor.setPosition(x, y, floor_num, sub_class);
 }
 
 Monster.prototype.getImage = function() {
@@ -37,20 +37,30 @@ Monster.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
 
+Monster.prototype.getDelay = function() {
+	return this._actor.getDelay();
+}
+
+Monster.prototype.setDelay = function(tick_delay) {
+	return this._actor.setDelay(tick_delay);
+}
+
 Monster.prototype.isGrabbable = function() {
 	return false;
 }
 
 /*
  * Will check if monster is dead, will appropriately delay itself if need be,
- * and make itself move
+ * and make itself move. If object changes visually it will to return true.
  */
-Monster.prototype.tick = function(force_update, sub_class=this) {
+Monster.prototype.tick = function(force_update, subclass_actor=this) {
 	if (this.isDead()) {
 		this._stage.removeActor(this);
+		return true;
 	} else if (this._actor.delay()) {
-		return this.move(this.dx, this.dy, sub_class);
+		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 	}
+	return false;
 }
 
 /*
@@ -66,7 +76,7 @@ Monster.prototype.isDead = function() {
 		for (var dy = -1; dy <= 1; dy++) {
 			if (dx == 0 && dy == 0) continue; // Don't need to check player
 			
-			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy);
+			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy, pos[2]);
 			if (actor) {
 				num_surrounding_actors += 1;
 			}
@@ -79,45 +89,48 @@ Monster.prototype.isDead = function() {
 /*
  *	Will move diagonally, if it hits a wall will determine if it is being 
  * blocked in the x or y directions and "bounce" in the opposite direction
+ * NOTE(SLatychev): This funciton is only called during an update via tick.
  */
-Monster.prototype.move = function(dx, dy, sub_class=this) {
+Monster.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 	var old_pos = this.getPosition();
 
-	//Tracks if the monster has bounced
-	var bounce = true;
+	var backward_pos_actor = this._stage.getActor(old_pos[0]-this.dx, old_pos[1]-this.dy, floor_num);
+	var forward_pos_actor = this._stage.getActor(old_pos[0]+this.dx, old_pos[1]+this.dy, floor_num);
+	var rev_dx_pos_actor = this._stage.getActor(old_pos[0]-this.dx, old_pos[1]+this.dy, floor_num);
+	var rev_dy_pos_actor = this._stage.getActor(old_pos[0]-this.dx, old_pos[1]-this.dy, floor_num);
 	
-	//Basic movement and awareness: next, previous, and opposite vector 
-	var prev = this._stage.getActor(old_pos[0]-dx, old_pos[1]-dy);
-	var next = this._stage.getActor(old_pos[0]+dx, old_pos[1]+dy);	
-	var bounce_x = this._stage.getActor(old_pos[0]-dx, old_pos[1]+dy);
-	var bounce_y = this._stage.getActor(old_pos[0]+dx, old_pos[1]-dy);
-	
-	
-	if (next) {
-		if (!bounce_x) {
+	if (forward_pos_actor) {
+		//Check if actor in position if we reverse dx
+		if (!rev_dx_pos_actor) {
 			this.dx = -this.dx;
-			bounce = true;
 		}
-		if (!bounce_y) {
+		//Check if actor in position if we reverse dy
+		if (!rev_dy_pos_actor) {
 			this.dy = -this.dy;
-			bounce = true;
 		}
-		if (!bounce) {
-			if (!prev){
+		//Check 
+		if (rev_dx_pos_actor && rev_dy_pos_actor) {
+			//Cannot move in a "forward" direction
+			if (!backward_pos_actor) {
 				this.dx = -this.dx;
 				this.dy = -this.dy;
 			}
-			//else we're about to get #rekt
 		}
-		bounce = false;
+		return false;
 	} else {
-		this.setPosition(old_pos[0]+dx, old_pos[1]+dy, sub_class);
-		this._stage.immediateMoveUpdate(sub_class, old_pos[0], old_pos[1]);
+		this.setPosition(old_pos[0]+this.dx, old_pos[1]+this.dy, floor_num, subclass_actor);
+		//TODO(SLatychev): See if it is necessary to call this function
+		this._stage.immediateActorScreenUpdate(subclass_actor, old_pos[0], old_pos[1], old_pos[2]);
+		return true;
 	}
-	return false;
 }
 
-
+/*
+ * Monster cannot be moved by other actors and so returns false.
+ */
+Monster.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
+	return false;
+}
 
 
 
