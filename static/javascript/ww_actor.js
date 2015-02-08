@@ -54,6 +54,20 @@ Actor.prototype.setImage = function(image_source) {
 }
 
 /*
+ * Return actor's delay.
+ */
+Actor.prototype.getDelay = function() {
+	return this.tick_delay;
+}
+
+/*
+ * Set actor's delay.
+ */
+Actor.prototype.setDelay = function(tick_delay) {
+	return this.tick_delay = tick_delay;
+}
+
+/*
  * Generic tick function to be overridden by specific actors that will use it.
  * Return whether its state changed.
  */
