@@ -4,7 +4,7 @@
  */
 function Alien(stage_ref, x, y, image_source=null) {
 	// Check default image source	
-	var default_image_source = "";
+	var default_image_source = "static/icons/alien-24.png";
 	if (image_source) {
 		default_image_source = image_source;
 	}

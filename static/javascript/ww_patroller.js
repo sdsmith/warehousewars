@@ -4,7 +4,7 @@
  */
 function Patroller(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source	
-	var default_image_source = "";
+	var default_image_source = "static/icons/face-devil-grin-24.png";
 	if (image_source) {
 		default_image_source = image_source;
 	}
