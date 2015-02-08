@@ -2,7 +2,7 @@
 /* 
  * Patroller Constructor. Take stage position (x, y). 
  */
-function Patroller(stage_ref, x, y, image_source=null) {
+function Patroller(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
@@ -14,15 +14,15 @@ function Patroller(stage_ref, x, y, image_source=null) {
 	this.dy = 0;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, default_image_source, 50);
+	this._monster = new Monster(stage_ref, x, y, floor_num, default_image_source, 50);
 }
 
 Patroller.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
-Patroller.prototype.setPosition = function(x, y) {
-	return this._monster.setPosition(x, y);
+Patroller.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
 Patroller.prototype.getImage = function() {
@@ -33,11 +33,23 @@ Patroller.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
+Patroller.prototype.getDelay = function() {
+	return this._monster.getDelay();
+}
+
+Patroller.prototype.setDelay = function(tick_delay) {
+	return this._monster.setDelay(tick_delay);
+}
+
+Patroller.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
+}
+
 /*
  *	Calls Monster's tick
  */
-Patroller.prototype.tick = function() {
-	return this._monster.tick();
+Patroller.prototype.tick = function(force_update, subclass_actor=this) {
+	return this._monster.tick(force_update, subclass_actor);
 }
 
 /*
@@ -50,15 +62,15 @@ Patroller.prototype.isDead = function() {
 /*
  *	Calls Monster's monsterMove
  */
-Patroller.prototype.monsterMove = function() {
-	return this._monster.monsterMove(this.dx, this.dy);
+Patroller.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
+	return this._monster.monsterMove(this.dx, this.dy, floor_num, subclass_actor);
 }
 
 /*
  *	Calls Monster's move
  */
-Patroller.prototype.move = function() {
-	return this._monster.move(this.dx, this.dy);
+Patroller.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
+	return this._monster.move(dx, dy, floor_num, subclass_actor);
 }
 
 
