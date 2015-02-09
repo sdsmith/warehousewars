@@ -77,7 +77,7 @@ Stage.prototype.initialize = function() {
 
 
 	// Add Player to the stage
-	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.player_floor, this.playerImageSrc);
+	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.player_floor, this.playerImageSrc, 100);
 	this.addActor(this.player);
 
 	var player_pos = this.player.getPosition(); //needed so we don't place actor on player square(s)

@@ -16,8 +16,9 @@ var key_space = 32;
  * Player constructor. Has a default image set. If image_source if set, it will
  * be used as the base image for the actor.
  */
-function Player(stage_ref, x, y, floor_num, image_source=null) {
+function Player(stage_ref, x, y, floor_num, image_source=null, health=100) {
 	this._stage = stage_ref;
+	this.health = health;// TODO(sdsmith): Have not implemented it
 
 	// Set actor's image
 	var default_image_source = "";
@@ -27,6 +28,9 @@ function Player(stage_ref, x, y, floor_num, image_source=null) {
 	this._actor = new Actor(stage_ref, x, y, floor_num, image_source, 0);
 
 	this.key_shift_pressed = false; // Whether the shift key has been pressed
+
+	// The current actor that is being grabbed
+	this.actor_grabbed = null;
 }
 
 /*
@@ -82,14 +86,39 @@ Player.prototype.immediateMove = function(dx, dy, floor_num) {
 
 			// If shift key pressed and moved on the same floor, drag an object opposite the current move direction
 			if (this.key_shift_pressed && old_pos[2] == new_pos[2]) {
-				var actor_pos_x = old_pos[0] - dx;
-				var actor_pos_y = old_pos[1] - dy;
-				var actor_floor_num = (this.getPosition())[2];
-				var actor = this._stage.getActor(actor_pos_x, actor_pos_y, actor_floor_num);
+				// Check to see if we are grabbing an actor already
+				if (this.actor_grabbed) {
+					var grabbedactor_pos = this.actor_grabbed.getPosition();
+					var new_grabbedactor_pos_x = grabbedactor_pos[0] + dx;
+					var new_grabbedactor_pos_y = grabbedactor_pos[1] + dy;
 
-				if (actor && actor.isGrabbable()) {
-					actor.setPosition(old_pos[0], old_pos[1], actor_floor_num);
-					this._stage.immediateActorScreenUpdate(actor, actor_pos_x, actor_pos_y, actor_floor_num);
+					var on_same_floor = grabbedactor_pos[2] == new_pos[2];
+					var is_grabbed_infront = grabbedactor_pos[0] == new_pos[0]+dx && grabbedactor_pos[1] == new_pos[1]+dy && grabbedactor_pos[2] == new_pos[2];
+
+					// Check if we are able to continue grabbing the object
+					if (on_same_floor && (is_grabbed_infront || !this._stage.getActor(new_grabbedactor_pos_x, new_grabbedactor_pos_y, grabbedactor_pos[2]))) {
+						if (!is_grabbed_infront) {
+							// If it is in front of us, we already moved, so we have pushed it.
+							this.actor_grabbed.setPosition(new_grabbedactor_pos_x, new_grabbedactor_pos_y, grabbedactor_pos[2], this.actor_grabbed);
+							this._stage.immediateActorScreenUpdate(this.actor_grabbed, grabbedactor_pos[0], grabbedactor_pos[1], grabbedactor_pos[2]);
+						}
+					} else {
+						// Grabbed actor can't move, let them go
+						this.actor_grabbed = null;
+					}
+				} else {
+					// Grab a new actor
+					var actor_pos_x = old_pos[0] - dx;
+					var actor_pos_y = old_pos[1] - dy;
+					var actor_floor_num = new_pos[2];
+					var actor = this._stage.getActor(actor_pos_x, actor_pos_y, actor_floor_num);
+
+					// 'grab' the actor if they exist
+					if (actor && actor.isGrabbable()) {
+						this.actor_grabbed = actor;
+						actor.setPosition(old_pos[0], old_pos[1], actor_floor_num);
+						this._stage.immediateActorScreenUpdate(actor, actor_pos_x, actor_pos_y, actor_floor_num);
+					}
 				}
 			}
 		}
@@ -119,6 +148,11 @@ Player.prototype.handleKeydown = function(event) {
 	 */
 	var keyCode = event.keyCode;
 	this.key_shift_pressed = event.shiftKey;
+	if (!this.key_shift_pressed) {
+		// release the actor when we release the shift key
+		// TODO(sdsmith): probably want to do this on keypress up.
+		this.actor_grabbed = false;
+	}
 	var pos = this.getPosition();
 
 	switch (keyCode) {
