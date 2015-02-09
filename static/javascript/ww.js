@@ -107,7 +107,7 @@ Stage.prototype.initialize = function() {
 				// Monster
 				else if (Math.random() < this.monster_frequency) {
 					//this.addActor(new Patroller(this, x, y, floor_num, this.patrollerImageSrc));
-					this.addActor(new Monster(this, x, y, floor_num, this.patrollerImageSrc));
+					this.addActor(new Patroller(this, x, y, floor_num, this.patrollerImageSrc));
 				}
 			}
 		}

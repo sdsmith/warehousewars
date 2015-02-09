@@ -33,6 +33,10 @@ Monster.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
 }
 
+Monster.prototype.delay = function() {
+	return this._actor.delay()
+}
+
 Monster.prototype.getDelay = function() {
 	return this._actor.getDelay();
 }
@@ -53,7 +57,7 @@ Monster.prototype.tick = function(force_update, subclass_actor=this) {
 	if (this.isDead()) {
 		this._stage.removeActor(this);
 		return true;
-	} else if (this._actor.delay()) {
+	} else if (this.delay()) {
 		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 	}
 	return false;
