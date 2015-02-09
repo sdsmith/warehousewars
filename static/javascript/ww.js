@@ -26,8 +26,10 @@ function Stage(width, height, stageElementID) {
 
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;
-	// element containing user messages
-	this.info_bannerID = document.getElementById('game_info_banner');
+	
+	/* Messages to print to screen */
+	this.info_banner_floor_number_id = document.getElementById('screen_floor_number');
+	this.info_banner_user_message_id = document.getElementById('user_info_message');
 
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
@@ -40,7 +42,6 @@ function Stage(width, height, stageElementID) {
 	
 	// Game state variables
 	this.game_paused = false;
-	this.info_banner_messages = []; // TODO(sdsmith):
 
 	// NPC spawn rates	
 	this.box_frequency = 0.40;
@@ -238,6 +239,13 @@ Stage.prototype.processKeydown = function(event) {
 	if (27 == keyCode) {
 		// Escape key
 		this.game_paused = !this.game_paused;
+
+		var message = "";
+		if (this.game_paused) {
+			message = "Paused";
+		}
+
+		this.displayUserMessage(message);
 	}
 	// Check if it is a player control key
 	else if (65 <= keyCode && keyCode <= 90 || keyCode == 32) {
@@ -277,9 +285,33 @@ Stage.prototype.drawFloor = function(floor_num) {
 	// Update the player's floor on draw
 	// TODO(sdsmith): is this the best way to do this?
 	this.player_floor = this.player.getPosition()[2];
+	
+	// Update the screen's floor number info
+	this.displayScreenFloorNumber();
 }
 
-// TODO(sdsmith):
-Stage.prototype.displayInfoMessage = function(message) {	 
+/*
+ * Displays the current floor number being displayed on the screen.
+ */
+Stage.prototype.displayScreenFloorNumber = function() {
+	this.info_banner_floor_number_id.innerHTML = "Floor " + this.floor_on_screen;
+}
+
+/*
+ * Displays the current user message to the screen. Tracks the current message 
+ * on screen.
+ */
+Stage.prototype.displayUserMessage = function(message) {
+	this.info_banner_user_message_id.innerHTML = message;
 }
 // END Class Stage
+
+
+
+
+
+
+
+
+
+
