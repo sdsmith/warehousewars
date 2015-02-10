@@ -15,6 +15,9 @@ function Ghoul(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_so
 
 	//Special ghoul property that defines how far it can "see"
 	this.sightRange = 2;
+	this.compound_dx = 0;
+	this.compound_dy = 0;
+	this.chase = false;
 
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, 350);
@@ -103,7 +106,6 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 	var possibleMoves = new Array();	
 	var pos = this.getPosition();
 	var num_surrounding_actors = 0;
-	var chase = false;
 
 	for (var dx = -1; dx <= 1; dx++) {
 		for (var dy = -1; dy <= 1; dy++) {
@@ -112,21 +114,26 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 			//Reference to surrounding actors
 			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy, pos[2]);
 			
-			if (!actor) {
+			//Only check to see if we can move to a spot if there are no actors and we are not chasing
+			if (!actor && !this.chase) {
 				//Only checks current floor, need to change if vertical rotations are implemented
 				possibleMoves.push([pos[0] + dx, pos[1] + dy]);
-				/*
+
 				//Look ahead and check if we can "see" the player
 				for (var los = 1; los <= this.sightRange; los++) {
-					var ghoul_sight = this._stage.getActor(pos[0] + dx + los, pos[1] + dy + los, pos[2]);
+					this.compound_dx += dx;
+					this.compound_dy += dy;
+					var ghoul_sight = this._stage.getActor(pos[0] + dx + this.compound_dx, pos[1] + dy + this.compound_dy, pos[2]);
 
 					//If a target is spotted and is hostile then set chase to true
 					if (ghoul_sight && this._stage.hostileTeamInteraction(this, ghoul_sight)) {
-						chase = true;
-
+						this.chase = true;
+						var distance = [ghoul_sight.getPosition()[0] - pos[0], ghoul_sight.getPosition()[1] - pos[1]];
+					}
+					if (los == this.sightRange && !ghoul_sight) {
+						
 					}
 				}
-				*/
 			}
 			//If the actor is hostile then attack the target
 			else if (this._stage.hostileTeamInteraction(this, actor)) {
@@ -144,10 +151,31 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 		}
 	}
 		
-	random_pos_index = Math.floor((Math.random() * possibleMoves.length));
-	random_pos = possibleMoves[random_pos_index];
-	this.dx = random_pos[0] - pos[0];
-	this.dy = random_pos[1] - pos[1];
+	//Check if we're chasing
+	if (!chase) {
+		//No chase, move randomly and slowly and reset the compound deltas
+		this.compound_dx = 0;
+		this.compound_dy = 0;
+		this.setDelay(350);
+		random_pos_index = Math.floor((Math.random() * possibleMoves.length));
+		random_pos = possibleMoves[random_pos_index];
+		this.dx = random_pos[0] - pos[0];
+		this.dy = random_pos[1] - pos[1];
+	} else {
+		//Chase in progress, get identity deltas to direct direction of movement and move quickly
+		this.compound_dx = 0;
+		this.compound_dy = 0;
+		this.setDelay(50);
+		if (distance[0] > 0) {
+			this.dx = distance[0] / Math.abs(distance[0]);
+		}
+		if (distance[1] > 0) {
+			this.dx = distance[1] / Math.abs(distance[1]);
+		}
+		if (distance[0] == 0 && distance[1] == 0) {
+			this.chase = false;
+		}
+	}
 	this.setPosition(pos[0] + this.dx, pos[1] + this.dy, floor_num, subclass_actor);
 	return true;
 }

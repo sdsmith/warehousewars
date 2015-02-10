@@ -47,6 +47,8 @@ Player.prototype.getHitPoints = function() {
 Player.prototype.hit = function(attacker_actor, damage_amount) {
 	this._actor.hit(attacker_actor, damage_amount);
 	this._stage.displayPlayerHealth();
+	this._hit = document.getElementById('wwHitSound');
+	this._hit.play();
 }
 
 Player.prototype.heal = function(hit_points) {

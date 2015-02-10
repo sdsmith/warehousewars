@@ -15,7 +15,8 @@
 		<script language="javascript" src="static/javascript/ww_ghoul.js" ></script>
 		<script language="javascript" src="static/javascript/ww_map.js" ></script>
 
-		<audio id="wwSoundLoop" src="static/audio/BanjoKazooie-GruntildaLairMedley.webm" preload="auto"></audio>	
+		<audio id="wwSoundLoop" src="static/audio/BanjoKazooie-GruntildaLairMedley.webm" preload="auto"></audio>
+		<audio id="wwHitSound" src="static/audio/Hit.wav" preload="auto"></audio>
 		<a href="javascript:playSong();">Play</a>
 		<a href="javascript:pauseSong();">Pause</a>
 		<a href="javascript:mute();">Mute</a>
@@ -30,11 +31,11 @@
 				stage.initialize();
 				wwSoundLoop.loop = true;
 				wwSoundLoop.muted = false;
-				wwSoundLoop.paused = false;
+				wwSoundLoop.paused = true;
 			}
 
 			function startGame(){
-				wwSoundLoop.play();
+				//wwSoundLoop.play();
 
 				/* Event Handlers */
 				document.addEventListener(
