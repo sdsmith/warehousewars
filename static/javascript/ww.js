@@ -119,7 +119,7 @@ Stage.prototype.initialize = function() {
 				} 
 				// Monster
 				else if (Math.random() < this.monster_frequency) {
-					this.addActor(new Monster(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.patrollerImageSrc));
+					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.ghoulImageSrc));
 				}
 			}
 		}
