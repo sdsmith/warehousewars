@@ -40,12 +40,6 @@ function Stage(width, height, stageElementID) {
 	this.info_banner_player_health_id = document.getElementById('player_health_info');
 	this.info_banner_game_score_id = document.getElementById('game_score');
 
-	/* Game statistics submit elements */
-	this.gamestats_score_id = document.getElementById('gamestats_score');
-	this.gamestats_kills_id = document.getElementById('gamestats_kills');
-	this.gamestats_deaths_id = document.getElementById('gamestats_deaths');
-	this.gamestats_steps_id = document.getElementById('gamestats_steps');
-
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
 	this.blankImageSrc = document.getElementById('blankImage').src;

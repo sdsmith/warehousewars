@@ -41,6 +41,9 @@ Actor.prototype.setTeamId = function(team_id) {
 	this.team_id = team_id;
 }
 
+/*
+ * Return the current hit points of the actor.
+ */
 Actor.prototype.getHitPoints = function() {
 	return this.hit_points;
 }
