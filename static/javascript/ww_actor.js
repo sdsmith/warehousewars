@@ -40,6 +40,13 @@ Actor.prototype.setTeamId = function(team_id) {
 }
 
 /*
+ * Return damage this actor will do to another actor.
+ */
+Actor.prototype.getDamage = function() {
+	return this.damage;
+}
+
+/*
  * Return array of (x,y,floor_num) position relative to the stage.
  */
 Actor.prototype.getPosition = function() {

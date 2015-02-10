@@ -25,6 +25,10 @@ Monster.prototype.setTeamId = function(team_id) {
 	this._actor.setTeamId(team_id);
 }
 
+Monster.prototype.getDamage = function() {
+	return this._actor.getDamage();
+}
+
 Monster.prototype.hit = function(attacker_actor, damage_amount) {
 	this._actor.hit(attacker_actor, damage_amount);
 }
@@ -116,6 +120,11 @@ Monster.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this)
 	var rev_dy_pos_actor = this._stage.getActor(old_pos[0]-this.dx, old_pos[1]-this.dy, floor_num);
 	
 	if (forward_pos_actor) {
+		// Apply damage
+		if (this._stage.hostileTeamInteraction(this, forward_pos_actor)) {
+			forward_pos_actor.hit(this, this.getDamage());
+		}
+
 		//Check if actor in position if we reverse dx
 		if (!rev_dx_pos_actor) {
 			this.dx = -this.dx;
