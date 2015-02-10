@@ -10,6 +10,7 @@ session_start();
 require_once(APP_ROOT_PATH . "/models/authentication.php");
 require_once(APP_ROOT_PATH . "/models/register.php");
 require_once(APP_ROOT_PATH . "/models/inputvalidation.php");
+require_once(APP_ROOT_PATH . "/models/gamestats.php");
 
 // Get current request's action
 $action = &$_POST['action'];
@@ -200,9 +201,23 @@ function actionController() {
 
 			if ($action == "home") {
 				set_view("home.html", "home_authenticated");
-			} elseif ($action == "logout") {
-				logout();
-				set_view("home_guest.html", "home_guest");
+			} elseif ($action == "gamestats_submit") {
+				// Game statistics are being submitted
+				// Use gamestats.php to handle input.
+				$score = $_POST['gamestats_score'];
+				$kills = $_POST['gamestats_kills'];
+				$deaths = $_POST['gamestats_deaths'];
+				$steps = $_POST['gamestats_steps'];
+				$maxlevel = 0;
+
+				// Insert game results into the database
+				insert_gamestats($_SESSION['userid'], $score, $maxlevel, $kills, $deaths, $steps);
+
+				// Update user's highscore if necessary
+				if ($score > $_SESSION['highscore']) {
+					update_user_highscore($_SESSION['userid'], $score);
+					$_SESSION['highscore'] = $score;
+				}
 			}
 
 			break;
