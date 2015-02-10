@@ -24,12 +24,31 @@ function Player(stage_ref, team_id, hit_points, x, y, floor_num, image_source=nu
 	if (image_source) {
 		default_image_source = image_source;
 	}
-	this._actor = new Actor(stage_ref, team_id, hit_points, 0, x, y, floor_num, image_source, 0);
+	this._actor = new Actor(stage_ref, team_id, hit_points, 0, 0, x, y, floor_num, image_source, 0);
 
+	// Store value of meta keys
 	this.key_shift_pressed = false; // Whether the shift key has been pressed
 
 	// The current actor that is being grabbed
 	this.actor_grabbed = null;
+
+	// Player Statistics
+	this.stats_steps = 0;
+	this.stats_deaths = 0;
+}
+
+/*
+ * Return the number of steps taken during this game.
+ */
+Player.prototype.getStatisticsSteps = function() {
+	return this.stats_steps;
+}
+
+/*
+ * Return the number of deaths had in this game.
+ */
+Player.prototype.getStatisticsDeaths = function() {
+	return this.stats_deaths;
 }
 
 Player.prototype.getTeamId = function() {
@@ -45,8 +64,14 @@ Player.prototype.getHitPoints = function() {
 }
 
 Player.prototype.hit = function(attacker_actor, damage_amount) {
-	this._actor.hit(attacker_actor, damage_amount);
+	var isDead = this._actor.hit(attacker_actor, damage_amount);
 	this._stage.displayPlayerHealth();
+
+	// If we died, end the game
+	if (isDead) {
+		this.stats_deaths += 1;
+		this._stage.endGame();
+	}
 }
 
 Player.prototype.heal = function(hit_points) {
@@ -101,6 +126,7 @@ Player.prototype.immediateMove = function(dx, dy, floor_num) {
 		var old_pos = this.getPosition();
 
 		if (this._actor.move(dx, dy, floor_num, this)) {
+			this.stats_steps += 1;
 			hasMoved = true;
 			var new_pos = this.getPosition();
 

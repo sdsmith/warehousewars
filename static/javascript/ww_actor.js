@@ -5,18 +5,20 @@
  * 	team_id			id of the team this actor belongs too
  *	hit_points		number of maximum damage this actor can take over its lifetime
  *	damage			the amount of damage done to a hostile during an attack
+ *	score_value		the amount of points this actor is worth if killed
  *	x				x co-ordinate of grid position
  *	y				y co-ordinate of grid position
  *	floor_num		floor the actor is on
  *	image_source	file path of the image that will be displayed on screen for actor
  *	tick_delay		interval of skipped ticks before it performs its move
  */
-function Actor(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source, tick_delay) {
+function Actor(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source, tick_delay) {
 	this._stage = stage_ref;
 	this.team_id = team_id;
 	this.max_hit_points = hit_points;		// maximum actor health
 	this.hit_points = this.max_hit_points;	// current actor health
 	this.damage = damage;
+	this.score_value = score_value;
 	this.pos_x = x;
 	this.pos_y = y;
 	this.floor_num = floor_num;
@@ -48,6 +50,13 @@ Actor.prototype.getHitPoints = function() {
  */
 Actor.prototype.getDamage = function() {
 	return this.damage;
+}
+
+/*
+ *
+ */
+Actor.prototype.getScoreValue = function() {
+	return this.score_value;
 }
 
 /*
@@ -119,6 +128,7 @@ Actor.prototype.isDead = function() {
 
 /*
  * Tells actor there attacker_actor is applying damage_amount of damage to it.
+ * Returns true if the actor has died.
  */
 Actor.prototype.hit = function(attacker_actor, damage_amount) {
 	// apply damage
@@ -127,7 +137,10 @@ Actor.prototype.hit = function(attacker_actor, damage_amount) {
 	if (this.hit_points < 0) {
 		// actor is 'dead'
 		this._stage.removeActor(this);
+		return true;
 	}
+
+	return false;
 }
 
 /*

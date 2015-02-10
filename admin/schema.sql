@@ -10,7 +10,7 @@ CREATE TABLE appuser_passwords (
 );
 
 CREATE TABLE ww_appuser_stats (
-	gameid	 	BIGINT,
+	gameid	 	BIGSERIAL,
 	userid 		BIGINT,
 	time 		TIMESTAMP,
 	score 		INT 		NOT NULL,

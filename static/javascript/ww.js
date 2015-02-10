@@ -34,10 +34,17 @@ function Stage(width, height, stageElementID) {
 	// the element containing the visual representation of the stage
 	this.stageElementID = stageElementID;
 	
-	/* Messages to print to screen */
+	/* Screen information elements */
 	this.info_banner_floor_number_id = document.getElementById('screen_floor_number');
 	this.info_banner_user_message_id = document.getElementById('user_info_message');
 	this.info_banner_player_health_id = document.getElementById('player_health_info');
+	this.info_banner_game_score_id = document.getElementById('game_score');
+
+	/* Game statistics submit elements */
+	this.gamestats_score_id = document.getElementById('gamestats_score');
+	this.gamestats_kills_id = document.getElementById('gamestats_kills');
+	this.gamestats_deaths_id = document.getElementById('gamestats_deaths');
+	this.gamestats_steps_id = document.getElementById('gamestats_steps');
 
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
@@ -52,13 +59,18 @@ function Stage(width, height, stageElementID) {
 	
 	// Game state variables
 	this.game_paused = false;
+	this.game_score = 0;
+	this.stats_kills = 0;
 
 	/* NPC Data */
 	// spawn rates	
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
-	
-	
+	// team counts
+	this.team_count = new Array(); // team_count[TEAM_ID] = that team's count
+	this.team_count[TEAM_NEUTRAL] = 0;
+	this.team_count[TEAM_PLAYER] = 0;
+	this.team_count[TEAM_ENEMY] = 0;
 
 	// Multi-floor support
 	this.num_floors = 2;
@@ -119,7 +131,8 @@ Stage.prototype.initialize = function() {
 				} 
 				// Monster
 				else if (Math.random() < this.monster_frequency) {
-					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.ghoulImageSrc));
+					//this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.ghoulImageSrc));
+					this.addActor(new Monster(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.patrollerImageSrc));
 				}
 			}
 		}
@@ -130,6 +143,7 @@ Stage.prototype.initialize = function() {
 
 	// Load gui initial info
 	this.displayPlayerHealth();
+	this.displayGameScore();
 }
 
 /*
@@ -151,6 +165,9 @@ Stage.prototype.addActor = function(actor) {
 	// Add actor to direct access map
 	var pos = actor.getPosition();
 	this.actor_map.set(pos[0], pos[1], pos[2], actor);
+
+	// Update team count
+	this.team_count[actor.getTeamId()] += 1
 }
 
 /*
@@ -165,6 +182,17 @@ Stage.prototype.removeActor = function(actor) {
 
 	// Blank out its screen tile
 	this.setImage(pos[0], pos[1], this.blankImageSrc);
+
+	// Update team count
+	this.team_count[actor.getTeamId()] -= 1;
+
+	// Update score and kill stats
+	if (actor.getTeamId() == TEAM_ENEMY) {
+		this.stats_kills += 1;
+		
+		// Add enemy's score value to current score
+		this.modifyGameScore(actor.getScoreValue());
+	}
 
 	// Remove from list of actors
 	var actor_index = this.actors.indexOf(actor);
@@ -352,6 +380,72 @@ Stage.prototype.hostileTeamInteraction = function(initiator_actor, target_actor)
 	}
 
 	return hostile;
+}
+
+/*
+ * Ends the game and decides win or loss based on the status of the game.
+ */
+Stage.prototype.endGame = function() {
+	// Check TEAM_ENEMY counts. If 0 win, else lose.
+	if (this.team_count[TEAM_ENEMY] == 0) {
+		// VICTORY! All enemies are gone!		
+		alert("You Win!");
+	} else {
+		// Defeat. Enemies remain.
+		alert("You lose!");
+	}
+
+	this.submitGameStats();
+}
+
+/*
+ * Adds the given score_value to the game's score.
+ */
+Stage.prototype.modifyGameScore = function(score_value) {
+	this.game_score += score_value;
+	this.displayGameScore();
+}
+
+/*
+ * Displays the current game score on the screen.
+ */
+Stage.prototype.displayGameScore = function() {
+	this.info_banner_game_score_id.innerHTML = "Score: " + this.game_score;
+}
+
+/*
+ * Builds a form to submit game statistics and sends it.
+ * NOTE: May leave current page; logic is dependant on controller.
+ */
+Stage.prototype.submitGameStats = function() {	
+	var gamestats_form = document.createElement("form");
+	var input_elt = document.createElement("input");
+
+	// Set form submit method	
+	gamestats_form.method = "post";
+
+	// Add all name-value pairs to the form
+	input_elt.name = "action";
+	input_elt.value = "gamestats_submit";
+	gamestats_form.appendChild(input_elt.cloneNode());
+	input_elt.name = "gamestats_score";
+	input_elt.value = this.game_score;
+	gamestats_form.appendChild(input_elt.cloneNode());
+	input_elt.name = "gamestats_kills";
+	input_elt.value = this.stats_kills;
+	gamestats_form.appendChild(input_elt.cloneNode());
+	input_elt.name = "gamestats_deaths";
+	input_elt.value = this.player.getStatisticsDeaths();
+	gamestats_form.appendChild(input_elt.cloneNode());
+	input_elt.name = "gamestats_steps";
+	input_elt.value = this.player.getStatisticsSteps();
+	gamestats_form.appendChild(input_elt.cloneNode());
+
+	// Append to document for submit
+	document.body.appendChild(gamestats_form);
+
+	// Submit
+	gamestats_form.submit();
 }
 // END Class Stage
 
