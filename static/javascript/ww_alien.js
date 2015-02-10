@@ -92,14 +92,6 @@ Alien.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 	var possibleMoves = new Array();	
 	var pos = this.getPosition();
 	var num_surrounding_actors = 0;
-	
-	//Apply Damage
-	if (this.dx != 0 && this.dy != 0) {
-		var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
-		if (actor && this._stage.hostileTeamInteraction(this, actor)) {
-			actor.hit(this, this.getDamage());
-		}
-	}
 
 	for (var _dx = -1; _dx <= 1; _dx++) {
 		for (var _dy = -1; _dy <= 1; _dy++) {
@@ -110,6 +102,17 @@ Alien.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 				//This will only check surrounding tiles on current floor
 				//NOTE(SLatychev): will need to change if we decide to implement vertical movement.
 				possibleMoves.push([pos[0] + _dx, pos[1] + _dy]);
+			}
+			else if (this._stage.hostileTeamInteraction(this, actor)) {
+				var actor_pos = actor.getPosition();
+				this.dx = actor_pos[0] - pos[0];
+				this.dy = actor_pos[1] - pos[1];
+				//Apply Damage
+				var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
+				if (actor && this._stage.hostileTeamInteraction(this, actor)) {
+					actor.hit(this, this.getDamage());
+				}
+				return true;
 			}
 		}
 	}

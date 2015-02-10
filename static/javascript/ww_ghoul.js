@@ -105,27 +105,40 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 	var num_surrounding_actors = 0;
 	var chase = false;
 
-	//Apply Damage
-	var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
-	if (actor && this._stage.hostileTeamInteraction(this, actor)) {
-		actor.hit(this, this.getDamage());
-	}
-	
-
 	for (var dx = -1; dx <= 1; dx++) {
 		for (var dy = -1; dy <= 1; dy++) {
 			if (dx == 0 && dy == 0) continue; // Don't need to check player
+
 			//Reference to surrounding actors
 			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy, pos[2]);
 			
 			if (!actor) {
 				//Only checks current floor, need to change if vertical rotations are implemented
 				possibleMoves.push([pos[0] + dx, pos[1] + dy]);
+				/*
+				//Look ahead and check if we can "see" the player
+				for (var los = 1; los <= this.sightRange; los++) {
+					var ghoul_sight = this._stage.getActor(pos[0] + dx + los, pos[1] + dy + los, pos[2]);
+
+					//If a target is spotted and is hostile then set chase to true
+					if (ghoul_sight && this._stage.hostileTeamInteraction(this, ghoul_sight)) {
+						chase = true;
+
+					}
+				}
+				*/
 			}
-			else if (actor == this._stage.player) {
+			//If the actor is hostile then attack the target
+			else if (this._stage.hostileTeamInteraction(this, actor)) {
 				var actor_pos = actor.getPosition();
 				this.dx = actor_pos[0] - pos[0];
 				this.dy = actor_pos[1] - pos[1];
+
+				//Apply Damage
+				var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
+				if (actor && this._stage.hostileTeamInteraction(this, actor)) {
+					actor.hit(this, this.getDamage());
+				}
 				return true;
 			}
 		}

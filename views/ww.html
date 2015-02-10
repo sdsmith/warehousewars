@@ -15,17 +15,28 @@
 		<script language="javascript" src="static/javascript/ww_ghoul.js" ></script>
 		<script language="javascript" src="static/javascript/ww_map.js" ></script>
 
+		<audio id="wwSoundLoop" src="audio/Banjo-Kazooie - Gruntilda's Lair Medley.mp3" preload="auto"></audio>	
+		<a href="javascript:playSong();">Play</a>
+		<a href="javascript:pauseSong();">Pause</a>
+		<a href="javascript:mute();">Mute</a>
+
 		<script> 
 			var stage = null;
-			var interval = null;			
+			var interval = null;	
+			var wwSoundLoop = document.getElementById('wwSoundLoop');		
 
 			function setupGame(){
 				stage=new Stage(20,20,"stage");
 				stage.initialize();
+				wwSoundLoop.loop = true;
+				wwSoundLoop.muted = false;
+				wwSoundLoop.paused = false;
 			}
 
 			function startGame(){
-				/* Event Handlers */	
+				wwSoundLoop.play();
+
+				/* Event Handlers */
 				document.addEventListener(
 					'keydown', 
 					function processKeydown(event) {
@@ -36,6 +47,18 @@
 						stage.tick();
 					}
 					, interval);
+			}
+
+			function playSong() {
+				wwSoundLoop.play();
+			}
+
+			function pauseSong() {
+				wwSoundLoop.pause();
+			}
+
+			function mute() {
+				wwSoundLoop.muted = !wwSoundLoop.muted;
 			}
 
 			function pauseGame(){
