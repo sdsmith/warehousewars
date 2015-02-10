@@ -6,7 +6,6 @@ define("APP_ROOT_PATH", dirname(__FILE__));
 session_save_path(APP_ROOT_PATH . "/sess");
 session_start();
 
-
 require_once(APP_ROOT_PATH . "/models/authentication.php");
 require_once(APP_ROOT_PATH . "/models/register.php");
 require_once(APP_ROOT_PATH . "/models/inputvalidation.php");
@@ -19,11 +18,6 @@ $errormessages = array();
 $state = &$_SESSION['state'];
 $action = &$_SESSION['action'];
 $view = &$_SESSION['view'];
-
-
-// TODO(sdsmith): Each state of the machine can be associated with a view.
-// Eventually refactor the system to just require state change where the view
-// associated with it will be defined in a config file.
 
 
 /*
@@ -114,14 +108,14 @@ function actionController() {
 				$cred_password = $_POST['login_password'];
 				
 				// Validate input
-				if (whitelist_input($cred_username) and whitelist_input($cred_password)) {
+				if (whitelist_input($cred_username, MIN_LEN_USERNAME, MAX_LEN_USERNAME) and whitelist_input($cred_password, MIN_LEN_PASSWORD, MAX_LEN_PASSWORD)) {
 					if (login($cred_username, $cred_password)) {
 						// Authenticate
 						set_view("home.html", "home_authenticated");
 					}
 				} else {
 					$_POST['login_username'] = "";
-					$errormessages[] = "Please enter alpha-numeric characters only.";
+					$errormessages[] = "Please enter valid strings.";
 				}
 			} elseif ($action == "register_user") {
 				// Go to registration page
