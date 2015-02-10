@@ -37,6 +37,7 @@ function Stage(width, height, stageElementID) {
 	/* Messages to print to screen */
 	this.info_banner_floor_number_id = document.getElementById('screen_floor_number');
 	this.info_banner_user_message_id = document.getElementById('user_info_message');
+	this.info_banner_player_health_id = document.getElementById('player_health_info');
 
 	// take a look at the value of these to understand why we capture them this way
 	// an alternative would be to use 'new Image()'
@@ -125,6 +126,9 @@ Stage.prototype.initialize = function() {
 
 	// Force all objects to render in their start state
 	this.drawFloor(this.player_floor);
+
+	// Load gui initial info
+	this.displayPlayerHealth();
 }
 
 /*
@@ -313,6 +317,12 @@ Stage.prototype.displayUserMessage = function(message) {
 	this.info_banner_user_message_id.innerHTML = message;
 }
 
+/*
+ * Displays the current player health on the screen.
+ */
+Stage.prototype.displayPlayerHealth = function() {
+	this.info_banner_player_health_id.innerHTML = "Health: " + this.player.getHitPoints();
+}
 
 /*
  * Given two actors, return true if there would be damage done, and false ow.

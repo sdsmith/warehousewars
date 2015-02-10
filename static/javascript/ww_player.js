@@ -40,12 +40,18 @@ Player.prototype.setTeamId = function(team_id) {
 	this._actor.setTeamId(team_id);
 }
 
+Player.prototype.getHitPoints = function() {
+	return this._actor.getHitPoints();
+}
+
 Player.prototype.hit = function(attacker_actor, damage_amount) {
 	this._actor.hit(attacker_actor, damage_amount);
+	this._stage.displayPlayerHealth();
 }
 
 Player.prototype.heal = function(hit_points) {
 	this._actor.heal(hit_points);
+	this._stage.displayPlayerHealth();
 }
 
 /*

@@ -39,6 +39,10 @@ Actor.prototype.setTeamId = function(team_id) {
 	this.team_id = team_id;
 }
 
+Actor.prototype.getHitPoints = function() {
+	return this.hit_points;
+}
+
 /*
  * Return damage this actor will do to another actor.
  */
