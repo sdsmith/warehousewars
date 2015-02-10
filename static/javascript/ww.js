@@ -335,9 +335,9 @@ Stage.prototype.displayPlayerHealth = function() {
  *	1..n	hostile against all other teamns but 0
  *  *no team is hostile with itself
  */
-Stage.prototype.hostileTeamInteraction = function(actor1, actor2) {
-	var team1 = actor1.getTeamId();
-	var team2 = actor2.getTeamId();
+Stage.prototype.hostileTeamInteraction = function(initiator_actor, target_actor) {
+	var team1 = initiator_actor.getTeamId();
+	var team2 = target_actor.getTeamId();
 	var hostile = null;
 
 	if (team1 == TEAM_NEUTRAL || team2 == TEAM_NEUTRAL) {
