@@ -132,6 +132,7 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 					//hostile actor spotted
 					if (ghoul_sight && this._stage.hostileTeamInteraction(this, ghoul_sight)) {
 						this.chase = true;
+						this.setDelay(20);
 						distance = [ghoul_sight.getPosition()[0] - pos[0], ghoul_sight.getPosition()[1] - pos[1]];
 						break;
 					} 
@@ -177,7 +178,6 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 		this.compound_dy = 0;
 		this.dx = 0;
 		this.dy = 0;
-		this.setDelay(20);
 		if (Math.abs(distance[0]) > 0) {
 			this.dx = (distance[0] / Math.abs(distance[0]));
 			distance[0] -= (distance[0] / Math.abs(distance[0]));
