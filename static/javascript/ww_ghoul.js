@@ -13,6 +13,9 @@ function Ghoul(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_so
 	this.dx = 1;
 	this.dy = 1;
 
+	//Special ghoul property that defines how far it can "see"
+	this.sightRange = 2;
+
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, 350);
 }
@@ -66,14 +69,18 @@ Ghoul.prototype.isGrabbable = function() {
 }
 
 /*
- *	If the ghoul dies remove all its surrounding boxes, then calls Monster's tick
+ *	If the ghoul is surrounded remove all actors in the 3x3 grid around and including the ghoul
  */
 Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 	var ghoul_pos = this.getPosition();
-	if(this.isDead) {
+	if(this.isDead()) {
 		for (var dx = -1; dx <= 1; dx++) {
 			for (var dy = -1; dy <= 1; dy++) {
-				this._stage.removeActor(this._stage.getActor(ghoul_pos[0] + dx, ghoul_pos[1] + dy, ghoul_pos[2]));
+				var actor = this._stage.getActor(ghoul_pos[0] + dx, ghoul_pos[1] + dy, ghoul_pos[2]);
+				//Prevent explosions from taking out walls
+				if(!(actor instanceof Wall)) {
+					this._stage.removeActor(actor);
+				}
 			}
 		}
 	} else if (this._monster.delay()) {
@@ -92,10 +99,11 @@ Ghoul.prototype.isDead = function() {
 /*
  *	Ghoul roams around randomly
  */
-Ghoul.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
+Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass_actor=this) {
 	var possibleMoves = new Array();	
 	var pos = this.getPosition();
 	var num_surrounding_actors = 0;
+	var chase = false;
 
 	//Apply Damage
 	if (this.dx != 0 && this.dy != 0) {
@@ -105,23 +113,24 @@ Ghoul.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 		}
 	}
 
-	for (var _dx = -1; _dx <= 1; _dx++) {
-		for (var _dy = -1; _dy <= 1; _dy++) {
-			if (_dx == 0 && _dy == 0) continue; // Don't need to check player
+	for (var dx = -1; dx <= 1; dx++) {
+		for (var dy = -1; dy <= 1; dy++) {
+			if (dx == 0 && dy == 0) continue; // Don't need to check player
+			//Reference to surrounding actors
+			var actor = this._stage.getActor(pos[0] + dx, pos[1] + dy, pos[2]);
 			
-			var actor = this._stage.getActor(pos[0] + _dx, pos[1] + _dy, pos[2]);
 			if (!actor) {
-				//This will only check surrounding tiles on current floor
-				//NOTE(SLatychev): will need to change if we decide to implement vertical movement.
-				possibleMoves.push([pos[0] + _dx, pos[1] + _dy]);
+				//Only checks current floor, need to change if vertical rotations are implemented
+				possibleMoves.push([pos[0] + dx, pos[1] + dy]);
 			}
 		}
 	}
+		
 	random_pos_index = Math.floor((Math.random() * possibleMoves.length));
 	random_pos = possibleMoves[random_pos_index];
-	dx = random_pos[0] - pos[0];
-	dy = random_pos[1] - pos[1];
-	this.setPosition(pos[0]+dx, pos[1]+dy, floor_num, subclass_actor);
+	this.dx = random_pos[0] - pos[0];
+	this.dy = random_pos[1] - pos[1];
+	this.setPosition(pos[0] + this.dx, pos[1] + this.dy, floor_num, subclass_actor);
 	return true;
 }
 
