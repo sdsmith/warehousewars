@@ -108,6 +108,12 @@ function actionController() {
 			set_view("home_guest.html");
 			$authenticated = false;
 			
+			// TODO(sdsmith): FOR TESTING ONLY
+			set_view("ww.html");
+			$authenticated = true;
+			break;
+			//////////////////////////////////
+
 			if ($action == "login") {
 				// User is logging in; check credentials against the database.
 				$cred_username = $_POST['login_username'];
