@@ -123,6 +123,12 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 				//Only checks current floor, need to change if vertical rotations are implemented
 				possibleMoves.push([pos[0] + dx, pos[1] + dy]);
 			}
+			else if (actor == this._stage.player) {
+				var actor_pos = actor.getPosition();
+				this.dx = actor_pos[0] - pos[0];
+				this.dy = actor_pos[1] - pos[1];
+				return true;
+			}
 		}
 	}
 		
