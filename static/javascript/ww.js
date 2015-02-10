@@ -152,6 +152,13 @@ Stage.prototype.initialize = function() {
 }
 
 /*
+ * Return the total number of floors in the map
+ */
+Stage.prototype.getTotalNumberOfFloors = function() {
+	return this.num_floors;
+}
+
+/*
  * Return the html ID of the provided co-ordinate.
  * Useful for linking stage co-ordinates to the co-responding html objects.
  */
