@@ -2,14 +2,21 @@
 /*
  * Wall constructor. Take stage position (x,y).
  */
-function Wall(stage_ref, x, y, floor_num, image_source=null) {
+function Wall(stage_ref, team_id, x, y, floor_num, image_source=null) {
 	// Check default image source
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}
 
-	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 0);
+	this._actor = new Actor(stage_ref, team_id, -1, 0, x, y, floor_num, default_image_source, 0);
+}
+
+/*
+ * Return actor's team id.
+ */
+Wall.prototype.getTeamId = function() {
+	return this._actor.getTeamId();
 }
 
 /*
@@ -47,7 +54,7 @@ Wall.prototype.tick = function(force_update) {
  * Called when object would like to move. Return false, as a wall will never
  * move.
  */
-Wall.prototype.move = function(dx, dy, floor_num) {
+Wall.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return false;
 }
 

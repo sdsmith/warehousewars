@@ -4,6 +4,13 @@
 // NOTE(sdsmith): Could add actors to a tick/update queue so that only items
 // that need to be updated on a tick get called.
 
+// Team ID constants
+var TEAM_NEUTRAL = 0;
+var TEAM_PLAYER = 1;
+var TEAM_ENEMY = 2;
+
+
+
 // BEGIN Class Stage
 /*
  * Stage class.
@@ -43,9 +50,12 @@ function Stage(width, height, stageElementID) {
 	// Game state variables
 	this.game_paused = false;
 
-	// NPC spawn rates	
+	/* NPC Data */
+	// spawn rates	
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
+	
+	
 
 	// Multi-floor support
 	this.num_floors = 2;
@@ -77,7 +87,7 @@ Stage.prototype.initialize = function() {
 
 
 	// Add Player to the stage
-	this.player = new Player(this, Math.floor(this.width / 2), Math.floor(this.height / 2), this.player_floor, this.playerImageSrc, 100);
+	this.player = new Player(this, TEAM_PLAYER, 100, Math.floor(this.width / 2), Math.floor(this.height / 2), this.player_floor, this.playerImageSrc);
 	this.addActor(this.player);
 
 	var player_pos = this.player.getPosition(); //needed so we don't place actor on player square(s)
@@ -88,7 +98,7 @@ Stage.prototype.initialize = function() {
 		for(var x = 0; x < this.width; x++){
 			for(var y = 0; y < this.height; y++){
 				if (x == 0 || y == 0 || x == this.width - 1 || y == this.height - 1) {
-					this.addActor(new Wall(this, x, y, floor_num, this.wallImageSrc));
+					this.addActor(new Wall(this, TEAM_NEUTRAL, x, y, floor_num, this.wallImageSrc));
 				}
 			}
 		}
@@ -102,21 +112,19 @@ Stage.prototype.initialize = function() {
 
 				// Box
 				if (Math.random() < this.box_frequency) {
-					this.addActor(new Box(this, x, y, floor_num, this.boxImageSrc));
+					this.addActor(new Box(this, TEAM_NEUTRAL, x, y, floor_num, this.boxImageSrc));
 				} 
 				// Monster
 				else if (Math.random() < this.monster_frequency) {
 					//this.addActor(new Patroller(this, x, y, floor_num, this.patrollerImageSrc));
-					this.addActor(new Monster(this, x, y, floor_num, this.patrollerImageSrc));
+					this.addActor(new Monster(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.patrollerImageSrc));
 				}
 			}
 		}
-
-		// Add in some Monsters
 	}
 
 	// Force all objects to render in their start state
-	this.drawFloor(0);
+	this.drawFloor(this.player_floor);
 }
 
 /*
@@ -303,6 +311,36 @@ Stage.prototype.displayScreenFloorNumber = function() {
  */
 Stage.prototype.displayUserMessage = function(message) {
 	this.info_banner_user_message_id.innerHTML = message;
+}
+
+
+/*
+ * Given two actors, return true if there would be damage done, and false ow.
+ * The determination is based on the stage's understanding of team ids and
+ * their respective interactions.
+ *
+ *	Team	Details
+ *	0		neutral, no team is hostile with them
+ *	1..n	hostile against all other teamns but 0
+ *  *no team is hostile with itself
+ */
+Stage.prototype.hostileTeamInteraction = function(actor1, actor2) {
+	var team1 = actor1.getTeamId();
+	var team2 = actor2.getTeamId();
+	var hostile = null;
+
+	if (team1 == TEAM_NEUTRAL || team2 == TEAM_NEUTRAL) {
+		// Any move against neutral unit is not hostile
+		hostile = false;
+	} else if (team1 == team2) {
+		// Teams are no hostile to themselves
+		hostile = false;
+	} else {
+		// Must be an opposing team
+		hostile = true;
+	}
+
+	return hostile;
 }
 // END Class Stage
 
