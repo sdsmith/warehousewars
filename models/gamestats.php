@@ -4,6 +4,48 @@
  */
 
 
+
+/*
+ * Update the highscore for the given user in the appuser table.
+ */
+function update_user_highscore($userid, $highscore) {
+	$dbconn = dbConnect();
+
+	if (!pg_prepare($dbconn, "update_user_highscore", "UPDATE appuser SET highscore = $1 WHERE id = $2")) {
+		die("Error: " . pg_last_error());
+	}
+
+	// Update highscore
+	$result = pg_execute($dbconn, "update_user_highscore", array($highscore, $userid));
+	if (!$result) {
+		die("Error: " . pg_last_error());
+	}
+
+	dbClose($dbconn);
+}
+
+/*
+ * Insert the given information into the game statistics table.
+ */
+function insert_gamestats($userid, $score, $maxlevel, $kills, $deaths, $steps) {
+	$dbconn = dbConnect();
+	
+	if (!pg_prepare($dbconn, "insert_gamestats", "INSERT INTO ww_appuser_stats (userid, time, score, maxlevel, kills, deaths, steps) VALUES ($1, $2, $3, $4, $5, $6, $7)")) {
+		die("Error: " . pg_last_error());
+	}
+	
+	// Create current timestamp
+	$timestamp = date('Y-m-d H:i:s');
+
+	// Insert into database
+	$result = pg_execute($dbconn, "insert_gamestats", array($userid, $timestamp, $score, $maxlevel, $kills, $deaths, $steps));
+	if (!$result) {
+		die("Error: " . pg_last_error());
+	}
+
+	dbClose($dbconn);
+}
+
 /*
  * Return array of the top $number highscores along with their associated info.
  * Return is formated in a 2d array of (score, username) elements.
@@ -13,7 +55,7 @@ function get_highscores($number) {
 
 	$dbconn = dbConnect();
 
-	if (!pg_prepare($dbconn, "highscores", "SELECT * FROM appuser ORDER BY highscore LIMIT $1")) {
+	if (!pg_prepare($dbconn, "highscores", "SELECT appuser.name, highscores.score FROM appuser, (SELECT userid, score FROM ww_appuser_stats ORDER BY score LIMIT $1) AS highscores WHERE appuser.id = highscores.userid")) { 
 		die("Error: " . pg_last_error());
 	}
 	$resultobj = pg_execute($dbconn, "highscores", array($number));
@@ -23,7 +65,7 @@ function get_highscores($number) {
 
 	$row = pg_fetch_array($resultobj);
 	while ($row) {
-		$highscores[] = array($row['highscore'], $row['name']);
+		$highscores[] = array($row['score'], $row['name']);
 		$row = pg_fetch_array($resultobj);
 	}
 
