@@ -2,7 +2,7 @@
 /* 
  * Ghoul Constructor. Take stage position (x, y). 
  */
-function Ghoul(stage_ref, x, y, image_source=null) {
+function Ghoul(stage_ref, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "ghoul-24.png";
 	if (image_source) {
@@ -14,7 +14,7 @@ function Ghoul(stage_ref, x, y, image_source=null) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, default_image_source, 100);
+	this._monster = new Monster(stage_ref, x, y, floor_num, default_image_source, 350);
 }
 
 Ghoul.prototype.getPosition = function() {
@@ -53,16 +53,13 @@ Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 	if(this.isDead) {
 		for (var dx = -1; dx <= 1; dx++) {
 			for (var dy = -1; dy <= 1; dy++) {
-				if (dx == 0 && dy == 0) continue;
-				this._stage.removeActor(
-					this._stage.getActor(
-						ghoul_pos[0] + delta[i], 
-						ghoul_pos[1] + delta[j]));
+				this._stage.removeActor(this._stage.getActor(ghoul_pos[0] + dx, ghoul_pos[1] + dy, ghoul_pos[2]));
 			}
 		}
+	} else if (this._monster.delay()) {
+		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 	}
-
-	return this._monster.tick(force_update, subclass_actor=this);
+	return false;
 }
 
 /*
@@ -76,10 +73,28 @@ Ghoul.prototype.isDead = function() {
  *	Ghoul roams around randomly
  */
 Ghoul.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
-	this.dx = Math.floor((Math.random() * 1) -1);
-	this.dy = Math.floor((Math.random() * 1) -1);
-	//Add LoS system
-	return this._monster.monsterMove(this.dx, this.dy, floor_num, subclass_actor);
+	var possibleMoves = new Array();	
+	var pos = this.getPosition();
+	var num_surrounding_actors = 0;
+
+	for (var _dx = -1; _dx <= 1; _dx++) {
+		for (var _dy = -1; _dy <= 1; _dy++) {
+			if (_dx == 0 && _dy == 0) continue; // Don't need to check player
+			
+			var actor = this._stage.getActor(pos[0] + _dx, pos[1] + _dy, pos[2]);
+			if (!actor) {
+				//This will only check surrounding tiles on current floor
+				//NOTE(SLatychev): will need to change if we decide to implement vertical movement.
+				possibleMoves.push([pos[0] + _dx, pos[1] + _dy]);
+			}
+		}
+	}
+	random_pos_index = Math.floor((Math.random() * possibleMoves.length));
+	random_pos = possibleMoves[random_pos_index];
+	dx = random_pos[0] - pos[0];
+	dy = random_pos[1] - pos[1];
+	this.setPosition(pos[0]+dx, pos[1]+dy, floor_num, subclass_actor);
+	return true;
 }
 
 /*

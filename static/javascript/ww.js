@@ -46,6 +46,8 @@ function Stage(width, height, stageElementID) {
 	this.boxImageSrc = document.getElementById('boxImage').src;
 	this.wallImageSrc = document.getElementById('wallImage').src;
 	this.patrollerImageSrc = document.getElementById('patrollerImage').src;
+	this.alienImageSrc = document.getElementById('alienImage').src;
+	this.ghoulImageSrc = document.getElementById('ghoulImage').src;
 
 	
 	// Game state variables
@@ -117,7 +119,6 @@ Stage.prototype.initialize = function() {
 				} 
 				// Monster
 				else if (Math.random() < this.monster_frequency) {
-					//this.addActor(new Patroller(this, x, y, floor_num, this.patrollerImageSrc));
 					this.addActor(new Monster(this, TEAM_ENEMY, 50, 25, x, y, floor_num, this.patrollerImageSrc));
 				}
 			}
