@@ -2,7 +2,7 @@
 /* 
  * Monster Constructor. Take stage position (x, y). 
  */
-function Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source=null, tick_delay=50) {
+function Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null, tick_delay=50) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
@@ -14,7 +14,11 @@ function Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, tick_delay);
+	this._actor = new Actor(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, tick_delay);
+}
+
+Monster.prototype.getScoreValue = function() {
+	return this._actor.getScoreValue();
 }
 
 Monster.prototype.getTeamId = function() {

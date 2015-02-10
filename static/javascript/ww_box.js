@@ -9,7 +9,7 @@ function Box(stage_ref, team_id, x, y, floor_num, image_source=null) {
 		default_image_source = image_source;
 	}
 
-	this._actor = new Actor(stage_ref, team_id, -1, 0, x, y, floor_num, default_image_source, 0);
+	this._actor = new Actor(stage_ref, team_id, -1, 0, 0, x, y, floor_num, default_image_source, 0);
 }
 
 /*
