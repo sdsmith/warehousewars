@@ -60,6 +60,10 @@ function Stage(width, height, stageElementID) {
 	// spawn rates	
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
+	this.patroller_frequency = 0.05;
+	this.alien_frequency = 0.03;
+	this.ghoul_frequency = 0.02;
+
 	// team counts
 	this.team_count = new Array(); // team_count[TEAM_ID] = that team's count
 	this.team_count[TEAM_NEUTRAL] = 0;
@@ -123,8 +127,16 @@ Stage.prototype.initialize = function() {
 				if (Math.random() < this.box_frequency) {
 					this.addActor(new Box(this, TEAM_NEUTRAL, x, y, floor_num, this.boxImageSrc));
 				} 
-				// Monster
-				else if (Math.random() < this.monster_frequency) {
+				// Patroller
+				else if (Math.random() < this.patroller_frequency) {
+					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.patrollerImageSrc));
+				}
+				// Alien
+				else if (Math.random() < this.alien_frequency) {
+					this.addActor(new Alien(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.alienImageSrc));
+				}
+				// Ghoul
+				else if (Math.random() < this.ghoul_frequency) {
 					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.ghoulImageSrc));
 				}
 			}
