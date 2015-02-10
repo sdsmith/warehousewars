@@ -1,16 +1,53 @@
 /* BEGIN Class Actor */
 /*
- * Actor constructor. Take stage position (x,y) and the source of the image to
- * be displayed in its position.
+ * Actor constructor.
+ * 	stage_ref		reference to the stage
+ * 	team_id			id of the team this actor belongs too
+ *	hit_points		number of maximum damage this actor can take over its lifetime
+ *	damage			the amount of damage done to a hostile during an attack
+ *	x				x co-ordinate of grid position
+ *	y				y co-ordinate of grid position
+ *	floor_num		floor the actor is on
+ *	image_source	file path of the image that will be displayed on screen for actor
+ *	tick_delay		interval of skipped ticks before it performs its move
  */
-function Actor(stage_ref, x, y, floor_num, image_source, tick_delay) {
+function Actor(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source, tick_delay) {
 	this._stage = stage_ref;
+	this.team_id = team_id;
+	this.max_hit_points = hit_points;		// maximum actor health
+	this.hit_points = this.max_hit_points;	// current actor health
+	this.damage = damage;
 	this.pos_x = x;
 	this.pos_y = y;
 	this.floor_num = floor_num;
 	this.image_source = image_source;
 	this.tick_delay_count = 0;
 	this.tick_delay = tick_delay;
+}
+
+/*
+ * Get actor's team id.
+ */
+Actor.prototype.getTeamId = function() {
+	return this.team_id;
+}
+
+/*
+ * Set actor to the given team id.
+ */
+Actor.prototype.setTeamId = function(team_id) {
+	this.team_id = team_id;
+}
+
+Actor.prototype.getHitPoints = function() {
+	return this.hit_points;
+}
+
+/*
+ * Return damage this actor will do to another actor.
+ */
+Actor.prototype.getDamage = function() {
+	return this.damage;
 }
 
 /*
@@ -78,6 +115,30 @@ Actor.prototype.tick = function(force_update) {
 //Generic is_dead function to be overridden by specific actors
 Actor.prototype.isDead = function() {
 	return false;
+}
+
+/*
+ * Tells actor there attacker_actor is applying damage_amount of damage to it.
+ */
+Actor.prototype.hit = function(attacker_actor, damage_amount) {
+	// apply damage
+	this.hit_points -= damage_amount;
+
+	if (this.hit_points < 0) {
+		// actor is 'dead'
+		this._stage.removeActor(this);
+	}
+}
+
+/*
+ * Adds the given hit_points to the actor's current hit_points.
+ * NOTE: Cannot go over the maximum health.
+ */
+Actor.prototype.heal = function(hit_points) {
+	this.hit_points += hit_points;
+	if (this.hit_points > this.max_hit_points) {
+		this.hit_points = this.max_hit_points;
+	}
 }
 
 /*

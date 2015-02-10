@@ -2,7 +2,7 @@
 /* 
  * Monster Constructor. Take stage position (x, y). 
  */
-function Monster(stage_ref, x, y, floor_num, image_source=null, tick_delay=50) {
+function Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source=null, tick_delay=50) {
 	// Check default image source	
 	var default_image_source = "";
 	if (image_source) {
@@ -14,7 +14,27 @@ function Monster(stage_ref, x, y, floor_num, image_source=null, tick_delay=50) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, tick_delay);
+	this._actor = new Actor(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, tick_delay);
+}
+
+Monster.prototype.getTeamId = function() {
+	return this._actor.getTeamId();
+}
+
+Monster.prototype.setTeamId = function(team_id) {
+	this._actor.setTeamId(team_id);
+}
+
+Monster.prototype.getDamage = function() {
+	return this._actor.getDamage();
+}
+
+Monster.prototype.hit = function(attacker_actor, damage_amount) {
+	this._actor.hit(attacker_actor, damage_amount);
+}
+
+Monster.prototype.heal = function(hit_points) {
+	this._actor.heal(hit_points);
 }
 
 Monster.prototype.getPosition = function() {
@@ -100,6 +120,11 @@ Monster.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this)
 	var rev_dy_pos_actor = this._stage.getActor(old_pos[0]-this.dx, old_pos[1]-this.dy, floor_num);
 	
 	if (forward_pos_actor) {
+		// Apply damage
+		if (this._stage.hostileTeamInteraction(this, forward_pos_actor)) {
+			forward_pos_actor.hit(this, this.getDamage());
+		}
+
 		//Check if actor in position if we reverse dx
 		if (!rev_dx_pos_actor) {
 			this.dx = -this.dx;

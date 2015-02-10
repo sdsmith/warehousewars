@@ -2,14 +2,21 @@
 /*
  * Box constructor. Take stage position (x,y).
  */
-function Box(stage_ref, x, y, floor_num, image_source=null) {
+function Box(stage_ref, team_id, x, y, floor_num, image_source=null) {
 	// Check default image source
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}
 
-	this._actor = new Actor(stage_ref, x, y, floor_num, default_image_source, 0);
+	this._actor = new Actor(stage_ref, team_id, -1, 0, x, y, floor_num, default_image_source, 0);
+}
+
+/*
+ * Get actor's team id.
+ */
+Box.prototype.getTeamId = function() {
+	return this._actor.getTeamId();
 }
 
 /*
@@ -19,6 +26,9 @@ Box.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
+/*
+ * Set actor's position to the given co-ordinates.
+ */
 Box.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	this._actor.setPosition(x, y, floor_num, subclass_actor);
 }

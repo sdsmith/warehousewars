@@ -16,21 +16,42 @@ var key_space = 32;
  * Player constructor. Has a default image set. If image_source if set, it will
  * be used as the base image for the actor.
  */
-function Player(stage_ref, x, y, floor_num, image_source=null, health=100) {
+function Player(stage_ref, team_id, hit_points, x, y, floor_num, image_source=null) {
 	this._stage = stage_ref;
-	this.health = health;// TODO(sdsmith): Have not implemented it
 
 	// Set actor's image
 	var default_image_source = "";
 	if (image_source) {
 		default_image_source = image_source;
 	}
-	this._actor = new Actor(stage_ref, x, y, floor_num, image_source, 0);
+	this._actor = new Actor(stage_ref, team_id, hit_points, 0, x, y, floor_num, image_source, 0);
 
 	this.key_shift_pressed = false; // Whether the shift key has been pressed
 
 	// The current actor that is being grabbed
 	this.actor_grabbed = null;
+}
+
+Player.prototype.getTeamId = function() {
+	return this._actor.getTeamId();
+}
+
+Player.prototype.setTeamId = function(team_id) {
+	this._actor.setTeamId(team_id);
+}
+
+Player.prototype.getHitPoints = function() {
+	return this._actor.getHitPoints();
+}
+
+Player.prototype.hit = function(attacker_actor, damage_amount) {
+	this._actor.hit(attacker_actor, damage_amount);
+	this._stage.displayPlayerHealth();
+}
+
+Player.prototype.heal = function(hit_points) {
+	this._actor.heal(hit_points);
+	this._stage.displayPlayerHealth();
 }
 
 /*
