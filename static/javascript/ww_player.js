@@ -35,6 +35,9 @@ function Player(stage_ref, team_id, hit_points, x, y, floor_num, image_source=nu
 	// Player Statistics
 	this.stats_steps = 0;
 	this.stats_deaths = 0;
+
+	// Sounds
+	this._sound_hit = document.getElementById('wwHitSound');
 }
 
 /*
@@ -66,8 +69,7 @@ Player.prototype.getHitPoints = function() {
 Player.prototype.hit = function(attacker_actor, damage_amount) {
 	var isDead = this._actor.hit(attacker_actor, damage_amount);
 	this._stage.displayPlayerHealth();
-	this._hit = document.getElementById('wwHitSound');
-	this._hit.play();
+	this._sound_hit.play();
 
 	// If we died, end the game
 	if (isDead) {
