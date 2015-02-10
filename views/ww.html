@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8">
-		<meta HTTP-EQUIV="EXPIRES" CONTENT="-1">
+		<meta charset="utf-8" />
+		<meta HTTP-EQUIV="EXPIRES" CONTENT="-1" />
 		<title>Computing Science 309 Warehouse Wars</title>
 		<script language="javascript" src="static/javascript/ww.js" > </script>
 		<script language="javascript" src="static/javascript/ww_actor.js" > </script>
@@ -17,9 +17,6 @@
 
 		<audio id="wwSoundLoop" src="static/audio/BanjoKazooie-GruntildaLairMedley.webm" preload="auto"></audio>
 		<audio id="wwHitSound" src="static/audio/Hit.wav" preload="auto"></audio>
-		<a href="javascript:playSong();">Play</a>
-		<a href="javascript:pauseSong();">Pause</a>
-		<a href="javascript:mute();">Mute</a>
 
 		<script> 
 			var stage = null;
@@ -35,7 +32,7 @@
 			}
 
 			function startGame(){
-				//wwSoundLoop.play();
+				wwSoundLoop.play();
 
 				/* Event Handlers */
 				document.addEventListener(
@@ -73,6 +70,11 @@
 		</style>
 	</head>
 	<body bgcolor=ffffff onload="setupGame(); startGame();" >
+
+		<a href="javascript:playSong();">Play</a>
+		<a href="javascript:pauseSong();">Pause</a>
+		<a href="javascript:mute();">Mute</a>
+
 		<h1>Warehouse Wars Online</h1>
 		<hr/>
 
@@ -145,19 +147,19 @@
 							<h2>Controls</h2>
 							<table class="controls">
 								<tr>
-									<td><img src="static/icons/north_west.svg" onclick="stage.player.immediateMove(-1, -1);" /></td>
-									<td><img src="static/icons/north.svg" onclick="stage.player.immediateMove(-1, 0);" /></td>
-									<td><img src="static/icons/north_east.svg" onclick="stage.player.immediateMove(-1, 1);" /></td>
+									<td><img src="static/icons/north_west.svg" onclick="stage.player.immediateMove(-1, -1, stage.player_floor);" /></td>
+									<td><img src="static/icons/north.svg" onclick="stage.player.immediateMove(-1, 0, stage.player_floor);" /></td>
+									<td><img src="static/icons/north_east.svg" onclick="stage.player.immediateMove(-1, 1, stage.player_floor);" /></td>
 								</tr>
 								<tr>
-									<td><img src="static/icons/west.svg" onclick="stage.player.immediateMove(0, -1);" /></td>
+									<td><img src="static/icons/west.svg" onclick="stage.player.immediateMove(0, -1, stage.player_floor);" /></td>
 									<td>&nbsp;</td>
-									<td><img src="static/icons/east.svg"onclick="stage.player.immediateMove(0, 1);" /></td>
+									<td><img src="static/icons/east.svg" onclick="stage.player.immediateMove(0, 1, stage.player_floor);" /></td>
 								</tr>
 								<tr>
-									<td><img src="static/icons/south_west.svg" onclick="stage.player.immediateMove(1, -1);" /></td>
-									<td><img src="static/icons/south.svg" onclick="stage.player.immediateMove(1, 0);" /></td>
-									<td><img src="static/icons/south_east.svg" onclick="stage.player.immediateMove(1, 1);" /></td>
+									<td><img src="static/icons/south_west.svg" onclick="stage.player.immediateMove(1, -1, stage.player_floor);" /></td>
+									<td><img src="static/icons/south.svg" onclick="stage.player.immediateMove(1, 0, stage.player_floor);" /></td>
+									<td><img src="static/icons/south_east.svg" onclick="stage.player.immediateMove(1, 1, stage.player_floor);" /></td>
 								</tr>
 							</table>
 						</center>

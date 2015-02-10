@@ -2,7 +2,7 @@
 /* 
  * Alien Constructor. Take stage position (x, y). 
  */
-function Alien(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source=null) {
+function Alien(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "static/icons/alien-24.png";
 	if (image_source) {
@@ -14,7 +14,11 @@ function Alien(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_so
 	this.dy = 0;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, 100);
+	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 100);
+}
+
+Alien.prototype.getScoreValue = function() {
+	return this._monster.getScoreValue();
 }
 
 Alien.prototype.getTeamId = function() {
