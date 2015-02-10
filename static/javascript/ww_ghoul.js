@@ -106,12 +106,11 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 	var chase = false;
 
 	//Apply Damage
-	if (this.dx != 0 && this.dy != 0) {
-		var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
-		if (actor && this._stage.hostileTeamInteraction(this, actor)) {
-			actor.hit(this, this.getDamage());
-		}
+	var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
+	if (actor && this._stage.hostileTeamInteraction(this, actor)) {
+		actor.hit(this, this.getDamage());
 	}
+	
 
 	for (var dx = -1; dx <= 1; dx++) {
 		for (var dy = -1; dy <= 1; dy++) {
