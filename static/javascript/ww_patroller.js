@@ -2,7 +2,7 @@
 /* 
  * Patroller Constructor. Take stage position (x, y). 
  */
-function Patroller(stage_ref, x, y, floor_num, image_source=null) {
+function Patroller(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "static/icons/face-devil-grin-24.png";
 	if (image_source) {
@@ -14,7 +14,27 @@ function Patroller(stage_ref, x, y, floor_num, image_source=null) {
 	this.dy = 0;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, floor_num, default_image_source, 50);
+	this._monster = new Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, 50);
+}
+
+Patroller.prototype.getTeamId = function() {
+	return this._monster.getTeamId();
+}
+
+Patroller.prototype.setTeamId = function(team_id) {
+	this._monster.setTeamId(team_id);
+}
+
+Patroller.prototype.getDamage = function() {
+	return this._monster.getDamage();
+}
+
+Patroller.prototype.hit = function(attacker_actor, damage_amount) {
+	this._monster.hit(attacker_actor, damage_amount);
+}
+
+Patroller.prototype.heal = function(hit_points) {
+	this._monster.heal(hit_points);
 }
 
 Patroller.prototype.getPosition = function() {

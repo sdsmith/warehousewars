@@ -2,7 +2,7 @@
 /* 
  * Ghoul Constructor. Take stage position (x, y). 
  */
-function Ghoul(stage_ref, x, y, floor_num, image_source=null) {
+function Ghoul(stage_ref, team_id, hit_points, damage, x, y, floor_num, image_source=null) {
 	// Check default image source	
 	var default_image_source = "ghoul-24.png";
 	if (image_source) {
@@ -14,7 +14,27 @@ function Ghoul(stage_ref, x, y, floor_num, image_source=null) {
 	this.dy = 1;
 
 	this._stage = stage_ref;
-	this._monster = new Monster(stage_ref, x, y, floor_num, default_image_source, 350);
+	this._monster = new Monster(stage_ref, team_id, hit_points, damage, x, y, floor_num, default_image_source, 350);
+}
+
+Ghoul.prototype.getTeamId = function() {
+	return this._monster.getTeamId();
+}
+
+Ghoul.prototype.setTeamId = function(team_id) {
+	this._monster.setTeamId(team_id);
+}
+
+Ghoul.prototype.getDamage = function() {
+	return this._monster.getDamage();
+}
+
+Ghoul.prototype.hit = function(attacker_actor, damage_amount) {
+	this._monster.hit(attacker_actor, damage_amount);
+}
+
+Ghoul.prototype.heal = function(hit_points) {
+	this._monster.heal(hit_points);
 }
 
 Ghoul.prototype.getPosition = function() {
@@ -76,6 +96,14 @@ Ghoul.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
 	var possibleMoves = new Array();	
 	var pos = this.getPosition();
 	var num_surrounding_actors = 0;
+
+	//Apply Damage
+	if (this.dx != 0 && this.dy != 0) {
+		var actor = this._stage.getActor(pos[0] + this.dx, pos[1] + this.dy, pos[2])
+		if (actor && this._stage.hostileTeamInteraction(this, actor)) {
+			actor.hit(this, this.getDamage());
+		}
+	}
 
 	for (var _dx = -1; _dx <= 1; _dx++) {
 		for (var _dy = -1; _dy <= 1; _dy++) {
