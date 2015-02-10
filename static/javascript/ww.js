@@ -431,18 +431,23 @@ Stage.prototype.submitGameStats = function() {
 
 	// Add all name-value pairs to the form
 	input_elt.name = "action";
+	input_elt.type = "hidden";
 	input_elt.value = "gamestats_submit";
 	gamestats_form.appendChild(input_elt.cloneNode());
 	input_elt.name = "gamestats_score";
+	input_elt.type = "hidden";
 	input_elt.value = this.game_score;
 	gamestats_form.appendChild(input_elt.cloneNode());
 	input_elt.name = "gamestats_kills";
+	input_elt.type = "hidden";	
 	input_elt.value = this.stats_kills;
 	gamestats_form.appendChild(input_elt.cloneNode());
 	input_elt.name = "gamestats_deaths";
+	input_elt.type = "hidden";
 	input_elt.value = this.player.getStatisticsDeaths();
 	gamestats_form.appendChild(input_elt.cloneNode());
 	input_elt.name = "gamestats_steps";
+	input_elt.type = "hidden";
 	input_elt.value = this.player.getStatisticsSteps();
 	gamestats_form.appendChild(input_elt.cloneNode());
 
