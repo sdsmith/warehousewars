@@ -71,8 +71,8 @@ function Stage(width, height, stageElementID) {
 	this.team_count[TEAM_ENEMY] = 0;
 
 	// Multi-floor support
-	this.num_floors = 2;
-	this.player_floor = 0;
+	this.num_floors = 5;
+	this.player_floor = 3;
 	this.floor_on_screen = this.player_floor;
 
 	// Map containing actor positions.
