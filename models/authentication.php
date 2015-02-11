@@ -77,10 +77,26 @@ function login($username, $password) {
 	if (!$emptyinfo) {
 		$authed = authenticate_user($username, $password);
 		if ($authed) {
+			// Set session variables
 			$_SESSION['username'] = $username;
 			$_SESSION['userid'] = $authed['id'];
 			$_SESSION['highscore'] = $authed['highscore'];
 			$authenticated = true;
+
+			// Updated last login time
+			$dbconn = dbConnect();
+			if (!pg_prepare($dbconn, "update_lastlogin_time", "UPDATE appuser SET lastlogin = $1 WHERE id = $2")) {
+				die("Error: " . pg_last_error());
+			}
+			
+			$timestamp = date('Y-m-d H:i:s');
+
+			$result = pg_execute($dbconn, "update_lastlogin_time", array($timestamp, $_SESSION['userid']));
+			if (!result) {
+				die("Error: " . pg_last_error());
+			}
+
+			dbClose($dbconn);
 		}
 	}
 
