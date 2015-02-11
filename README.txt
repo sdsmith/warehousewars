@@ -10,8 +10,7 @@
 	- grabbing
 
 
-=====ENGINE DOCUMENTATION=====	
-
+=====ENGINE DOCUMENTATION=====
 ==ACTORS
 All actors psuedo inherit from the Actor class, which has all the the basic information any actor would need to integrate into the engine. Infact it supplies many prebuilt methods that should never need to be overriden.
 
@@ -73,6 +72,10 @@ All keyboard input is directed to the stage, with then directs to any necessary 
 When an actor moves, it is their responsability to inform the engine. This is done through Stage.updateActorMapPosition(4). Actors supply their old position, which is used to reset references to their old position (see 'direct mapping system'). Actors also supply a reference to themselves so that the engine can get their source image and new position to display on the screen. For consistency, an actor by default informs the engine about a position change through Actor.move (however their is no garantee if it is overridden; it is now YOUR responsibility to make sure it happens). The screen update is done after every actor's .tick has returned if and only if it returns true (see 'game step' system). Actors that move out of the .tick update (ie, when they are asked to move) must manually inform the engine to update. This was designed so that their was flexibility in the timing of the screen updating. Actors must call Stage.immediateActorScreenUpdate(4) when they wish to be updated on screen on a case by case basis. By doing it this way, it also allows for more speed in the rendering process, as we are only changing screen tiles when the need to be updated.
 
 There is also a Stage.drawFloor(1) method. This will force the engine to visit each tile and render the appropriate image across the whole screen. This is slow, and so was not chosen as the primary way of rendering objects on the screen. This is used once after the initialization phase of the game, and again on all floor changes.
+
+
+==VICTORY SYSTEM
+The number of members of each team is tracked by the engine, updated when actors are added and removed. When the player dies, they call Stage.endgame(). This function checks the enemy team count; if it is 0, the player has killed all enemies and won. If not, the player lost. Either way, the current statistics for the game are send to the controller to be processed.
 
 
 ==DAMAGE STRUCTURE
