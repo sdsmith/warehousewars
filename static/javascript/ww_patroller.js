@@ -29,13 +29,6 @@ function Patroller(stage_ref, team_id, hit_points, damage, score_value, x, y, fl
 }
 
 /*
- * Get Patroller's score value
- */
-Patroller.prototype.getScoreValue = function() {
-	return this._monster.getScoreValue();
-}
-
-/*
  * Get Patroller's team ID
  */
 Patroller.prototype.getTeamId = function() {
@@ -57,17 +50,10 @@ Patroller.prototype.getDamage = function() {
 }
 
 /*
- * Tells Patroller that attacker_actor is applying damage_amount of damage to it.
+ * Get Patroller's score value
  */
-Patroller.prototype.hit = function(attacker_actor, damage_amount) {
-	this._monster.hit(attacker_actor, damage_amount);
-}
-
-/*
- * Add hit_points health to Patroller
- */
-Patroller.prototype.heal = function(hit_points) {
-	this._monster.heal(hit_points);
+Patroller.prototype.getScoreValue = function() {
+	return this._monster.getScoreValue();
 }
 
 /*
@@ -113,13 +99,6 @@ Patroller.prototype.setDelay = function(tick_delay) {
 }
 
 /*
- * Patroller is not grabable so return false
- */
-Patroller.prototype.isGrabbable = function() {
-	return this._monster.isGrabble();
-}
-
-/*
  *	Checks if it is dead and will remove itself from the stage, otherwise it will move according to its delay
  */
 Patroller.prototype.tick = function(force_update, subclass_actor=this) {
@@ -140,6 +119,20 @@ Patroller.prototype.isDead = function() {
 }
 
 /*
+ * Tells Patroller that attacker_actor is applying damage_amount of damage to it.
+ */
+Patroller.prototype.hit = function(attacker_actor, damage_amount) {
+	this._monster.hit(attacker_actor, damage_amount);
+}
+
+/*
+ * Add hit_points health to Patroller
+ */
+Patroller.prototype.heal = function(hit_points) {
+	this._monster.heal(hit_points);
+}
+
+/*
  *	Calls Monster's monsterMove
  */
 Patroller.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {
@@ -153,7 +146,12 @@ Patroller.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return this._monster.move(dx, dy, floor_num, subclass_actor);
 }
 
-
+/*
+ * Patroller is not grabable so return false
+ */
+Patroller.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
+}
 
 
 

@@ -1,6 +1,14 @@
 /* START Class Box */
 /*
  * Box constructor. Take stage position (x,y).
+ *
+ * stage_ref		reference to the stage
+ * team_id			id of the team this actor belongs too
+ *	x				x co-ordinate of grid position
+ *	y				y co-ordinate of grid position
+ *	floor_num		floor the actor is on
+ *	image_source	file path of the image that will be displayed on screen for actor
+ *	tick_delay		interval of skipped ticks before it performs its move
  */
 function Box(stage_ref, team_id, x, y, floor_num, image_source=null) {
 	// Check default image source
