@@ -39,6 +39,9 @@
 					'keydown', 
 					function processKeydown(event) {
 						stage.processKeydown(event);
+						event.preventDefault(); 
+						event.stopImmediatePropagation(); 
+						event.stopPropagation();
 					});
 				setInterval(
 					function tick() {

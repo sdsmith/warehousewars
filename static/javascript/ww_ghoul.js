@@ -229,7 +229,7 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 		this.dx = random_pos[0] - pos[0];
 		this.dy = random_pos[1] - pos[1];
 	} else {
-		//Chase in progress, get identity deltas to direct direction of movement and move quickly
+		//Chase in progress, get identity deltas to set direction of movement and move quickly
 		this.compound_dx = 0;
 		this.compound_dy = 0;
 		this.dx = 0;
