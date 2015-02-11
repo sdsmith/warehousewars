@@ -87,7 +87,7 @@ Ghoul.prototype.getPosition = function() {
 /*
  * Set Ghoul's x, y, z coordinates
  */
-Alien.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+Ghoul.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
