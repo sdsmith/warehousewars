@@ -35,12 +35,6 @@ function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 350);
 }
-/*
- * Get Ghoul's score value
- */
-Ghoul.prototype.getScoreValue = function() {
-	return this._monster.getScoreValue();
-}
 
 /*
  * Get Ghoul's team ID
@@ -64,17 +58,10 @@ Ghoul.prototype.getDamage = function() {
 }
 
 /*
- * Tells Ghoul that attacker_actor is applying damage_amount of damage to it.
+ * Get Ghoul's score value
  */
-Ghoul.prototype.hit = function(attacker_actor, damage_amount) {
-	this._monster.hit(attacker_actor, damage_amount);
-}
-
-/*
- * Add hit_points health to Ghoul
- */
-Ghoul.prototype.heal = function(hit_points) {
-	this._monster.heal(hit_points);
+Ghoul.prototype.getScoreValue = function() {
+	return this._monster.getScoreValue();
 }
 
 /*
@@ -120,13 +107,6 @@ Ghoul.prototype.setDelay = function(tick_delay) {
 }
 
 /*
- * Ghoul is not grabable so return false
- */
-Ghoul.prototype.isGrabbable = function() {
-	return this._monster.isGrabble();
-}
-
-/*
  *	Ghoul will check if it is dead and then proceed to "explode", it will remove any neutral actors surrounding  * it, other than Walls, and apply explosive_damage damage to any non neutral actors in the surrounding tiles.
  */
 Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
@@ -157,6 +137,20 @@ Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
  */
 Ghoul.prototype.isDead = function() {
 	return this._monster.isDead();
+}
+
+/*
+ * Tells Ghoul that attacker_actor is applying damage_amount of damage to it.
+ */
+Ghoul.prototype.hit = function(attacker_actor, damage_amount) {
+	this._monster.hit(attacker_actor, damage_amount);
+}
+
+/*
+ * Add hit_points health to Ghoul
+ */
+Ghoul.prototype.heal = function(hit_points) {
+	this._monster.heal(hit_points);
 }
 
 /*
@@ -257,7 +251,12 @@ Ghoul.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return this._monster.move(dx, dy, floor_num, subclass_actor);
 }
 
-
+/*
+ * Ghoul is not grabable so return false
+ */
+Ghoul.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
+}
 
 
 

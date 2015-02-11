@@ -247,7 +247,7 @@ Stage.prototype.endGame = function() {
 	if (this.team_count[TEAM_ENEMY] == 0) {
 		// VICTORY! All enemies are gone!		
 		alert("You Win!");
-	} else {F
+	} else {
 		// Defeat. Enemies remain.
 		alert("You lose!");
 	}
