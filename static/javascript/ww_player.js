@@ -49,24 +49,38 @@ Player.prototype.getStatisticsSteps = function() {
 }
 
 /*
- * Return the number of deaths had in this game.
+ * Get Player death statistics.
  */
 Player.prototype.getStatisticsDeaths = function() {
 	return this.stats_deaths;
 }
 
+/*
+ * Get Player team ID.
+ */
 Player.prototype.getTeamId = function() {
 	return this._actor.getTeamId();
 }
 
+/*
+ * Set Player team ID.
+ */
 Player.prototype.setTeamId = function(team_id) {
 	this._actor.setTeamId(team_id);
 }
 
+/*
+ * Get Player health.
+ */
 Player.prototype.getHitPoints = function() {
 	return this._actor.getHitPoints();
 }
 
+/*
+ * Player will be notified when they are hit by other actors, and will be further notified if they are
+ * hit below 0 health, if so isDead will be set to true, your death statistics counter will increase
+ * and the game will then end.
+ */
 Player.prototype.hit = function(attacker_actor, damage_amount) {
 	var isDead = this._actor.hit(attacker_actor, damage_amount);
 	this._stage.displayPlayerHealth();
@@ -79,34 +93,37 @@ Player.prototype.hit = function(attacker_actor, damage_amount) {
 	}
 }
 
+/*
+ * Return the number of deaths had in this game.
+ */
 Player.prototype.heal = function(hit_points) {
 	this._actor.heal(hit_points);
 	this._stage.displayPlayerHealth();
 }
 
 /*
- * Return actor's position on the stage as an array [x,y,floor_num].
+ * Return Player's position on the stage as an array [x,y,floor_num].
  */
 Player.prototype.getPosition = function() {
 	return this._actor.getPosition();
 }
 
 /*
- * Set actor's position to the give stage co-ordinates,
+ * Set Player's position to the give stage co-ordinates,
  */
 Player.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	return this._actor.setPosition(x, y, floor_num, subclass_actor);
 }
 
 /*
- * Return actor's image.
+ * Return Player's image.
  */
 Player.prototype.getImage = function() {
 	return this._actor.getImage();
 }
 
 /*
- * Set actor's image.
+ * Set Player's image.
  */
 Player.prototype.setImage = function(image_source) {
 	return this._actor.setImage(image_source);
@@ -241,7 +258,6 @@ Player.prototype.handleKeydown = function(event) {
 			break;
 
 		case key_space:
-			// Switch floors (NOTE(sdsmith): assuming there is only two!!!!!)
 			this.changeFloors(true, pos[2]);
 			break;
 
@@ -252,7 +268,7 @@ Player.prototype.handleKeydown = function(event) {
 }
 
 /*
- * Change the players vertical position depending on whether they pressed space(up) or ctrl(down)
+ * Change the Player's vertical position depending on whether they pressed space(up) or ctrl(down)
  */
 Player.prototype.changeFloors = function(up, current_floor) {
 	var new_floor = current_floor;
