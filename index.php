@@ -164,12 +164,12 @@ function actionController() {
 				set_view("home_guest.html", "home_guest");
 			} elseif ($action == "play_warehouse_wars") {
 				set_view("ww.html", "warehouse_wars");
-			} elseif ($action == "settings") {
+			}/* elseif ($action == "settings") {
 				set_view("settings.html", "settings");
-			}
+			}*/
 
 			break;
-
+/*
 		case "settings":
 			set_view("settings.html");
 
@@ -184,7 +184,7 @@ function actionController() {
 			}
 
 			break;
-
+*/
 		case "warehouse_wars":
 			// Page for playing warehouse wars
 			set_view("ww.html");
