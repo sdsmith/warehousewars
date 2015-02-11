@@ -29,14 +29,14 @@ function Patroller(stage_ref, team_id, hit_points, damage, score_value, x, y, fl
 }
 
 /*
- * Get Monster's score value
+ * Get Patroller's score value
  */
 Patroller.prototype.getScoreValue = function() {
 	return this._monster.getScoreValue();
 }
 
 /*
- * Get Monster's team ID
+ * Get Patroller's team ID
  */
 Patroller.prototype.getTeamId = function() {
 	return this._monster.getTeamId();
@@ -50,77 +50,77 @@ Patroller.prototype.setTeamId = function(team_id) {
 }
 
 /*
- * Get Monster's damage
+ * Get Patroller's damage
  */
 Patroller.prototype.getDamage = function() {
 	return this._monster.getDamage();
 }
 
 /*
- * Tells Monster that attacker_actor is applying damage_amount of damage to it.
+ * Tells Patroller that attacker_actor is applying damage_amount of damage to it.
  */
 Patroller.prototype.hit = function(attacker_actor, damage_amount) {
 	this._monster.hit(attacker_actor, damage_amount);
 }
 
 /*
- * Add hit_points health to Monster
+ * Add hit_points health to Patroller
  */
 Patroller.prototype.heal = function(hit_points) {
 	this._monster.heal(hit_points);
 }
 
 /*
- * Get Monster's x, y, z coordinates
+ * Get Patroller's x, y, z coordinates
  */
 Patroller.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
 /*
- * Set Monster's x, y, z coordinates
+ * Set Patroller's x, y, z coordinates
  */
 Patroller.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
 /*
- * Get Monster's image
+ * Get Patroller's image
  */
 Patroller.prototype.getImage = function() {
 	return this._monster.getImage();
 }
 
 /*
- * Set Monster's image
+ * Set Patroller's image
  */
 Patroller.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
 /*
- * Get Monster's tick_delay
+ * Get Patroller's tick_delay
  */
 Patroller.prototype.getDelay = function() {
 	return this._monster.getDelay();
 }
 
 /*
- * Set Monster's tick_delay
+ * Set Patroller's tick_delay
  */
 Patroller.prototype.setDelay = function(tick_delay) {
 	return this._monster.setDelay(tick_delay);
 }
 
 /*
- * Monster is not grabable so return false
+ * Patroller is not grabable so return false
  */
 Patroller.prototype.isGrabbable = function() {
 	return this._monster.isGrabble();
 }
 
 /*
- *	Calls Monster's tick
+ *	Checks if it is dead and will remove itself from the stage, otherwise it will move according to its delay
  */
 Patroller.prototype.tick = function(force_update, subclass_actor=this) {
 	if (this.isDead()) {
