@@ -15,11 +15,13 @@ define("MAX_LEN_EMAIL", 50);
  */
 function whitelist_input($input, $minlength, $maxlength) {
 	$valid = false;
-	
+	$inputlength = strlen($input);
+		
+
 	// Check length
-	if ($minlength <= $input.length && $input.length <= $maxlength) {
+	if ($minlength <= $inputlength && $inputlength <= $maxlength) {
 		// Check string content
-		if (preg_match("/[\w\d]+/", $input, $matched) !== false) {
+		if (preg_match("/[\w\d@.]+/", $input, $matched) !== false) {
 			$valid = $input === $matched[0];
 		}
 	}

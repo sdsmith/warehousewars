@@ -24,7 +24,7 @@ function validate_registration_username($username) {
 				$validated = false;
 			}
 		} else {
-			$errormessages[] = "Please enter a username between " .  MIN_LEN_USERNAME . " and " .  MAX_LEN_USERNAME . "characters";
+			$errormessages[] = "Enter a username between " .  MIN_LEN_USERNAME . " and " .  MAX_LEN_USERNAME . " alpha-numeric characters";
 			$validated = false;
 		}
 	} else {
@@ -57,7 +57,7 @@ function validate_registration_email($email) {
 				$validated = false;
 			}
 		} else {
-			$errormessages[] = "Please enter an email between " .  MIN_LEN_EMAIL . " and " .  MAX_LEN_EMAIL . "characters";
+			$errormessages[] = "Enter an email between " .  MIN_LEN_EMAIL . " and " .  MAX_LEN_EMAIL . " characters";
 			$validated = false;
 		}
 	} else {
@@ -85,7 +85,7 @@ function validate_registration_password($password, $confirm_password) {
 		} else {
 			// Whitelist input (same password, only need to check one)
 			if (!whitelist_input($password, MIN_LEN_PASSWORD, MAX_LEN_PASSWORD)) {
-				$errormessages[] = "Please enter a password between " .  MIN_LEN_PASSWORD . " and " .  MAX_LEN_PASSWORD . "characters";
+				$errormessages[] = "Enter a password between " .  MIN_LEN_PASSWORD . " and " .  MAX_LEN_PASSWORD . " alpha-numeric characters";
 				$validated = false;
 			}
 		}
@@ -94,7 +94,6 @@ function validate_registration_password($password, $confirm_password) {
 		$validated = false;
 	}
 
-	dbClose($dbconn);
 	return $validated;
 }
 
@@ -104,10 +103,9 @@ function validate_registration_password($password, $confirm_password) {
  * messages. Return true on successful validation, false otherwise.
  */
 function validate_registration_info($username, $email, $password, $confirm_password) {
-	var $validated =
-			validate_registration_username($username) and
-			validate_registration_email($email) and		
-			validate_registration_password($password, $confirm_password);
+	$valid_username = validate_registration_username($username);
+	$valid_email = validate_registration_email($email);
+	$valid_password = validate_registration_password($password, $confirm_password);
 
 	return $validated;
 }
