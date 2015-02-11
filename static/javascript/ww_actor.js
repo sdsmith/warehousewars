@@ -56,7 +56,7 @@ Actor.prototype.getDamage = function() {
 }
 
 /*
- *
+ * Get actor's score value
  */
 Actor.prototype.getScoreValue = function() {
 	return this.score_value;

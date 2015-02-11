@@ -128,15 +128,15 @@ Stage.prototype.initialize = function() {
 				} 
 				// Patroller
 				else if (Math.random() < this.patroller_frequency) {
-					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.patrollerImageSrc));
+					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, 45, x, y, floor_num, this.patrollerImageSrc));
 				}
 				// Alien
 				else if (Math.random() < this.alien_frequency) {
-					this.addActor(new Alien(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.alienImageSrc));
+					this.addActor(new Alien(this, TEAM_ENEMY, 50, 25, 185, x, y, floor_num, this.alienImageSrc));
 				}
 				// Ghoul
 				else if (Math.random() < this.ghoul_frequency) {
-					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, 100, x, y, floor_num, this.ghoulImageSrc));
+					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, 355, x, y, floor_num, this.ghoulImageSrc));
 				}
 			}
 		}

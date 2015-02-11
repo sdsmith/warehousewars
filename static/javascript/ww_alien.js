@@ -1,8 +1,19 @@
 /* Start Class Alien */
 /* 
- * Alien Constructor. Take stage position (x, y). 
+ * Alien Constructor. Take stage position (x, y).
+ * 
+ * stage_ref		reference to the stage
+ * team_id			id of the team this actor belongs too
+ *	hit_points		number of maximum damage this actor can take over its lifetime
+ *	damage			the amount of damage done to a hostile during an attack
+ *	score_value		the amount of points this actor is worth if killed
+ *	x					x co-ordinate of grid position
+ *	y					y co-ordinate of grid position
+ *	floor_num		floor the actor is on
+ *	image_source	file path of the image that will be displayed on screen for actor
+ *	tick_delay		interval of skipped ticks before it performs its move 
  */
-function Alien(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null) {
+function Alien(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null, tick_delay=20) {
 	// Check default image source	
 	var default_image_source = "static/icons/alien-24.png";
 	if (image_source) {
@@ -17,60 +28,99 @@ function Alien(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 100);
 }
 
+/*
+ * Get Alien's score value
+ */
 Alien.prototype.getScoreValue = function() {
 	return this._monster.getScoreValue();
 }
 
+/*
+ * Get Alien's team ID
+ */
 Alien.prototype.getTeamId = function() {
 	return this._monster.getTeamId();
 }
 
+/*
+ * Set Alien's team ID
+ */
 Alien.prototype.setTeamId = function(team_id) {
 	this._monster.setTeamId(team_id);
 }
 
+/*
+ * Get Alien's damage
+ */
 Alien.prototype.getDamage = function() {
 	return this._monster.getDamage();
 }
 
+/*
+ * Tells Alien that attacker_actor is applying damage_amount of damage to it.
+ */
 Alien.prototype.hit = function(attacker_actor, damage_amount) {
 	this._monster.hit(attacker_actor, damage_amount);
 }
 
+/*
+ * Add hit_points health to Alien
+ */
 Alien.prototype.heal = function(hit_points) {
 	this._monster.heal(hit_points);
 }
 
+/*
+ * Get Alien's x, y, z coordinates
+ */
 Alien.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
+/*
+ * Set Alien's x, y, z coordinates
+ */
 Alien.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
+/*
+ * Get Alien's image
+ */
 Alien.prototype.getImage = function() {
 	return this._monster.getImage();
 }
 
+/*
+ * Set Alien's image
+ */
 Alien.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
+/*
+ * Get Alien's tick_delay
+ */
 Alien.prototype.getDelay = function() {
 	return this._monster.getDelay();
 }
 
+/*
+ * Set Alien's tick_delay
+ */
 Alien.prototype.setDelay = function(tick_delay) {
 	return this._monster.setDelay(tick_delay);
 }
 
+/*
+ * Alien is not grabable so return false
+ */
 Alien.prototype.isGrabbable = function() {
 	return this._monster.isGrabble();
 }
 
 /*
- *	Calls Monster's tick
+ *	Alien will check if it's dead and remove itself accordingly, otherwise it will move according to the delay
  */
 Alien.prototype.tick = function(force_update, subclass_actor=this) {
 	if (this.isDead()) {
@@ -90,7 +140,9 @@ Alien.prototype.isDead = function() {
 }
 
 /*
- *	Alien moves randomly
+ *	Alien will check surrounding non occupied tiles and randomly select one of those tiles to move to,
+ * if a player is in any of the immediately surrounding tiles, the Alien will switch it's delta vectors
+ * to point to the player and not move, but instead apply damage to the player at the rate of it's delay
  */
 Alien.prototype.monsterMove = function(dx, dy, floor_num, subclass_actor=this) {	
 	var possibleMoves = new Array();	

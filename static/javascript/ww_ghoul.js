@@ -1,8 +1,19 @@
 /* Start Class Ghoul */
 /* 
- * Ghoul Constructor. Take stage position (x, y). 
+ * Ghoul Constructor. Take stage position (x, y).
+ * 
+ * stage_ref		reference to the stage
+ * team_id			id of the team this actor belongs too
+ *	hit_points		number of maximum damage this actor can take over its lifetime
+ *	damage			the amount of damage done to a hostile during an attack
+ *	score_value		the amount of points this actor is worth if killed
+ *	x					x co-ordinate of grid position
+ *	y					y co-ordinate of grid position
+ *	floor_num		floor the actor is on
+ *	image_source	file path of the image that will be displayed on screen for actor
+ *	tick_delay		interval of skipped ticks before it performs its move
  */
-function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null) {
+function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, image_source=null, tick_delay=350) {
 	// Check default image source	
 	var default_image_source = "ghoul-24.png";
 	if (image_source) {
@@ -24,61 +35,99 @@ function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 350);
 }
-
-Ghoul.prototype.getScoreValue = function() {
+/*
+ * Get Alien's score value
+ */
+Alien.prototype.getScoreValue = function() {
 	return this._monster.getScoreValue();
 }
 
+/*
+ * Get Ghoul's team ID
+ */
 Ghoul.prototype.getTeamId = function() {
 	return this._monster.getTeamId();
 }
 
+/*
+ * Set Ghoul's team ID
+ */
 Ghoul.prototype.setTeamId = function(team_id) {
 	this._monster.setTeamId(team_id);
 }
 
+/*
+ * Get Ghoul's damage
+ */
 Ghoul.prototype.getDamage = function() {
 	return this._monster.getDamage();
 }
 
+/*
+ * Tells Ghoul that attacker_actor is applying damage_amount of damage to it.
+ */
 Ghoul.prototype.hit = function(attacker_actor, damage_amount) {
 	this._monster.hit(attacker_actor, damage_amount);
 }
 
+/*
+ * Add hit_points health to Ghoul
+ */
 Ghoul.prototype.heal = function(hit_points) {
 	this._monster.heal(hit_points);
 }
 
+/*
+ * Get Ghoul's x, y, z coordinates
+ */
 Ghoul.prototype.getPosition = function() {
 	return this._monster.getPosition();
 }
 
-Ghoul.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
+/*
+ * Set Ghoul's x, y, z coordinates
+ */
+Alien.prototype.setPosition = function(x, y, floor_num, subclass_actor=this) {
 	return this._monster.setPosition(x, y, floor_num, subclass_actor);
 }
 
+/*
+ * Get Ghoul's image
+ */
 Ghoul.prototype.getImage = function() {
 	return this._monster.getImage();
 }
 
+/*
+ * Set Ghoul's image
+ */
 Ghoul.prototype.setImage = function(image_source) {
 	return this._monster.setImage(image_source);
 }
 
+/*
+ * Get Ghoul's tick_delay
+ */
 Ghoul.prototype.getDelay = function() {
 	return this._monster.getDelay();
 }
 
+/*
+ * Set Ghoul's tick_delay
+ */
 Ghoul.prototype.setDelay = function(tick_delay) {
 	return this._monster.setDelay(tick_delay);
 }
 
+/*
+ * Ghoul is not grabable so return false
+ */
 Ghoul.prototype.isGrabbable = function() {
 	return this._monster.isGrabble();
 }
 
 /*
- *	If the ghoul is surrounded remove all actors in the 3x3 grid around and including the ghoul
+ *	Ghoul will check if it is dead and then proceed to "explode", it will remove any neutral actors surrounding  * it, other than Walls, and apply explosive_damage damage to any non neutral actors in the surrounding tiles.
  */
 Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 	var ghoul_pos = this.getPosition();
@@ -110,7 +159,8 @@ Ghoul.prototype.isDead = function() {
 }
 
 /*
- *	Ghoul roams around randomly
+ *	Ghoul roams around randomly like the alien but at a much slower rate, however if it spot an actor of a 
+ * hostile team, will proceed to chase them and damage the actor at it's accelerated tick_delay
  */
 Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass_actor=this) {
 	var distance = [0, 0];
@@ -134,7 +184,7 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 					//ghoul's sight in los direction
 					var ghoul_sight = this._stage.getActor(pos[0] + dx + this.compound_dx, pos[1] + dy + this.compound_dy, pos[2]);
 
-					//hostile actor spotted
+					//hostile actor spotted, begin the chase
 					if (ghoul_sight && this._stage.hostileTeamInteraction(this, ghoul_sight)) {
 						this.chase = true;
 						this.setDelay(20);
@@ -171,7 +221,7 @@ Ghoul.prototype.monsterMove = function(unused_dx, unused_dy, floor_num, subclass
 		
 	//Check if we're chasing
 	if (!this.chase) {
-		//No chase, move randomly and slowly, and reset the compound deltas
+		//No chase, move randomly and slowly, and reset the compounding deltas
 		this.setDelay(350);
 		random_pos_index = Math.floor((Math.random() * possibleMoves.length));
 		random_pos = possibleMoves[random_pos_index];
