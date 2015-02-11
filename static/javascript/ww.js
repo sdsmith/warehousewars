@@ -63,6 +63,11 @@ function Stage(width, height, stageElementID) {
 	this.patroller_frequency = 0.04;
 	this.alien_frequency = 0.02;
 	this.ghoul_frequency = 0.01;
+	// Score value
+	this.monster_scorevalue = 30;
+	this.patroller_scorevalue = 45;
+	this.alien_scorevalue = 185;
+	this.ghoul_scorevalue = 335;
 
 	// team counts
 	this.team_count = new Array(); // team_count[TEAM_ID] = that team's count
@@ -128,15 +133,15 @@ Stage.prototype.initialize = function() {
 				}
 				// Patroller
 				else if (Math.random() < this.patroller_frequency) {
-					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, 45, x, y, floor_num, this.patrollerImageSrc));
+					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, this.patroller_scorevalue, x, y, floor_num, this.patrollerImageSrc));
 				}
 				// Alien
 				else if (Math.random() < this.alien_frequency) {
-					this.addActor(new Alien(this, TEAM_ENEMY, 50, 25, 185, x, y, floor_num, this.alienImageSrc));
+					this.addActor(new Alien(this, TEAM_ENEMY, 50, 25, this.alien_scorevalue, x, y, floor_num, this.alienImageSrc));
 				}
 				// Ghoul
 				else if (Math.random() < this.ghoul_frequency) {
-					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, 355, x, y, floor_num, this.ghoulImageSrc));
+					this.addActor(new Ghoul(this, TEAM_ENEMY, 50, 25, this.ghoul_scorevalue, x, y, floor_num, this.ghoulImageSrc));
 				}
 			}
 		}
