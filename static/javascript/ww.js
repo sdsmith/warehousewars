@@ -122,7 +122,6 @@ Stage.prototype.initialize = function() {
 				if (floor_num == player_pos[2] && x == player_pos[0] && y == player_pos[1]) {
 					continue;
 				}
-
 				// Box
 				if (Math.random() < this.box_frequency) {
 					this.addActor(new Box(this, TEAM_NEUTRAL, x, y, floor_num, this.boxImageSrc));
@@ -301,7 +300,7 @@ Stage.prototype.processKeydown = function(event) {
 		this.displayUserMessage(message);
 	}
 	// Check if it is a player control key
-	else if (65 <= keyCode && keyCode <= 90 || keyCode == 32) {
+	else if (65 <= keyCode && keyCode <= 90 || keyCode == 32 || keyCode ==17) {
 		this.player.handleKeydown(event);
 	}
 }
