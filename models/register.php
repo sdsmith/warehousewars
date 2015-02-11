@@ -107,7 +107,7 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 	$valid_email = validate_registration_email($email);
 	$valid_password = validate_registration_password($password, $confirm_password);
 
-	return $validated;
+	return $valid_username and $valid_email and $valid_password;
 }
 
 

@@ -55,7 +55,7 @@ function get_highscores($number) {
 
 	$dbconn = dbConnect();
 
-	if (!pg_prepare($dbconn, "highscores", "SELECT appuser.name, highscores.score FROM appuser, (SELECT userid, score FROM ww_appuser_stats ORDER BY score LIMIT $1) AS highscores WHERE appuser.id = highscores.userid")) { 
+	if (!pg_prepare($dbconn, "highscores", "SELECT appuser.name, highscores.score FROM appuser, (SELECT userid, score FROM ww_appuser_stats ORDER BY score LIMIT $1) AS highscores WHERE appuser.id = highscores.userid ORDER BY highscores.score DESC")) { 
 		die("Error: " . pg_last_error());
 	}
 	$resultobj = pg_execute($dbconn, "highscores", array($number));
