@@ -19,6 +19,7 @@ function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this.compound_dy = 0;
 	this.chase = false;
 	this.run_speed = 0;
+	this.explosive_damage = 75;
 
 	this._stage = stage_ref;
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 350);
@@ -87,7 +88,11 @@ Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 				var actor = this._stage.getActor(ghoul_pos[0] + dx, ghoul_pos[1] + dy, ghoul_pos[2]);
 				//Prevent explosions from taking out walls
 				if(!(actor instanceof Wall)) {
-					this._stage.removeActor(actor);
+					if (actor.getTeamId() != TEAM_NEUTRAL) {
+						actor.hit(this, this.explosive_damage);
+					} else {
+						this._stage.removeActor(actor);
+					}
 				}
 			}
 		}
