@@ -32,13 +32,6 @@ function Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floo
 }
 
 /*
- * Get Monster's score value
- */
-Monster.prototype.getScoreValue = function() {
-	return this._actor.getScoreValue();
-}
-
-/*
  * Get Monster's team ID
  */
 Monster.prototype.getTeamId = function() {
@@ -60,17 +53,10 @@ Monster.prototype.getDamage = function() {
 }
 
 /*
- * Tells Monster that attacker_actor is applying damage_amount of damage to it.
+ * Get Monster's score value
  */
-Monster.prototype.hit = function(attacker_actor, damage_amount) {
-	this._actor.hit(attacker_actor, damage_amount);
-}
-
-/*
- * Add hit_points health to Monster
- */
-Monster.prototype.heal = function(hit_points) {
-	this._actor.heal(hit_points);
+Monster.prototype.getScoreValue = function() {
+	return this._actor.getScoreValue();
 }
 
 /*
@@ -102,14 +88,6 @@ Monster.prototype.setImage = function(image_source) {
 }
 
 /*
- * Return actor's delay function which will give true or false based on calculation done on the 
- * tick_delay_count and the tick_delay
- */
-Monster.prototype.delay = function() {
-	return this._actor.delay()
-}
-
-/*
  * Get Monster's tick_delay
  */
 Monster.prototype.getDelay = function() {
@@ -124,13 +102,6 @@ Monster.prototype.setDelay = function(tick_delay) {
 }
 
 /*
- * Monster is not grabable so return false
- */
-Monster.prototype.isGrabbable = function() {
-	return false;
-}
-
-/*
  * Will check if monster is dead, will appropriately delay itself if need be,
  * and make itself move. If object changes visually it will to return true.
  */
@@ -142,6 +113,20 @@ Monster.prototype.tick = function(force_update, subclass_actor=this) {
 		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 	}
 	return false;
+}
+
+/*
+ * Tells Monster that attacker_actor is applying damage_amount of damage to it.
+ */
+Monster.prototype.hit = function(attacker_actor, damage_amount) {
+	this._actor.hit(attacker_actor, damage_amount);
+}
+
+/*
+ * Add hit_points health to Monster
+ */
+Monster.prototype.heal = function(hit_points) {
+	this._actor.heal(hit_points);
 }
 
 /*
@@ -218,8 +203,20 @@ Monster.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return false;
 }
 
+/*
+ * Return actor's delay function which will give true or false based on calculation done on the 
+ * tick_delay_count and the tick_delay
+ */
+Monster.prototype.delay = function() {
+	return this._actor.delay()
+}
 
-
+/*
+ * Monster is not grabable so return false
+ */
+Monster.prototype.isGrabbable = function() {
+	return false;
+}
 
 
 

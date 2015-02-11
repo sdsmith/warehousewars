@@ -1,8 +1,9 @@
 /* BEGIN Class Actor */
 /*
  * Actor constructor.
- * 	stage_ref		reference to the stage
- * 	team_id			id of the team this actor belongs too
+ *
+ * stage_ref		reference to the stage
+ * team_id			id of the team this actor belongs too
  *	hit_points		number of maximum damage this actor can take over its lifetime
  *	damage			the amount of damage done to a hostile during an attack
  *	score_value		the amount of points this actor is worth if killed
@@ -23,7 +24,7 @@ function Actor(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this.pos_y = y;
 	this.floor_num = floor_num;
 	this.image_source = image_source;
-	this.tick_delay_count = 0;
+	this.tick_delay_count = Math.floor(Math.random() * tick_delay);
 	this.tick_delay = tick_delay;
 }
 

@@ -29,13 +29,6 @@ function Alien(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 }
 
 /*
- * Get Alien's score value
- */
-Alien.prototype.getScoreValue = function() {
-	return this._monster.getScoreValue();
-}
-
-/*
  * Get Alien's team ID
  */
 Alien.prototype.getTeamId = function() {
@@ -57,17 +50,10 @@ Alien.prototype.getDamage = function() {
 }
 
 /*
- * Tells Alien that attacker_actor is applying damage_amount of damage to it.
+ * Get Alien's score value
  */
-Alien.prototype.hit = function(attacker_actor, damage_amount) {
-	this._monster.hit(attacker_actor, damage_amount);
-}
-
-/*
- * Add hit_points health to Alien
- */
-Alien.prototype.heal = function(hit_points) {
-	this._monster.heal(hit_points);
+Alien.prototype.getScoreValue = function() {
+	return this._monster.getScoreValue();
 }
 
 /*
@@ -113,13 +99,6 @@ Alien.prototype.setDelay = function(tick_delay) {
 }
 
 /*
- * Alien is not grabable so return false
- */
-Alien.prototype.isGrabbable = function() {
-	return this._monster.isGrabble();
-}
-
-/*
  *	Alien will check if it's dead and remove itself accordingly, otherwise it will move according to the delay
  */
 Alien.prototype.tick = function(force_update, subclass_actor=this) {
@@ -137,6 +116,20 @@ Alien.prototype.tick = function(force_update, subclass_actor=this) {
  */
 Alien.prototype.isDead = function() {
 	return this._monster.isDead();
+}
+
+/*
+ * Tells Alien that attacker_actor is applying damage_amount of damage to it.
+ */
+Alien.prototype.hit = function(attacker_actor, damage_amount) {
+	this._monster.hit(attacker_actor, damage_amount);
+}
+
+/*
+ * Add hit_points health to Alien
+ */
+Alien.prototype.heal = function(hit_points) {
+	this._monster.heal(hit_points);
 }
 
 /*
@@ -189,7 +182,12 @@ Alien.prototype.move = function(dx, dy, floor_num, subclass_actor=this) {
 	return this._monster.move(dx, dy, floor_num, subclass_actor);
 }
 
-
+/*
+ * Alien is not grabable so return false
+ */
+Alien.prototype.isGrabbable = function() {
+	return this._monster.isGrabble();
+}
 
 
 
