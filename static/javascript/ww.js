@@ -60,9 +60,9 @@ function Stage(width, height, stageElementID) {
 	// spawn rates	
 	this.box_frequency = 0.40;
 	this.monster_frequency = 0.05;
-	this.patroller_frequency = 0.05;
-	this.alien_frequency = 0.03;
-	this.ghoul_frequency = 0.02;
+	this.patroller_frequency = 0.04;
+	this.alien_frequency = 0.02;
+	this.ghoul_frequency = 0.01;
 
 	// team counts
 	this.team_count = new Array(); // team_count[TEAM_ID] = that team's count
@@ -71,8 +71,8 @@ function Stage(width, height, stageElementID) {
 	this.team_count[TEAM_ENEMY] = 0;
 
 	// Multi-floor support
-	this.num_floors = 5;
-	this.player_floor = 3;
+	this.num_floors = 2;
+	this.player_floor = 0;
 	this.floor_on_screen = this.player_floor;
 
 	// Map containing actor positions.
@@ -125,7 +125,7 @@ Stage.prototype.initialize = function() {
 				// Box
 				if (Math.random() < this.box_frequency) {
 					this.addActor(new Box(this, TEAM_NEUTRAL, x, y, floor_num, this.boxImageSrc));
-				} 
+				}
 				// Patroller
 				else if (Math.random() < this.patroller_frequency) {
 					this.addActor(new Patroller(this, TEAM_ENEMY, 50, 25, 45, x, y, floor_num, this.patrollerImageSrc));

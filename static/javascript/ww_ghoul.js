@@ -36,9 +36,9 @@ function Ghoul(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_
 	this._monster = new Monster(stage_ref, team_id, hit_points, damage, score_value, x, y, floor_num, default_image_source, 350);
 }
 /*
- * Get Alien's score value
+ * Get Ghoul's score value
  */
-Alien.prototype.getScoreValue = function() {
+Ghoul.prototype.getScoreValue = function() {
 	return this._monster.getScoreValue();
 }
 
@@ -145,6 +145,7 @@ Ghoul.prototype.tick = function(force_update, subclass_actor=this) {
 				}
 			}
 		}
+		this._stage.removeActor(this);
 	} else if (this._monster.delay()) {
 		return this.monsterMove(this.dx, this.dy, this.getPosition()[2], subclass_actor);
 	}
