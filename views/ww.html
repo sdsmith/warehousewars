@@ -39,6 +39,9 @@
 					'keydown', 
 					function processKeydown(event) {
 						stage.processKeydown(event);
+						event.preventDefault(); 
+						event.stopImmediatePropagation(); 
+						event.stopPropagation();
 					});
 				setInterval(
 					function tick() {
@@ -144,6 +147,9 @@
 									<td> Ghoul </td>
 								</tr>
 							</table>
+
+							<div id="floor_viewport"></div>
+
 							<h2>Controls</h2>
 							<table class="controls">
 								<tr>
