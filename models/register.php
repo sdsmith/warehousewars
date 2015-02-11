@@ -1,38 +1,63 @@
 <?php
 
 require_once(dirname(__FILE__) . "/postgres.php");
-
+require_once(dirname(__FILE__) . "/inputvalidation.php");
 
 /*
- * Validates the registration information and sets the appropriate error
- * messages. Return true on successful validation, false otherwise.
+ * Return true if the given username is valid for registering an account.
  */
-function validate_registration_info($username, $email, $password, $confirm_password) {
+function validate_registration_username($username) {
 	global $errormessages;
-	$dbconn = dbConnect();
-	
-	pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
-	pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
-	
-
 	$validated = true;
-	// Check if username exists in db
+
+	$dbconn = dbConnect();	
+	pg_prepare($dbconn, "check_username_existance", 'SELECT * FROM appuser WHERE name = $1');
+
+	// Check if empty
 	if (!empty($username)) {
-		$resultobj_username = pg_execute($dbconn, "check_username_existance", array($username));
-		if (pg_fetch_array($resultobj_username)) {
-			$errormessages[] = "Username exists";
+		// Whitelist input
+		if (whitelist_input($username, MIN_LEN_USERNAME, MAX_LEN_USERNAME)) {
+			// Check if username exists in db
+			$resultobj_username = pg_execute($dbconn, "check_username_existance", array($username));
+			if (pg_fetch_array($resultobj_username)) {
+				$errormessages[] = "Username exists";
+				$validated = false;
+			}
+		} else {
+			$errormessages[] = "Enter a username between " .  MIN_LEN_USERNAME . " and " .  MAX_LEN_USERNAME . " alpha-numeric characters";
 			$validated = false;
 		}
 	} else {
 		$errormessages[] = "Must have a username";
 		$validated = false;
-	}
+	}	
+	
+	dbClose($dbconn);
+	return $validated;
+}
 
-	// Check if email exists in db
+/*
+ * Return true if the given email is valid for registering an account.
+ */
+function validate_registration_email($email) {
+	global $errormessages;
+	$validated = true;
+
+	$dbconn = dbConnect();
+	pg_prepare($dbconn, "check_email_existance", 'SELECT * FROM appuser WHERE email = $1');
+
+	// Check if empty
 	if (!empty($email)) {
-		$resultobj_email = pg_execute($dbconn, "check_email_existance", array($email));
-		if (pg_fetch_array($resultobj_email)) {
-			$errormessages[] = "Email exists";
+		// Whitelist input
+		if (whitelist_input($email, MIN_LEN_EMAIL, MAX_LEN_EMAIL)) {
+			// Check if email exists in db
+			$resultobj_email = pg_execute($dbconn, "check_email_existance", array($email));
+			if (pg_fetch_array($resultobj_email)) {
+				$errormessages[] = "Email exists";
+				$validated = false;
+			}
+		} else {
+			$errormessages[] = "Enter an email between " .  MIN_LEN_EMAIL . " and " .  MAX_LEN_EMAIL . " characters";
 			$validated = false;
 		}
 	} else {
@@ -40,18 +65,48 @@ function validate_registration_info($username, $email, $password, $confirm_passw
 		$validated = false;
 	}
 
-	// Check if passwords match
-	if (!empty($password) and !empty($confirm_password)) {
+	dbClose($dbconn);
+	return $validated;
+}
+
+/*
+ * Return tru if the given password is valid for registering an account.
+ */
+function validate_registration_password($password, $confirm_password) {
+	global $errormessages;
+	$validated = true;
+
+	// Password
+	if (!empty($password) and !empty($confirm_password)) {		
+		// Check if passwords match
 		if ($password !== $confirm_password) {
 			$errormessages[] = "Passwords do not match";
 			$validated = false;
+		} else {
+			// Whitelist input (same password, only need to check one)
+			if (!whitelist_input($password, MIN_LEN_PASSWORD, MAX_LEN_PASSWORD)) {
+				$errormessages[] = "Enter a password between " .  MIN_LEN_PASSWORD . " and " .  MAX_LEN_PASSWORD . " alpha-numeric characters";
+				$validated = false;
+			}
 		}
 	} else {
 		$errormessages[] = "Must have confirmed password";
 		$validated = false;
 	}
-	
-	dbClose($dbconn);
+
+	return $validated;
+}
+
+
+/*
+ * Validates the registration information and sets the appropriate error
+ * messages. Return true on successful validation, false otherwise.
+ */
+function validate_registration_info($username, $email, $password, $confirm_password) {
+	$valid_username = validate_registration_username($username);
+	$valid_email = validate_registration_email($email);
+	$valid_password = validate_registration_password($password, $confirm_password);
+
 	return $validated;
 }
 
