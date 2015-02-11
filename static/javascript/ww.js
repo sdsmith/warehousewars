@@ -259,7 +259,7 @@ Stage.prototype.getActor = function(x, y, floor_num) {
 	return this.actor_map.get(x, y, floor_num);
 }
 
-/* TODO(sdsmith): BE MORE DESCRIPTIVE ie. immediateScreenUpdate
+/*
  * Updates the given actor on call, regardless of interval callback.
  */
 Stage.prototype.immediateActorScreenUpdate = function(actor, old_x, old_y, old_floor_num) {
@@ -340,7 +340,6 @@ Stage.prototype.drawFloor = function(floor_num) {
 	}
 
 	// Update the player's floor on draw
-	// TODO(sdsmith): is this the best way to do this?
 	this.player_floor = this.player.getPosition()[2];
 	
 	// Update the screen's floor number info
@@ -406,7 +405,7 @@ Stage.prototype.endGame = function() {
 	if (this.team_count[TEAM_ENEMY] == 0) {
 		// VICTORY! All enemies are gone!		
 		alert("You Win!");
-	} else {
+	} else {F
 		// Defeat. Enemies remain.
 		alert("You lose!");
 	}

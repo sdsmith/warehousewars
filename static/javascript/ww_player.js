@@ -218,8 +218,7 @@ Player.prototype.handleKeydown = function(event) {
 	var keyCode = event.keyCode;
 	this.key_shift_pressed = event.shiftKey;
 	if (!this.key_shift_pressed) {
-		// release the actor when we release the shift key
-		// TODO(sdsmith): probably want to do this on keypress up.
+		// release the actor when we release the shift key and move
 		this.actor_grabbed = false;
 	}
 	var pos = this.getPosition();
