@@ -150,6 +150,11 @@
 									<td><img src="static/icons/north_west.svg" onclick="stage.player.immediateMove(-1, -1, stage.player_floor);" /></td>
 									<td><img src="static/icons/north.svg" onclick="stage.player.immediateMove(-1, 0, stage.player_floor);" /></td>
 									<td><img src="static/icons/north_east.svg" onclick="stage.player.immediateMove(-1, 1, stage.player_floor);" /></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><img src="static/icons/north.svg" onclick="stage.player.changeFloors(true, stage.player.getPosition()[2]);" /></td>
 								</tr>
 								<tr>
 									<td><img src="static/icons/west.svg" onclick="stage.player.immediateMove(0, -1, stage.player_floor);" /></td>
@@ -160,6 +165,11 @@
 									<td><img src="static/icons/south_west.svg" onclick="stage.player.immediateMove(1, -1, stage.player_floor);" /></td>
 									<td><img src="static/icons/south.svg" onclick="stage.player.immediateMove(1, 0, stage.player_floor);" /></td>
 									<td><img src="static/icons/south_east.svg" onclick="stage.player.immediateMove(1, 1, stage.player_floor);" /></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><img src="static/icons/south.svg" onclick="stage.player.changeFloors(false, stage.player.getPosition()[2]);" /></td>
 								</tr>
 							</table>
 						</center>

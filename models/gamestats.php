@@ -55,7 +55,7 @@ function get_highscores($number) {
 
 	$dbconn = dbConnect();
 
-	if (!pg_prepare($dbconn, "highscores", "SELECT appuser.name, highscores.score FROM appuser, (SELECT userid, score FROM ww_appuser_stats ORDER BY score LIMIT $1) AS highscores WHERE appuser.id = highscores.userid ORDER BY highscores.score DESC")) { 
+	if (!pg_prepare($dbconn, "highscores", "SELECT appuser.name, top.score, top.time, top.kills, top.deaths, top.steps FROM appuser, (SELECT * FROM ww_appuser_stats ORDER BY score DESC LIMIT $1) AS top WHERE appuser.id = top.userid ORDER BY top.score DESC")) { 
 		die("Error: " . pg_last_error());
 	}
 	$resultobj = pg_execute($dbconn, "highscores", array($number));
@@ -65,12 +65,11 @@ function get_highscores($number) {
 
 	$row = pg_fetch_array($resultobj);
 	while ($row) {
-		$highscores[] = array($row['score'], $row['name']);
+		$highscores[] = array($row['score'], $row['kills'], $row['deaths'], $row['steps'] ,$row['time'], $row['name']);
 		$row = pg_fetch_array($resultobj);
 	}
 
 	dbClose($dbconn);
-
 	return $highscores;
 }
 
@@ -83,10 +82,11 @@ function display_highscores($highscorearray) {
 	$highscores_html = "<div id=\"highscore_table\">\n<h3>Highscores - Top " . count($highscorearray) . "</h3>\n";
 	
 	if (!empty($highscorearray)) {
-		$highscores_html .= "<table>\n";
+		$highscores_html .= "<table border='3'>\n";
+		$highscores_html .= "\t<tr>\n\t\t<td>Score</td><td>Kills</td><td>Deaths</td><td>Steps Taken</td><td>Played</td><td>Username</td>\n\t</tr>\n";
 
 		foreach ($highscorearray as $entry) {
-			$highscores_html .= "\t<tr>\n\t\t<td>" . $entry[0] . "</td><td>" . $entry[1] . "</td>\n\t</tr>\n";
+			$highscores_html .= "\t<tr>\n\t\t<td>" . $entry[0] . "</td><td>" . $entry[1] . "</td><td>" . $entry[2] . "</td><td>" . $entry[3] . "</td><td>" . $entry[4] . "</td><td>" . $entry[5] . "</td>\n\t</tr>\n";
 		}
 
 		$highscores_html .= "</table>\n";
