@@ -263,8 +263,8 @@ Player.prototype.changeFloors = function(up, current_floor) {
 	else if (!up && current_floor > 0) {
 		new_floor -= 1;
 	}
-	if (new_floor != current_floor && this.immediateMove(0, 0, current_floor)) {
-		this._stage.drawFloor(current_floor);
+	if (new_floor != current_floor && this.immediateMove(0, 0, new_floor)) {
+		this._stage.drawFloor(new_floor);
 	}
 }	
 
