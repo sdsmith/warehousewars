@@ -8,6 +8,7 @@ var key_Z = 90;
 var key_X = 88;
 var key_C = 67;
 var key_space = 32;
+var key_control = 17;
 
 
 
@@ -241,12 +242,49 @@ Player.prototype.handleKeydown = function(event) {
 
 		case key_space:
 			// Switch floors (NOTE(sdsmith): assuming there is only two!!!!!)
-			var other_floor = (pos[2] + 1) % 2;
-			if (this.immediateMove(0, 0, other_floor)) {
-				this._stage.drawFloor(other_floor);
-			}
-	}
+			this.changeFloors(true, pos[2]);
+			break;
 
-	
+		case key_control:
+			this.changeFloors(false, pos[2]);
+			break;
+	}
 }
+
+/*
+ * Change the players vertical position depending on whether they pressed space(up) or ctrl(down)
+ */
+Player.prototype.changeFloors = function(up, current_floor) {
+	var new_floor = current_floor;
+
+	if (up && current_floor < this._stage.getTotalNumberOfFloors() - 1) {
+		new_floor += 1;
+	} 
+	else if (!up && current_floor > 0) {
+		new_floor -= 1;
+	}
+	if (new_floor != current_floor && this.immediateMove(0, 0, current_floor)) {
+		this._stage.drawFloor(current_floor);
+	}
+}	
+
+
 /* END Class Player */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
