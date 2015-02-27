@@ -30,7 +30,7 @@ function set_view($new_view, $new_state=NULL, $reset_action=false) {
 	global $view;
 	global $action;
 	global $state;
-	$view = "/views/" . $new_view;
+	$view = APP_ROOT_PATH . "/views/" . $new_view;
 
 	if (isset($new_state)) {
 		set_state($new_state);
@@ -227,7 +227,7 @@ actionController();
 
 ?>
 
-<?php include(APP_ROOT_PATH . $view) ?>
+<?php include($view) ?>
 
 
 
