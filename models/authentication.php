@@ -29,7 +29,7 @@ function authenticate_user($username, $password) {
 				$autheduserdata = $result_as_array;
 
 				// Sanity check: confirm there was only one credential match.
-				if ($result_as_array = pg_fetch_array($result)) {
+				if ($result_as_array = pg_fetch_array($resultobj)) {
 					die("Multiple user credential matches");
 				}
 
